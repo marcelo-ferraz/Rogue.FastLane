@@ -1,0 +1,4 @@
+Rogue.FastLane
+==============
+
+Fast collections
