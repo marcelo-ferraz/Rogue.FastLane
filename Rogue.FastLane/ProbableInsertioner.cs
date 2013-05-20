@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Items;
-using Rogue.FastLane.Selectors;
+using Rogue.FastLane.Queries;
 
 using Rogue.FastLane.Collections.Mixins;
 
 namespace Rogue.FastLane
 {
     public class ProbableSavior 
-        : SimpleSelector<Pair, int> 
+        : SimpleQuery<Pair, int> 
     {
         public ReferenceNode<Pair, int> Root { get; set; }
 
@@ -119,6 +119,16 @@ namespace Rogue.FastLane
             }
             nodeRef.Values[~index] = item;
             return lastNode;
+        }
+
+        public override void AfterAdd(ValueNode<Pair> node, UniqueKeyQueryState state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void AfterRemove(ValueNode<Pair> item, UniqueKeyQueryState state)
+        {
+            throw new NotImplementedException();
         }
     }
 

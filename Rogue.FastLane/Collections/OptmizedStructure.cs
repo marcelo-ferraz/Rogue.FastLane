@@ -1,5 +1,5 @@
 ﻿using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Selectors;
+using Rogue.FastLane.Queries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,9 +15,9 @@ namespace Rogue.FastLane.Collections
 {
     public class OptmizedStructure<TItem>
     {
-        public StructState State { get; set; }
+        public UniqueKeyQueryState State { get; set; }
 
-        protected ISelector<TItem>[] Selectors;
+        protected IQuery<TItem>[] Selectors;
 
         public int Count { get; set; }
 
@@ -50,7 +50,7 @@ namespace Rogue.FastLane.Collections
         }
 
 
-        public void Remove<TKey>(ISelector<TItem> selector)
+        public void Remove<TKey>(IQuery<TItem> selector)
         {
             var node =
                 selector.First();

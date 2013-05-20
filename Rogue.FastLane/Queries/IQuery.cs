@@ -7,12 +7,12 @@ using Rogue.FastLane.Items;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.State;
 
-namespace Rogue.FastLane.Selectors
+namespace Rogue.FastLane.Queries
 {
-    public interface ISelector<TItem> 
+    public interface IQuery<TItem> 
     { 
         ValueNode<TItem> First();
-        void AfterAdd(ValueNode<TItem> node, StructState state);
-        void AfterRemove(ValueNode<TItem> item, StructState state);
+        void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state);
+        void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state);
     }
 }

@@ -1,0 +1,46 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Strategies/Strategy.cs">
+    <Files>
+      <File FileName="Program2.cs" Line="88" Column="21" />
+      <File FileName="Selectors/SimpleSelector.cs" Line="52" Column="4" />
+      <File FileName="ProbableInsertioner.cs" Line="131" Column="37" />
+      <File FileName="ProbableInsertioner2.cs" Line="76" Column="10" />
+      <File FileName="Collections/State/StructState.cs" Line="24" Column="41" />
+      <File FileName="Strategies/Strategy.cs" Line="35" Column="3" />
+      <File FileName="Strategies/LevelAugmentStrategy .cs" Line="5" Column="41" />
+      <File FileName="Strategies/InsertionStrategy.cs" Line="6" Column="3" />
+      <File FileName="Collections/Mixins/ListMixins.cs" Line="84" Column="3" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Rogue.FastLane" expanded="True">
+            <Node name="Collections" expanded="True">
+              <Node name="Mixins" expanded="True" />
+              <Node name="State" expanded="True" />
+            </Node>
+            <Node name="Selectors" expanded="True" />
+            <Node name="Strategies" expanded="True">
+              <Node name="Strategy.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True">
+          <Node name="Rogue.FastLane" expanded="True">
+            <Node name="Nhonho" expanded="True" />
+            <Node name="Rogue" expanded="True">
+              <Node name="FastLane" expanded="True" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

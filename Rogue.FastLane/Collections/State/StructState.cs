@@ -5,21 +5,21 @@ using System.Text;
 
 namespace Rogue.FastLane.Collections.State
 {
-    public class StructState
+    public class UniqueKeyQueryState
     {
-        public int Lenght { get; set; }
+        public int Length { get; set; }
         public int PercentageUsed { get; set; }
         public int OptimumLenghtPerSegment { get; set; }
         public int MaxNumberOfIteractions { get; set; }
         
         public Pair[] Levels { get; set; }
 
-        public StructState PassOn()
+        public UniqueKeyQueryState PassOn()
         {
             var newState = 
-                new StructState
+                new UniqueKeyQueryState
                 {
-                    Lenght = Lenght,
+                    Length = Length,
                     PercentageUsed = PercentageUsed,
                     OptimumLenghtPerSegment = OptimumLenghtPerSegment,
                     Levels = new Pair[Levels.Length]

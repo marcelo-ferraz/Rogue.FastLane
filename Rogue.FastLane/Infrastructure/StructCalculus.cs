@@ -42,12 +42,12 @@ namespace Rogue.FastLane.Infrastructure
             return ammountOfNodesPerLevel;
         }
 
-        public static StructState Calculate(StructState oldState, int newLenght)
+        public static UniqueKeyQueryState Calculate(UniqueKeyQueryState oldState, int newLenght)
         {
             var newState = 
                 oldState.PassOn();
 
-            newState.Lenght = newLenght;
+            newState.Length = newLenght;
 
             var lenght = newLenght;
             

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rogue.FastLane.Collections.Items
 {
-    public abstract class Node<TItem, TKey>: INode
+    public abstract class Node<TItem, TKey> : INode
     {
         public ReferenceNode<TItem, TKey> Parent { get; set; }
     }
