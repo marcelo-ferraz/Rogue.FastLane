@@ -20,6 +20,18 @@ namespace Rogue.FastLane
         public override void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state)
         {
             QueryStrategies.AugmentValueCount(Root, state, 1);
+            
+            var key = 
+                SelectKey(node.Value);
+
+            int[] indexes = null;
+
+            var lowestRef =
+                FirstReference(key, Root, ref indexes);
+
+            var valueIndex = lowestRef.Values.BinarySearch(
+                val =>
+                    CompareKeys(key, SelectKey(val.Value)));
 
 
         }

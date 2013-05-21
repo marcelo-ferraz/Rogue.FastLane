@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.State;
+using Rogue.FastLane.Strategies.Query;
 
 namespace Rogue.FastLane.Collections
 {
@@ -16,7 +17,30 @@ namespace Rogue.FastLane.Collections
             Root = root;
         }
 
-        //protected IEnumerable<ReferenceNode<TItem, TKey>> GetEnumerator<TItem, TKey>(ReferenceNode<TItem, TKey> node, UniqueKeyQueryState state, int levelIndex)
+        protected IEnumerable<ReferenceNode<TItem, TKey>> GetEnumerable<TItem, TKey>(ReferenceNode<TItem, TKey> node, Pair[] location, int levelIndex)
+        {
+            // aqui só funciona do root em diante. Pensar em como deveria ser se pegasse de um refnode em diante
+
+            if (node.Values != null)
+            {
+                yield return node;
+            }
+            else if (node.References != null)
+            {
+
+                foreach (var child in node.References)
+                {
+                    var iterator =
+                        GetEnumerator(child);
+
+                    while (iterator.MoveNext())
+                    {
+                        yield return iterator.Current;
+                    }
+                }
+            }
+        }
+
         protected IEnumerator<ReferenceNode<TItem, TKey>> GetEnumerator<TItem, TKey>(ReferenceNode<TItem, TKey> node)
         {
             if (node.Values != null)

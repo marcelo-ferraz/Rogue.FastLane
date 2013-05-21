@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\LowestReferencesEnumerable.cs" />
     <Compile Include="Collections\Mixins\ArrayMixins.cs" />
     <Compile Include="Collections\State\Pair.cs" />
     <Compile Include="Collections\State\StructState.cs" />

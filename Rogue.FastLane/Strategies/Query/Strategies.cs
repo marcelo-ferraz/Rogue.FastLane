@@ -15,7 +15,6 @@ namespace Rogue.FastLane.Strategies.Query
                 _fetchStrategy = new NodeFetchStrategy());
         }
 
-		
 		/// <summary>
 		/// Augments the level count.
 		/// </summary>
