@@ -15,9 +15,14 @@ namespace Rogue.FastLane.Collections
 {
     public class OptmizedStructure<TItem>
     {
-        public UniqueKeyQueryState State { get; set; }
+        public OptmizedStructure(params IQuery<TItem>[] queries)
+        {
+            Queries = queries;
+        }
 
-        protected IQuery<TItem>[] Selectors;
+        protected IQuery<TItem>[] Queries;
+
+        protected internal UniqueKeyQueryState State { get; set; }
 
         public int Count { get; set; }
 
@@ -42,9 +47,9 @@ namespace Rogue.FastLane.Collections
             }
 
             var s =
-                StructCalculus.Calculate(State, Count + 1);
+                StructCalculus.Calculate(State, Count + 1, 10);
 
-            Parallel.ForEach(Selectors, sel => sel.AfterAdd(node, s));
+            Parallel.ForEach(Queries, sel => sel.AfterAdd(node, s));
 
             Count++;
         }
@@ -66,9 +71,9 @@ namespace Rogue.FastLane.Collections
                 prior.Next = next;
 
                 var s = 
-                    StructCalculus.Calculate(State, Count + 1);
+                    StructCalculus.Calculate(State, Count + 1, 10);
 
-                Parallel.ForEach(Selectors, 
+                Parallel.ForEach(Queries, 
                     sel => 
                         sel.AfterRemove(node, s));
 

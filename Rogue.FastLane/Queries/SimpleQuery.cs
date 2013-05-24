@@ -3,6 +3,7 @@ using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections.State;
+using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane.Queries
@@ -19,9 +20,7 @@ namespace Rogue.FastLane.Queries
         /// <summary>
         /// Numero maximo de comparacoes para encontrar um valor
         /// </summary>
-        protected int MaxComparisons;
-
-        
+        protected int MaxComparisons;        
 
         protected OptmizedStructure<TItem> Structure;
         
@@ -54,26 +53,13 @@ namespace Rogue.FastLane.Queries
                 (k1, k2) => ((IComparable)k1).CompareTo(k2))
                 )(key1, key2);
         }
-
-        protected virtual ReferenceNode<TItem, TKey> FirstReference(TKey key, ReferenceNode<TItem, TKey> node)
-        {
-            return NodeFetching.FirstReference(key, node, CompareKeys);
-        }
-       
+               
         public SimpleQuery<TItem, TKey> Select(TKey key)
         {
             Key = key;
             return this;
         }
 
-        public ValueNode<TItem> First()
-        {
-            var found =
-                FirstReference(Key, Root);
-
-            return found.Values.BinaryGet(
-                    node =>
-                        CompareKeys(Key, SelectKey(node.Value))); 
-        }
+        public abstract ValueNode<TItem> First();
     }
 }

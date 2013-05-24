@@ -4,6 +4,8 @@ using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries.Mixins;
+using Rogue.FastLane.Collections;
+using Rogue.FastLane.Queries;
 
 namespace Nhonho
 {
@@ -68,18 +70,22 @@ namespace Nhonho
                 PercentageUsed = 14/16*100
             };
 
-            ValueOneTime[] offsets = null;
-            //strategy.GetLastRefNodeByItsValueFlatIndex(root, 14, state, ref offsets);
+            var query =
+                new UniqueKeyQuery<Pair, int>() { 
+                     SelectKey = item => item.Index
+                };
 
-            QueryStrategies.AugmentValueCount(root, state, 1);
+            var structure = 
+                new OptmizedStructure<Pair>(query);
 
-            var first = NodeFetchingMixins.FirstRefByUniqueKey(14, root,
-                (one, another) => one.CompareTo(another), ref offsets, state.Levels.Length);
+            structure.Add(new Pair() { Index = 3 });
+            structure.Add(new Pair() { Index = 1 });
 
-            foreach (var n in NodeFetchingMixins.IterateTroughLowestReferences(root, offsets))
-            {
-                Debugger.Break();
-            }
+
+            //foreach (var n in NodeFetchingMixins.IterateTroughLowestReferences(root, offsets))
+            //{
+            //    Debugger.Break();
+            //}
             
 
 
@@ -107,11 +113,11 @@ namespace Nhonho
 			
 			
 			
-            var savior = new ProbableSavior() { Root = root };
+            //var savior = new ProbableSavior() { Root = root };
 
-            savior.Save(new Pair() { Index = 6, Length=45 });
-            savior.Save(new Pair { Index = 14 });
-            savior.Save(new Pair { Index = 7 });
+            //savior.Save(new Pair() { Index = 6, Length=45 });
+            //savior.Save(new Pair { Index = 14 });
+            //savior.Save(new Pair { Index = 7 });
         }
 		
 		static void Save(ReferenceNode<Pair, int> item, int count)

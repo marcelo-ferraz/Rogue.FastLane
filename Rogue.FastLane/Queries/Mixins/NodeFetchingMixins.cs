@@ -48,7 +48,7 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="node"></param>
         /// <param name="compareKeys"></param>
         /// <returns></returns>
-        public static ReferenceNode<TItem, TKey> FirstReference<TItem, TKey>(
+        public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
         {
             if ((node ?? (node = self.Root)).Values != null) { return node; }
@@ -59,7 +59,7 @@ namespace Rogue.FastLane.Queries.Mixins
             var found =
                 node.References[index < 0 ? ~index : index];
 
-            return found != null ? FirstReference(self, found) : null;
+            return found != null ? FirstRefByUniqueKey(self, found) : null;
         }
 
 

@@ -42,10 +42,14 @@ namespace Rogue.FastLane.Infrastructure
             return ammountOfNodesPerLevel;
         }
 
-        public static UniqueKeyQueryState Calculate(UniqueKeyQueryState oldState, int newLenght)
+        public static UniqueKeyQueryState Calculate(UniqueKeyQueryState oldState, int newLenght, int maxDesiredComparisons)
         {
-            var newState = 
-                oldState.PassOn();
+            var newState = oldState != null ? 
+                oldState.PassOn() :
+                new UniqueKeyQueryState();
+
+            newState.OptimumLenghtPerSegment = 
+                GetOptimumLength(maxDesiredComparisons);
 
             newState.Length = newLenght;
 
@@ -54,7 +58,7 @@ namespace Rogue.FastLane.Infrastructure
             int levelCount = 
                 HowManyLevelsShouldExist(ref lenght, newState.OptimumLenghtPerSegment);
 
-            if (newState.Levels.Length != levelCount)
+            if (newState.Levels == null || newState.Levels.Length != levelCount)
             { 
                 newState.Levels = 
                     GetQtdOfNodesPerLevel(newLenght, newState.OptimumLenghtPerSegment, levelCount);                 

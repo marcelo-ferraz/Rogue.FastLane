@@ -9,12 +9,23 @@ namespace Rogue.FastLane.Queries
 {
     public class UniqueKeyQuery<TItem, TKey> : SimpleQuery<TItem, TKey>
     {
+        public UniqueKeyQuery()
+        {
+            Root = new ReferenceNode<TItem, TKey>();
+        }
+
         protected internal UniqueKeyQueryState State;
 
-        protected virtual ReferenceNode<TItem, TKey> FirstReference(TKey key, ReferenceNode<TItem, TKey> node, ref ValueOneTime[] offsets)
+        public override ValueNode<TItem> First()
         {
-            return this.FirstRefByUniqueKey(ref offsets);
+            var found =
+                this.FirstRefByUniqueKey();
+
+            return found.Values.BinaryGet(
+                    node =>
+                        CompareKeys(Key, SelectKey(node.Value)));
         }
+
 
         public override void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state)
         {
