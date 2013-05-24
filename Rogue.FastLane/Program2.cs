@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using Rogue.FastLane;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Items;
-using Rogue.FastLane;
-using Rogue.FastLane.Strategies.Query;
+using Rogue.FastLane.Queries.Mixins;
 
 namespace Nhonho
 {
     class Program2
     {
+        #region
         static ReferenceNode<Pair, int> GetRef(int key, int count = 4, ReferenceNode<Pair, int> parent = null)
         {
             return new ReferenceNode<Pair, int>() { Key = key, References = new ReferenceNode<Pair, int>[count], Parent = parent };
@@ -28,10 +23,11 @@ namespace Nhonho
         static ValueNode<Pair> GetVal(int key)
         {
             return new ValueNode<Pair>() { Value = new Pair() { Index = key } };
-        }       
-
+        }
+        #endregion
         static void Main(string[] args)
         {
+            #region
             var root = GetRef(12);
 			var count = 14;
 			
@@ -54,13 +50,33 @@ namespace Nhonho
             node.Values[2] = GetVal(12);
             node.Values[3] = GetVal(13);
 
-            root.References[3] = node = GetRefVal(15, 2, root);
+            root.References[3] = node = GetRefVal(15, 2, parent: root);
             node.Values[0] = GetVal(15);
             node.Values[1] = GetVal(16);
             //root.References[3].Values[2] = GetVal(13);
+            #endregion
 
+            var state = new UniqueKeyQueryState {
+                Length = 14,
+                Levels = new []
+                {
+                    new Pair { Length = 4 },
+                    new Pair { Length = 14 },
+                },
+                MaxNumberOfIteractions = 10,
+                OptimumLenghtPerSegment = 4,
+                PercentageUsed = 14/16*100
+            };
 
-            foreach (var n in new NodeFetchStrategy().IterateTroughLowestReferences(root, null, 0))
+            ValueOneTime[] offsets = null;
+            //strategy.GetLastRefNodeByItsValueFlatIndex(root, 14, state, ref offsets);
+
+            QueryStrategies.AugmentValueCount(root, state, 1);
+
+            var first = NodeFetchingMixins.FirstRefByUniqueKey(14, root,
+                (one, another) => one.CompareTo(another), ref offsets, state.Levels.Length);
+
+            foreach (var n in NodeFetchingMixins.IterateTroughLowestReferences(root, offsets))
             {
                 Debugger.Break();
             }

@@ -66,10 +66,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\SimpleQuery.cs" />
-    <Compile Include="UniqueKeyQuery.cs" />
-    <Compile Include="Strategies\Query\Strategies.cs" />
-    <Compile Include="Strategies\Query\AugmentStrategy .cs" />
-    <Compile Include="Strategies\Query\NodeFetchStrategy.cs" />
+    <Compile Include="Queries\UniqueKeyQuery.cs" />
+    <Compile Include="Queries\Mixins\AugmentMixins.cs" />
+    <Compile Include="Queries\Mixins\NodeFetchingMixins.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -82,5 +81,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Collections\Items\ValueOneTime.cs" />
+  </ItemGroup>
 </Project>

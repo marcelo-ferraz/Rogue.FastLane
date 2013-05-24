@@ -2,18 +2,13 @@ using System;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections.Items;
+using Rogue.FastLane.Collections;
+using Rogue.FastLane.Queries.Mixins;
 
-namespace Rogue.FastLane.Strategies.Query
+namespace Rogue.FastLane.Queries.Mixins
 {
-	public class AugmentStrategy
+	public static class AugmentMixins
 	{
-        private NodeFetchStrategy _getter;
-
-        public AugmentStrategy(NodeFetchStrategy getter)
-        {
-            _getter = getter;
-        }
-
         /// <summary>
         /// Augments the level count.
         /// </summary>
@@ -26,7 +21,7 @@ namespace Rogue.FastLane.Strategies.Query
         /// <param name='itemAmmountToSum'>
         /// Item ammount to sum to the tree.
         /// </param>
-        public void AugmentLevelCount<TItem, TKey>(ReferenceNode<TItem, TKey> root, UniqueKeyQueryState state, int itemAmmountToSum)
+        public static void AugmentLevelCount<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, UniqueKeyQueryState state, int itemAmmountToSum)
         {
             int newLength =
                 state.Length + itemAmmountToSum;
@@ -66,37 +61,29 @@ namespace Rogue.FastLane.Strategies.Query
             }
         }
 
-        public void AugmentValueCount<TItem, TKey>(ReferenceNode<TItem, TKey> root, UniqueKeyQueryState state, int itemAmmountToSum)
+        public static void AugmentValueCount<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, int itemAmmountToSum)
         {
-            int newLength =
+            var state = self.State;
+
+            double newLength =
                 state.Length + itemAmmountToSum;
 
-            var spacesCount =
+            double spacesCount =
                 Math.Pow(state.OptimumLenghtPerSegment, state.Levels.Length);
 
             //if there is not enough room for this new item
             if (spacesCount < newLength)
-            { AugmentLevelCount(root, state, itemAmmountToSum); }
+            { AugmentLevelCount(self, root, state, itemAmmountToSum); }
 
             //get the one who references the value array that can be changed
             int holderIndex = (int)
-                Math.Ceiling((decimal)newLength / state.Levels.Length);
-
-            //descobrir a referencia do referenceNode que esta mais proximo dos valores
-            //por calculo, achar as coordenadas certas, do node
-            /* 
-             * por exemplo,
-             * a estrutura tem 14 valores, e vai ser inserido um valor
-             * nesse caso, não é necessario que a contagem de niveis seja alterada,
-             * newLength / state.Levels.Length ->  15/16 = 0.9375, ou 93,75%
-             * 
-             * talvez -> arredondar de 93.75 para para 1, de 53.44 para 0,5 
-            */
+                Math.Ceiling((double)newLength / spacesCount);
+            
             var nodeFound =
-                _getter.GetLastRefNodeByItsValueFlatIndex(root, holderIndex, state, 1);
+                self.GetLastRefNode(root);
 
             nodeFound.Values =
-                nodeFound.Values.Resize(newLength);
+                nodeFound.Values.Resize(nodeFound.Values.Length + itemAmmountToSum);
         }
 	}
 }

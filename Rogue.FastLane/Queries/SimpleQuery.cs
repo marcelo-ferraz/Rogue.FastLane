@@ -1,7 +1,7 @@
 ﻿using System;
-using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Items;
+using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Items;
 
@@ -12,19 +12,19 @@ namespace Rogue.FastLane.Queries
         /// <summary>
         /// Key for getting the result
         /// </summary>
-        protected TKey Key;
+        protected internal TKey Key { get; set; }
+
+        protected internal ReferenceNode<TItem, TKey> Root { get; set; }
 
         /// <summary>
         /// Numero maximo de comparacoes para encontrar um valor
         /// </summary>
         protected int MaxComparisons;
 
-        protected ReferenceNode<TItem, TKey> Root;
+        
 
         protected OptmizedStructure<TItem> Structure;
-
-        protected UniqueKeyQueryState State;
-
+        
         public abstract void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state);
 
         public abstract void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state);
@@ -46,7 +46,7 @@ namespace Rogue.FastLane.Queries
         /// <param name="key1"></param>
         /// <param name="key2"></param>
         /// <returns></returns>
-        protected virtual int CompareKeys(TKey key1, TKey key2)
+        protected internal virtual int CompareKeys(TKey key1, TKey key2)
         {
             return (KeyComparer ?? (KeyComparer =
                 !typeof(IComparable).IsAssignableFrom(typeof(TKey)) ?
@@ -57,32 +57,7 @@ namespace Rogue.FastLane.Queries
 
         protected virtual ReferenceNode<TItem, TKey> FirstReference(TKey key, ReferenceNode<TItem, TKey> node)
         {
-            if (node.Values != null) { return node; }
-
-            int index =
-                node.References.BinarySearch(k =>
-                    CompareKeys(key, k.Key));
-
-            var found =
-                node.References[index < 0 ? ~index : index];
-
-            return found != null ? FirstReference(key, found) : null;
-        }
-
-        protected virtual ReferenceNode<TItem, TKey> FirstReference(TKey key, ReferenceNode<TItem, TKey> node, ref int[] indexes, int lvlIndex = 0)
-        {
-            if (node.Values != null) { return node; }
-                       
-            int index = 
-                node.References.BinarySearch(k => CompareKeys(key, k.Key));
-
-            (indexes ??
-                (indexes = new int[State.Levels.Length]))[lvlIndex] = index;
-
-            var found =
-                node.References[index < 0 ? ~index : index];
-
-            return found != null ? FirstReference(key, found, ref indexes, ++lvlIndex) : null;
+            return NodeFetching.FirstReference(key, node, CompareKeys);
         }
        
         public SimpleQuery<TItem, TKey> Select(TKey key)
