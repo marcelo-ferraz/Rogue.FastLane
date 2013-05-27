@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using Rogue.FastLane.Collections.Items;
+using Rogue.FastLane.Collections.State;
 
 namespace Rogue.FastLane.Collections
 {
-    public class LowestReferencesEnumerable<TItem, TKey>
+    public class LowestReverseReferencesEnumerable<TItem, TKey>
     {
         public IEnumerable<ReferenceNode<TItem, TKey>> AllBellow(ReferenceNode<TItem, TKey> node)
         {
-            // aqui só funciona do root em diante. Pensar em como deveria ser se pegasse de um refnode em diante
             if (node.Values != null)
             {
                 yield return node;
             }
             else if (node.References != null)
             {
-                foreach (var child in node.References)
+                for (int i = node.References.Length -1; i > 0; i--)
                 {
-                    foreach (var grandChild in AllBellow(child))
+                    foreach (var grandChild in AllBellow(node.References[i]))
                     {
                         yield return grandChild;
                     }
@@ -24,7 +24,7 @@ namespace Rogue.FastLane.Collections
             }
         }        
 
-        public IEnumerable<ReferenceNode<TItem, TKey>> FromHereOn(ReferenceNode<TItem, TKey> node, OneTimeValue[] offsetPerLvl, int lvlIndex = 0)
+        public IEnumerable<ReferenceNode<TItem, TKey>> UpToHere(ReferenceNode<TItem, TKey> node, Pair[] offsetPerLvl, int lvlIndex = 0)
         {
             if (node.Values != null)
             {
@@ -32,11 +32,13 @@ namespace Rogue.FastLane.Collections
             }
             else if (node.References != null)
             {
-                for (int i = offsetPerLvl[lvlIndex].Value; i < node.References.Length; i++)
+                for (int i = node.References.Length - 1; i > 0 && offsetPerLvl[lvlIndex].Index < offsetPerLvl[lvlIndex].Length; i--)
                 {
-                    foreach (var child in FromHereOn(node.References[i], offsetPerLvl, lvlIndex))
+                    offsetPerLvl[lvlIndex].Index++;
+
+                    foreach (var grandChild in UpToHere(node.References[i], offsetPerLvl, lvlIndex + 1))
                     {
-                        yield return child;
+                        yield return grandChild;
                     }
                 }
             }

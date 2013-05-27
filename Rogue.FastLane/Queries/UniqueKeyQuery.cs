@@ -32,7 +32,7 @@ namespace Rogue.FastLane.Queries
             Key =
                 SelectKey(node.Value);
 
-            ValueOneTime[] offsets = null;
+            OneTimeValue[] offsets = null;
 
             State = state;
 
@@ -49,28 +49,31 @@ namespace Rogue.FastLane.Queries
             else
                 if (valueIndex < 0)
                 {
-                    this.AugmentValueCount(Root, 1);
+                    if(this.NeedsAugmentation(closestRef, 1))
+                    {
+                        this.AugmentValueCount(Root, 1);
+                    }
 
                     Insert(node, offsets);
                 }
         }
 
-        private void Insert(ValueNode<TItem> node, ValueOneTime[] offsets)
+        private void Insert(ValueNode<TItem> node, OneTimeValue[] offsets)
         {
             ValueNode<TItem> nextFirstNode = node;
             var offset = offsets[offsets.Length - 1];
-            foreach (var childNode in this.IterateTroughLowestReferences(Root, offsets))
+            foreach (var childNode in this.IntoLowestRefs(Root, offsets))
             {
-                var startAt = offset.Value;
-                for (var i = startAt; i < childNode.Values.Length; i++)
+                var finishIndex = offset.Value;
+                for (var i = childNode.Values.Length; i > finishIndex; i--)
                 {
-                    if ((i + 1) < childNode.Values.Length)
+                    if ((i - 1) < childNode.Values.Length)
                     { childNode.Values[i + 1] = childNode.Values[i]; }
                     else
                     { nextFirstNode = childNode.Values[i]; }
                 }
 
-                childNode.Values[startAt] = node;
+                childNode.Values[finishIndex] = node;
                 childNode.Key = SelectKey(
                     childNode.Values[childNode.Values.Length - 1].Value);
 

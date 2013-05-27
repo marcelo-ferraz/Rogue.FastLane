@@ -68,22 +68,27 @@ namespace Rogue.FastLane.Queries.Mixins
             double newLength =
                 state.Length + itemAmmountToSum;
 
-            double spacesCount =
+            double totalOfSpacesCount =
                 Math.Pow(state.OptimumLenghtPerSegment, state.Levels.Length);
 
             //if there is not enough room for this new item
-            if (spacesCount < newLength)
+            if (totalOfSpacesCount < newLength)
             { AugmentLevelCount(self, root, state, itemAmmountToSum); }
 
             //get the one who references the value array that can be changed
             int holderIndex = (int)
-                Math.Ceiling((double)newLength / spacesCount);
+                Math.Ceiling((double)newLength / totalOfSpacesCount);
             
             var nodeFound =
                 self.GetLastRefNode(root);
 
             nodeFound.Values =
                 nodeFound.Values.Resize(nodeFound.Values.Length + itemAmmountToSum);
+        }
+
+        public static bool NeedsAugmentation<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> refNode, int itemAmmountToSum)
+        { 
+            return refNode.Values.Length < self.State.OptimumLenghtPerSegment + itemAmmountToSum;
         }
 	}
 }

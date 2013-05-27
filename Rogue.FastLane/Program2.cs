@@ -30,6 +30,8 @@ namespace Nhonho
         #endregion
         static void Main(string[] args)
         {
+            TestReverseEnumerable();
+
             var query =
                 new UniqueKeyQuery<Pair, int>() { 
                      SelectKey = item => item.Index
@@ -38,60 +40,58 @@ namespace Nhonho
             var structure = 
                 new OptmizedStructure<Pair>(query);
 
-            structure.Add(new Pair() { Index = 3 });
-            structure.Add(new Pair() { Index = 1 });
-            structure.Add(new Pair() { Index = 2 });
-
-            //var root = (ReferenceNode<Pair, int>)
-            var root = 
+            var root = (ReferenceNode<Pair, int>)
                 typeof(UniqueKeyQuery<,>)
                 .MakeGenericType(typeof(Pair), typeof(int))
                 .GetProperty("Root", BindingFlags.NonPublic | BindingFlags.Instance)
                 .GetGetMethod(true)
                 .Invoke(query, null);
-
-
-            //foreach (var n in NodeFetchingMixins.IterateTroughLowestReferences(root, offsets))
-            //{
-            //    Debugger.Break();
-            //}
             
 
-
-			/*
-			 * passos para solucionar o problema da inserção
-			 * 1- iterar por todos os nodes, a partir do node encontrado
-			 * 2- ver se existe alguma mudança na quantidade de niveis dos seletores
-			 * 2.1- case tenha alguma mudança criar ou eliminar o nivel abaixo, arrumando as referencias
-			 * 3- inserir um novo node no val array
-			 * 3.1- caso o array tenha menos que o tamanho maximo, inserir nele
-			 * 3.2- caso algum dos val arrays do node pai tenha menos que o tamanho maximo, inserir nele
-			 * 3.3- caso algum dos val arrays de algum dos nodes tenha menos que o tamanho maximo, inserir nele
-			 * 3b- procurar pelo primeiro array que ainda seja menor que o maximo e inserir nele
-			 * 4- Colocar o valor no node certo e mover todos os outros uma posição, para mais, ou para menos 
-			 * 4b- iterar e devolver os nodes mais baixos de referencia, os valueNodes para tornar a passagem mais facil
-			 * 
-			 * 
-			 * com base na quantidade total e a de niveis, é possivel saber se algum node vai suportar esse item extra ou se é necessário que se faça mais um nivel
-			 * planejamento
-			 * aumento da capacidade
-			 * mudanca de ponteiros
-			 * inserçao
-			 * */
-			
-			
-			
-			
-            //var savior = new ProbableSavior() { Root = root };
-
-            //savior.Save(new Pair() { Index = 6, Length=45 });
-            //savior.Save(new Pair { Index = 14 });
-            //savior.Save(new Pair { Index = 7 });
-        }
-		
-		static void Save(ReferenceNode<Pair, int> item, int count)
-		{
-			
+            structure.Add(new Pair() { Index = 3 });
+            structure.Add(new Pair() { Index = 1 });
+            structure.Add(new Pair() { Index = 2 });            
 		}
+
+        private static void TestReverseEnumerable()
+        {
+
+            var otherRoot = GetRef(12);
+
+            ReferenceNode<Pair, int> node;
+            otherRoot.References[0] = node = GetRefVal(4, parent: otherRoot);
+            node.Values[0] = GetVal(1);
+            node.Values[1] = GetVal(2);
+            node.Values[2] = GetVal(3);
+            node.Values[3] = GetVal(4);
+
+            otherRoot.References[1] = node = GetRefVal(9, parent: otherRoot);
+            node.Values[0] = GetVal(5);
+            node.Values[1] = GetVal(6);
+            node.Values[2] = GetVal(8);
+            node.Values[3] = GetVal(9);
+
+            otherRoot.References[2] = node = GetRefVal(13, parent: otherRoot);
+            node.Values[0] = GetVal(10);
+            node.Values[1] = GetVal(11);
+            node.Values[2] = GetVal(12);
+            node.Values[3] = GetVal(13);
+
+            otherRoot.References[3] = node = GetRefVal(15, 2, otherRoot);
+            node.Values[0] = GetVal(15);
+            node.Values[1] = GetVal(16);
+            //root.References[3].Values[2] = GetVal(13);
+
+
+            var @enum = new LowestReverseReferencesEnumerable<Pair, int>().
+                UpToHere(otherRoot, new[] { new Pair() { Length = 4, Index = 3 }, new Pair() { Length = 12, Index = 10 } });
+                //AllBellow(otherRoot);
+
+
+            foreach (var item in @enum)
+            {
+                System.Console.Write("Id: {0}" , item.Key);
+            }
+        }
     }
 }

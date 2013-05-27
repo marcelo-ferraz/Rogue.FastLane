@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Collections\LowestReferencesEnumerable.cs" />
     <Compile Include="Collections\Mixins\ArrayMixins.cs" />
+    <Compile Include="Collections\LowestReverseReferencesEnumerable.cs" />
     <Compile Include="Collections\State\Pair.cs" />
     <Compile Include="Collections\State\StructState.cs" />
     <Compile Include="ProbableInsertioner.cs" />
@@ -82,6 +83,6 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Collections\Items\ValueOneTime.cs" />
+    <Compile Include="Collections\Items\OneTimeValue.cs" />
   </ItemGroup>
 </Project>

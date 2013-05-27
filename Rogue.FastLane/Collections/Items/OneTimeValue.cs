@@ -8,7 +8,7 @@ namespace Rogue.FastLane.Collections.Items
     /// <remarks>
     /// Usually used as a offset for multilevel interactions.
     /// </remarks>
-    public class ValueOneTime
+    public class OneTimeValue
     {
         private int _value;
 

@@ -9,6 +9,28 @@ namespace Rogue.FastLane.Queries.Mixins
 {
 	public static class NodeFetchingMixins
 	{
+        public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, Action<int, int> getCoordinates, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
+        {
+            node = node ?? self.Root;
+
+            int index = node.Values != null ?
+                node.Values.BinarySearch(n => self.CompareKeys(self.Key, self.SelectKey(n.Value))) :
+                node.References.BinarySearch(n => self.CompareKeys(self.Key, n.Key));
+
+            getCoordinates(lvlIndex, index);
+
+            if (node.Values != null) { return node; }
+
+            var found =
+                node.References[index < 0 ? ~index : index];
+
+            return found != null ?
+                FirstRefByUniqueKey(self, getCoordinates, node, ++lvlIndex) :
+                null;
+        }
+
+
         /// <summary>
         /// Retrieves the referenceNode next to a valuenode, and give it back a set of coordinates, to be used as offsets, when iterating
         /// </summary>
@@ -22,22 +44,19 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="lvlIndex"></param>
         /// <returns></returns>
         public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, ref ValueOneTime[] offsets, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
-        {            
-            int index = (node ?? (node = self.Root))
-                .References.BinarySearch(k => self.CompareKeys(self.Key, k.Key));
+            this UniqueKeyQuery<TItem, TKey> self, ref OneTimeValue[] offsets, ReferenceNode<TItem, TKey> node = null)
+        {
+            var offs = offsets;
+            
+            var refNode = FirstRefByUniqueKey(
+                self, 
+                (lvlIndex, index) => 
+                    (offs ?? (offs = new OneTimeValue[self.State.Levels.Length - 1]))
+                    [lvlIndex] = new OneTimeValue() { Value = index < 0 ? ~index : index }, node);
 
-            (offsets ?? (offsets = new ValueOneTime[self.State.Levels.Length -1]))
-                [lvlIndex] = new ValueOneTime() { Value = index < 0 ? ~index : index };
+            offsets = offs;
 
-            if (node.Values != null) { return node; }
-
-            var found =
-                node.References[index < 0 ? ~index : index];
-
-            return found != null ? 
-                FirstRefByUniqueKey(self, ref offsets, node, ++lvlIndex) : 
-                null;
+            return refNode;
         }
 
         /// <summary>
@@ -84,7 +103,7 @@ namespace Rogue.FastLane.Queries.Mixins
         /// the current Level index.
         /// </param>
         [Obsolete("No real use for it until now, probably will be replaced")]
-        public static ReferenceNode<TItem, TKey> GetLastRefNodeByItsValueFlatIndex<TItem, TKey>(ReferenceNode<TItem, TKey> node, int valueFlatIndex, UniqueKeyQueryState state, ref ValueOneTime[] offsets, int levelIndex = 0, int itemCountToTheLeft = 0)
+        public static ReferenceNode<TItem, TKey> GetLastRefNodeByItsValueFlatIndex<TItem, TKey>(ReferenceNode<TItem, TKey> node, int valueFlatIndex, UniqueKeyQueryState state, ref OneTimeValue[] offsets, int levelIndex = 0, int itemCountToTheLeft = 0)
         {
             levelIndex++;
             itemCountToTheLeft *= state.OptimumLenghtPerSegment;
@@ -95,7 +114,7 @@ namespace Rogue.FastLane.Queries.Mixins
             itemCountToTheLeft = currentIndex;
             
             (offsets ??
-                (offsets = new ValueOneTime[state.Levels.Length]))[levelIndex - 1] = new ValueOneTime { Value = currentIndex };
+                (offsets = new OneTimeValue[state.Levels.Length]))[levelIndex - 1] = new OneTimeValue { Value = currentIndex };
             
             if (node.Values != null) { return node; }
             
@@ -115,14 +134,23 @@ namespace Rogue.FastLane.Queries.Mixins
                 node;
         }
 
-        public static IEnumerable<ReferenceNode<TItem, TKey>> IterateTroughLowestReferences<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, ValueOneTime[] offsets)
+        public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefs<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, OneTimeValue[] offsets)
         {
             var iterator = 
                 new LowestReferencesEnumerable<TItem, TKey>();
 
             return iterator.FromHereOn(root, offsets);
         }
+        
+        //public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefsReverse<TItem, TKey>(
+        //    this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, OneTimeValue[] offsets)
+        //{
+        //    var iterator =
+        //        new LowestReverseReferencesEnumerable<TItem, TKey>();
+
+        //    return iterator.UpToHere(root, offsets);
+        //}
 	}
 }
 
