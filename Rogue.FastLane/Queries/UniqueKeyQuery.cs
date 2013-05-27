@@ -11,7 +11,7 @@ namespace Rogue.FastLane.Queries
     {
         public UniqueKeyQuery()
         {
-            Root = new ReferenceNode<TItem, TKey>();
+            Root = new ReferenceNode<TItem, TKey>() { Values = new ValueNode<TItem>[0], References = new ReferenceNode<TItem,TKey>[0] };
         }
 
         protected internal UniqueKeyQueryState State;
@@ -33,6 +33,8 @@ namespace Rogue.FastLane.Queries
                 SelectKey(node.Value);
 
             ValueOneTime[] offsets = null;
+
+            State = state;
 
             var closestRef =
                 this.FirstRefByUniqueKey(ref offsets);
@@ -67,7 +69,12 @@ namespace Rogue.FastLane.Queries
                     else
                     { nextFirstNode = childNode.Values[i]; }
                 }
-                childNode.Values[startAt] = nextFirstNode;
+
+                childNode.Values[startAt] = node;
+                childNode.Key = SelectKey(
+                    childNode.Values[childNode.Values.Length - 1].Value);
+
+                node = nextFirstNode;
             }
         }
 

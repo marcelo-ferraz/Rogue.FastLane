@@ -37,7 +37,9 @@ namespace Rogue.FastLane.Infrastructure
 
             for (int i = 0; i < ammountOfNodesPerLevel.Length; i++)
             {
-                ammountOfNodesPerLevel[i] = new Pair { Length = (int)Math.Ceiling(Math.Pow(optimumLength, i + 1) * percentage) };
+                ammountOfNodesPerLevel[i] = new Pair { 
+                    Index = levelCount,
+                    Length = (int)Math.Ceiling(Math.Pow(optimumLength, i + 1) * percentage) };
             }
             return ammountOfNodesPerLevel;
         }
@@ -47,6 +49,8 @@ namespace Rogue.FastLane.Infrastructure
             var newState = oldState != null ? 
                 oldState.PassOn() :
                 new UniqueKeyQueryState();
+
+            newState.MaxNumberOfIteractions = maxDesiredComparisons;
 
             newState.OptimumLenghtPerSegment = 
                 GetOptimumLength(maxDesiredComparisons);

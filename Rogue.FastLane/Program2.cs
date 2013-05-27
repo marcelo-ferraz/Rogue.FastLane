@@ -6,6 +6,7 @@ using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Queries;
+using System.Reflection;
 
 namespace Nhonho
 {
@@ -29,47 +30,6 @@ namespace Nhonho
         #endregion
         static void Main(string[] args)
         {
-            #region
-            var root = GetRef(12);
-			var count = 14;
-			
-            ReferenceNode<Pair, int> node;
-            root.References[0] = node = GetRefVal(4, parent: root);
-            node.Values[0] = GetVal(1);
-            node.Values[1] = GetVal(2);
-            node.Values[2] = GetVal(3);
-            node.Values[3] = GetVal(4);
-
-            root.References[1] = node = GetRefVal(9, parent: root);
-            node.Values[0] = GetVal(5);
-            node.Values[1] = GetVal(6);
-            node.Values[2] = GetVal(8);
-            node.Values[3] = GetVal(9);
-
-            root.References[2] = node = GetRefVal(13, parent: root);
-            node.Values[0] = GetVal(10);
-            node.Values[1] = GetVal(11);
-            node.Values[2] = GetVal(12);
-            node.Values[3] = GetVal(13);
-
-            root.References[3] = node = GetRefVal(15, 2, parent: root);
-            node.Values[0] = GetVal(15);
-            node.Values[1] = GetVal(16);
-            //root.References[3].Values[2] = GetVal(13);
-            #endregion
-
-            var state = new UniqueKeyQueryState {
-                Length = 14,
-                Levels = new []
-                {
-                    new Pair { Length = 4 },
-                    new Pair { Length = 14 },
-                },
-                MaxNumberOfIteractions = 10,
-                OptimumLenghtPerSegment = 4,
-                PercentageUsed = 14/16*100
-            };
-
             var query =
                 new UniqueKeyQuery<Pair, int>() { 
                      SelectKey = item => item.Index
@@ -80,6 +40,15 @@ namespace Nhonho
 
             structure.Add(new Pair() { Index = 3 });
             structure.Add(new Pair() { Index = 1 });
+            structure.Add(new Pair() { Index = 2 });
+
+            //var root = (ReferenceNode<Pair, int>)
+            var root = 
+                typeof(UniqueKeyQuery<,>)
+                .MakeGenericType(typeof(Pair), typeof(int))
+                .GetProperty("Root", BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetGetMethod(true)
+                .Invoke(query, null);
 
 
             //foreach (var n in NodeFetchingMixins.IterateTroughLowestReferences(root, offsets))

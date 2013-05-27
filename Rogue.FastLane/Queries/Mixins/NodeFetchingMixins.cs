@@ -27,15 +27,16 @@ namespace Rogue.FastLane.Queries.Mixins
             int index = (node ?? (node = self.Root))
                 .References.BinarySearch(k => self.CompareKeys(self.Key, k.Key));
 
-            (offsets ?? (offsets = new ValueOneTime[self.State.Levels.Length]))
+            (offsets ?? (offsets = new ValueOneTime[self.State.Levels.Length -1]))
                 [lvlIndex] = new ValueOneTime() { Value = index < 0 ? ~index : index };
+
+            if (node.Values != null) { return node; }
 
             var found =
                 node.References[index < 0 ? ~index : index];
 
-            return 
-                node.Values != null ? node : 
-                found != null ? FirstRefByUniqueKey(self, ref offsets, node, ++lvlIndex) : 
+            return found != null ? 
+                FirstRefByUniqueKey(self, ref offsets, node, ++lvlIndex) : 
                 null;
         }
 
