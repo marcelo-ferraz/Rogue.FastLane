@@ -9,8 +9,8 @@ namespace Rogue.FastLane.Queries.Mixins
 {
 	public static class NodeFetchingMixins
 	{
-        public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, Action<int, int> getCoordinates, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
+        public static ReferenceNode<TItem, TKey> GetRefByUniqueKey<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, Action<int, int, ReferenceNode<TItem, TKey>> getCoordinates, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
         {
             node = node ?? self.Root;
 
@@ -18,7 +18,7 @@ namespace Rogue.FastLane.Queries.Mixins
                 node.Values.BinarySearch(n => self.CompareKeys(self.Key, self.SelectKey(n.Value))) :
                 node.References.BinarySearch(n => self.CompareKeys(self.Key, n.Key));
 
-            getCoordinates(lvlIndex, index);
+            getCoordinates(lvlIndex, index, node);
 
             if (node.Values != null) { return node; }
 
@@ -26,7 +26,7 @@ namespace Rogue.FastLane.Queries.Mixins
                 node.References[index < 0 ? ~index : index];
 
             return found != null ?
-                FirstRefByUniqueKey(self, getCoordinates, node, ++lvlIndex) :
+                GetRefByUniqueKey(self, getCoordinates, node, ++lvlIndex) :
                 null;
         }
 
@@ -46,15 +46,53 @@ namespace Rogue.FastLane.Queries.Mixins
         public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref OneTimeValue[] offsets, ReferenceNode<TItem, TKey> node = null)
         {
-            var offs = offsets;
+            var offs = (offsets ?? (offsets = new OneTimeValue[self.State.Levels.Length - 1]));
             
-            var refNode = FirstRefByUniqueKey(
+            var refNode = GetRefByUniqueKey(
                 self, 
-                (lvlIndex, index) => 
-                    (offs ?? (offs = new OneTimeValue[self.State.Levels.Length - 1]))
-                    [lvlIndex] = new OneTimeValue() { Value = index < 0 ? ~index : index }, node);
+                (lvlIndex, index, n) => 
+                    offs[lvlIndex] = new OneTimeValue() { Value = index < 0 ? ~index : index }, node);
 
             offsets = offs;
+
+            return refNode;
+        }
+
+
+        /// <summary>
+        /// Retrieves the referenceNode next to a valuenode, and give it back a set of coordinates, to be used as offsets, when iterating
+        /// </summary>
+        /// <typeparam name="TItem">The type of the Item</typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="node"></param>
+        /// <param name="compareKeys"></param>
+        /// <param name="offsets"></param>
+        /// <param name="lvlCount"></param>
+        /// <param name="lvlIndex"></param>
+        /// <returns></returns>
+        public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, ref Coordinates[] absoluteCoordinates, ReferenceNode<TItem, TKey> node = null)
+        {
+            var coordinates = (absoluteCoordinates?? 
+                (absoluteCoordinates= new Coordinates[self.State.Levels.Length + 1/*- 1*/]));
+
+            int lastIndex = 0;
+
+            var refNode = GetRefByUniqueKey(
+                self,
+                (lvlIndex, index, n) => {
+                    coordinates[lvlIndex] = new Coordinates()
+                    {
+                        Length = (n.Parent != null ? n.Parent.References.Length : 0),
+                        Index = index < 0 ? ~index : index,
+                        FullFlatPosition = (index < 0 ? ~index : index) + (lvlIndex * lastIndex)
+                    };
+                    lastIndex = index;
+                }, 
+                    node);
+
+            absoluteCoordinates = coordinates;
 
             return refNode;
         }

@@ -51,6 +51,7 @@
     <Compile Include="Collections\LowestReferencesEnumerable.cs" />
     <Compile Include="Collections\Mixins\ArrayMixins.cs" />
     <Compile Include="Collections\LowestReverseReferencesEnumerable.cs" />
+    <Compile Include="Collections\State\Coordinates.cs" />
     <Compile Include="Collections\State\Pair.cs" />
     <Compile Include="Collections\State\StructState.cs" />
     <Compile Include="ProbableInsertioner.cs" />

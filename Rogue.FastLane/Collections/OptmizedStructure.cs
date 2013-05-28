@@ -47,12 +47,12 @@ namespace Rogue.FastLane.Collections
             }
 
             var newState =
-                StructCalculus.Calculate(State, Count + 1, 10);
+                StructCalculus.Calculate(State, Count + 1, 4);
 
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
             foreach (var q in Queries)
             {
-                q.AfterAdd(node, newState);
+                //q.AfterAdd(node, newState);
             }
             State = newState;
             Count++;

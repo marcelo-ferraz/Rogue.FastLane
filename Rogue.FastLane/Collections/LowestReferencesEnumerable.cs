@@ -8,35 +8,41 @@ namespace Rogue.FastLane.Collections
         public IEnumerable<ReferenceNode<TItem, TKey>> AllBellow(ReferenceNode<TItem, TKey> node)
         {
             // aqui só funciona do root em diante. Pensar em como deveria ser se pegasse de um refnode em diante
-            if (node.Values != null)
+            if (node != null)
             {
-                yield return node;
-            }
-            else if (node.References != null)
-            {
-                foreach (var child in node.References)
+                if (node.Values != null)
                 {
-                    foreach (var grandChild in AllBellow(child))
+                    yield return node;
+                }
+                else if (node.References != null)
+                {
+                    foreach (var child in node.References)
                     {
-                        yield return grandChild;
+                        foreach (var grandChild in AllBellow(child))
+                        {
+                            yield return grandChild;
+                        }
                     }
                 }
             }
-        }        
+        }
 
         public IEnumerable<ReferenceNode<TItem, TKey>> FromHereOn(ReferenceNode<TItem, TKey> node, OneTimeValue[] offsetPerLvl, int lvlIndex = 0)
         {
-            if (node.Values != null)
+            if (node != null)
             {
-                yield return node;
-            }
-            else if (node.References != null)
-            {
-                for (int i = offsetPerLvl[lvlIndex].Value; i < node.References.Length; i++)
+                if (node.Values != null)
                 {
-                    foreach (var child in FromHereOn(node.References[i], offsetPerLvl, lvlIndex))
+                    yield return node;
+                }
+                else if (node.References != null)
+                {
+                    for (int i = offsetPerLvl[lvlIndex].Value; i < node.References.Length; i++)
                     {
-                        yield return child;
+                        foreach (var child in FromHereOn(node.References[i], offsetPerLvl, lvlIndex))
+                        {
+                            yield return child;
+                        }
                     }
                 }
             }

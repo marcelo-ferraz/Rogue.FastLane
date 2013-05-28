@@ -4,7 +4,7 @@ using Rogue.FastLane.Collections.State;
 
 namespace Rogue.FastLane.Collections
 {
-    public class LowestReverseReferencesEnumerable<TItem, TKey>
+    public class LowestReferencesReverseEnumerable<TItem, TKey>
     {
         public IEnumerable<ReferenceNode<TItem, TKey>> AllBellow(ReferenceNode<TItem, TKey> node)
         {
