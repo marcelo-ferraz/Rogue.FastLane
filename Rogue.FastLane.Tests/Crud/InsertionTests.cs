@@ -12,10 +12,11 @@ using Rogue.FastLane.Collections.Items;
 namespace Rogue.FastLane.Tests.Crud
 {
     [TestFixture]
-    public class InsertionTests
+    public class InsertionTests: BaseNodeTest
     {
         private OptmizedStructure<Pair> _structure;
         private UniqueKeyQuery<Pair, int> _query;
+
         [SetUp]
         public void Setup()
         {
@@ -43,7 +44,6 @@ namespace Rogue.FastLane.Tests.Crud
                 .Invoke(_query, null);
 
             Assert.AreEqual(3, root.Key);
-            
         }
     }
 }

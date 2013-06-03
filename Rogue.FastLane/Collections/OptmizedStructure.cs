@@ -52,7 +52,7 @@ namespace Rogue.FastLane.Collections
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
             foreach (var q in Queries)
             {
-                //q.AfterAdd(node, newState);
+                q.AfterAdd(node, newState);
             }
             State = newState;
             Count++;

@@ -1,9 +1,16 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rogue.FastLane", "Rogue.FastLane.csproj", "{710C56E2-4DDA-4CE4-A867-31D1F7CBB38C}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rogue.FastLane", "Rogue.FastLane\Rogue.FastLane.csproj", "{710C56E2-4DDA-4CE4-A867-31D1F7CBB38C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rogue.FastLane.Tests", "..\Rogue.FastLane.Tests\Rogue.FastLane.Tests.csproj", "{05F84EE7-6B8F-4AD9-BE01-B1EF4D067422}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rogue.FastLane.Tests", "Rogue.FastLane.Tests\Rogue.FastLane.Tests.csproj", "{05F84EE7-6B8F-4AD9-BE01-B1EF4D067422}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FE58F28F-F13A-424A-9F77-01F3DC92EB71}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

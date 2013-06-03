@@ -4,6 +4,7 @@ using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries.Mixins;
+using System.Threading.Tasks;
 
 namespace Rogue.FastLane.Queries
 {
@@ -32,12 +33,12 @@ namespace Rogue.FastLane.Queries
             Key =
                 SelectKey(node.Value);
 
-            OneTimeValue[] offsets = null;
+            Coordinates[] coordinates = null;
 
             State = state;
 
             var closestRef =
-                this.FirstRefByUniqueKey(ref offsets);
+                this.FirstRefByUniqueKey(ref coordinates);
 
             var valueIndex = closestRef.Values.BinarySearch(
                 val =>
@@ -54,17 +55,36 @@ namespace Rogue.FastLane.Queries
                         this.AugmentValueCount(Root, 1);
                     }
 
-                    Insert(node, offsets);
+                    Insert(node, coordinates);
                 }
         }
 
-        private void Insert(ValueNode<TItem> node, OneTimeValue[] offsets)
+        private void Insert(ValueNode<TItem> node, Pair[] coordinateSet)
         {
             ValueNode<TItem> nextFirstNode = node;
-            var offset = offsets[offsets.Length - 1];
-            foreach (var childNode in this.IntoLowestRefs(Root, offsets))
+            var coordinates = coordinateSet[coordinateSet.Length - 1];
+
+            this.ForEachValuedNode(coordinateSet, 
+                (@ref, i) => { 
+                    
+                    /*
+                     * Como resolver o caso de acabarem os valores abaixo do reference node?
+                     * preciso manter a referencia do primeiro item e passar como ultimo do reference node anterior
+                     */
+                    
+                    var values = 
+                        @ref.Values;
+
+                    if (i > 0) { values[i] = values[i - 1]; }
+                    else {
+ 
+                    }
+
+                });
+
+            foreach (var childNode in this.IntoLowestRefsReverse(Root, coordinateSet))
             {
-                var finishIndex = offset.Value;
+                var finishIndex = 0;//coordinates.Value;
                 for (var i = childNode.Values.Length; i > finishIndex; i--)
                 {
                     if ((i - 1) < childNode.Values.Length)

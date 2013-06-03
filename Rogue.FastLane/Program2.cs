@@ -31,7 +31,7 @@ namespace Nhonho
         #endregion
         static void Main(string[] args)
         {
-            //TestReverseEnumerable();
+            TestReverseEnumerable();
 
             var query =
                 new UniqueKeyQuery<Pair, int>() { 
@@ -97,7 +97,7 @@ namespace Nhonho
 
             foreach (var item in @enum)
             {
-                System.Console.Write("Id: {0}" , item.Key);
+                System.Console.WriteLine("Id: {0}" , item.Key);
             }
 
 
@@ -112,7 +112,7 @@ namespace Nhonho
 
         private static ReferenceNode<Pair, int> GetRoot()
         {
-            var otherRoot = GetRef(12);
+            var otherRoot = GetRef(15);
 
             ReferenceNode<Pair, int> node;
             otherRoot.References[0] = node = GetRefVal(5, parent: otherRoot);

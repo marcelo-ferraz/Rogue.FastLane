@@ -4,6 +4,7 @@ using Rogue.FastLane.Collections.State;
 using System.Collections.Generic;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Mixins;
+using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
@@ -180,15 +181,32 @@ namespace Rogue.FastLane.Queries.Mixins
 
             return iterator.FromHereOn(root, offsets);
         }
-        
-        //public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefsReverse<TItem, TKey>(
-        //    this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, OneTimeValue[] offsets)
-        //{
-        //    var iterator =
-        //        new LowestReverseReferencesEnumerable<TItem, TKey>();
 
-        //    return iterator.UpToHere(root, offsets);
-        //}
+        public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefsReverse<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, Pair[] coordinates)
+        {
+            var iterator =
+                new LowestReferencesReverseEnumerable<TItem, TKey>();
+
+            return iterator.UpToHere(root, coordinates);
+        }
+
+        public static void ForEachValuedNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, 
+            Pair[] offsetPerLvl, Action<ReferenceNode<TItem, TKey>, int> inEach)
+        {
+            var lvlIndex =
+                offsetPerLvl.Length;
+
+            foreach (var @ref in IntoLowestRefsReverse(self, self.Root, offsetPerLvl))
+            {
+                offsetPerLvl[lvlIndex].Index++;
+
+                for (int i = @ref.Values.Length - 1; i > 0 && offsetPerLvl[lvlIndex].Index < offsetPerLvl[lvlIndex].Length; i--)
+                {
+                    inEach(@ref, i);
+                }
+            }
+        }
 	}
 }
 
