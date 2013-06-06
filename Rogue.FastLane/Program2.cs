@@ -31,37 +31,38 @@ namespace Nhonho
         #endregion
         static void Main(string[] args)
         {
-            TestReverseEnumerable();
+            //TestReverseEnumerable();
 
             var query =
-                new UniqueKeyQuery<Pair, int>() { 
-                     SelectKey = item => item.Index
+                new UniqueKeyQuery<Pair, int>()
+                {
+                    SelectKey = item => item.Index
                 };
 
-            var structure = 
+            var structure =
                 new OptmizedStructure<Pair>(query);
 
-            var root = (ReferenceNode<Pair, int>)
-                typeof(UniqueKeyQuery<,>)
-                .MakeGenericType(typeof(Pair), typeof(int))
-                .GetProperty("Root", BindingFlags.NonPublic | BindingFlags.Instance)
-                .GetGetMethod(true)
-                .Invoke(query, null);
+            //var root = (ReferenceNode<Pair, int>)
+            //    typeof(UniqueKeyQuery<,>)
+            //    .MakeGenericType(typeof(Pair), typeof(int))
+            //    .GetProperty("Root", BindingFlags.NonPublic | BindingFlags.Instance)
+            //    .GetGetMethod(true)
+            //    .Invoke(query, null);
 
-            query.Root = root = GetRoot();
+            //query.Root = root = GetRoot();
 
-            var iterator =
-                new LowestReferencesEnumerable<Pair, int>().AllBellow(query.Root);
+            //var iterator =
+            //    new LowestReferencesEnumerable<Pair, int>().AllBellow(query.Root);
 
-            foreach (var inp in iterator)
-            {
-                foreach (var val in inp.Values)
-                {
-                    structure.Add(val.Value);
-                }
-            }
+            //foreach (var inp in iterator)
+            //{
+            //    foreach (var val in inp.Values)
+            //    {
+            //        structure.Add(val.Value);
+            //    }
+            //}
 
-            query.State = structure.State;
+            //query.State = structure.State;
 
             //typeof(OptmizedStructure<>)
             //    .MakeGenericType(typeof(Pair))
@@ -69,13 +70,13 @@ namespace Nhonho
             //    .GetSetMethod(true)
             //    .Invoke(structure, new [] { root });
 
-            query.Root = root;
+            //query.Root = root;
 
 
-            Coordinates[] coordinates = null;
+            //Coordinates[] coordinates = null;
 
-            query.Key = 3;
-            var first = query.FirstRefByUniqueKey(ref coordinates);
+            //query.Key = 3;
+            //var first = query.FirstRefByUniqueKey(ref coordinates);
 
             structure.Add(new Pair() { Index = 3 });
             structure.Add(new Pair() { Index = 1 });

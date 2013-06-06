@@ -12,7 +12,7 @@ namespace Rogue.FastLane.Queries
     {
         public UniqueKeyQuery()
         {
-            Root = new ReferenceNode<TItem, TKey>() { Values = new ValueNode<TItem>[0], References = new ReferenceNode<TItem,TKey>[0] };
+            Root = new ReferenceNode<TItem, TKey>() { Values = new ValueNode<TItem>[0] };
         }
 
         protected internal UniqueKeyQueryState State;
@@ -59,46 +59,29 @@ namespace Rogue.FastLane.Queries
                 }
         }
 
-        private void Insert(ValueNode<TItem> node, Pair[] coordinateSet)
+        private void Insert(ValueNode<TItem> node, Coordinates[] coordinateSet)
         {
-            ValueNode<TItem> nextFirstNode = node;
+            ReferenceNode<TItem, TKey> previousRef = null;
             var coordinates = coordinateSet[coordinateSet.Length - 1];
 
             this.ForEachValuedNode(coordinateSet, 
                 (@ref, i) => { 
-                    
-                    /*
-                     * Como resolver o caso de acabarem os valores abaixo do reference node?
-                     * preciso manter a referencia do primeiro item e passar como ultimo do reference node anterior
-                     */
-                    
-                    var values = 
-                        @ref.Values;
-
-                    if (i > 0) { values[i] = values[i - 1]; }
-                    else {
- 
+                    if (i < 1)
+                    { 
+                        previousRef = @ref;
+                        return;
                     }
 
-                });
-
-            foreach (var childNode in this.IntoLowestRefsReverse(Root, coordinateSet))
-            {
-                var finishIndex = 0;//coordinates.Value;
-                for (var i = childNode.Values.Length; i > finishIndex; i--)
-                {
-                    if ((i - 1) < childNode.Values.Length)
-                    { childNode.Values[i + 1] = childNode.Values[i]; }
+                    if (previousRef != null)
+                    {
+                        @ref.Values[i] =
+                            @ref.Values[i - 1];
+                    }
                     else
-                    { nextFirstNode = childNode.Values[i]; }
-                }
-
-                childNode.Values[finishIndex] = node;
-                childNode.Key = SelectKey(
-                    childNode.Values[childNode.Values.Length - 1].Value);
-
-                node = nextFirstNode;
-            }
+                    {
+                        previousRef.Values[i] = @ref.Values[i];
+                    }
+                });
         }
 
         public override void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state)

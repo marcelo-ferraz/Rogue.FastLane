@@ -38,7 +38,7 @@ namespace Rogue.FastLane.Infrastructure
             for (int i = 0; i < ammountOfNodesPerLevel.Length; i++)
             {
                 ammountOfNodesPerLevel[i] = new Pair { 
-                    Index = levelCount,
+                    Index = i,
                     Length = (int)Math.Ceiling(Math.Pow(optimumLength, i + 1) * percentage) };
             }
             return ammountOfNodesPerLevel;

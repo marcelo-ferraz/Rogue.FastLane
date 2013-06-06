@@ -18,7 +18,10 @@ namespace Rogue.FastLane.Collections
         public OptmizedStructure(params IQuery<TItem>[] queries)
         {
             Queries = queries;
+            MaxDesiredComparisons = 5;
         }
+
+        protected int MaxDesiredComparisons;
 
         protected IQuery<TItem>[] Queries;
 
@@ -47,13 +50,14 @@ namespace Rogue.FastLane.Collections
             }
 
             var newState =
-                StructCalculus.Calculate(State, Count + 1, 4);
+                StructCalculus.Calculate(State, Count + 1, MaxDesiredComparisons);
 
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
             foreach (var q in Queries)
             {
                 q.AfterAdd(node, newState);
             }
+
             State = newState;
             Count++;
         }

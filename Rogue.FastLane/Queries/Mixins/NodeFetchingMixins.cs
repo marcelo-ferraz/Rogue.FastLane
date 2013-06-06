@@ -83,15 +83,20 @@ namespace Rogue.FastLane.Queries.Mixins
             var refNode = GetRefByUniqueKey(
                 self,
                 (lvlIndex, index, n) => {
-                    coordinates[lvlIndex] = new Coordinates()
+                    var coord = new Coordinates()
                     {
-                        Length = (n.Parent != null ? n.Parent.References.Length : 0),
-                        Index = index < 0 ? ~index : index,
-                        FullFlatPosition = (index < 0 ? ~index : index) + (lvlIndex * lastIndex)
+                        Length = n.Parent != null ? n.Parent.References.Length : 0,
+                        Index = index < 0 ? ~index : index,                        
                     };
+
+                    coord.FullFlatPosition = 
+                        coord.Index + (lvlIndex * coord.Length);
+                    
+                    coordinates[lvlIndex] = coord;
+                    
                     lastIndex = index;
                 }, 
-                    node);
+                node);
 
             absoluteCoordinates = coordinates;
 
