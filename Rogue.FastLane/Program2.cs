@@ -67,6 +67,7 @@ namespace Nhonho
             //typeof(OptmizedStructure<>)
             //    .MakeGenericType(typeof(Pair))
             //    .GetProperty("Root", BindingFlags.NonPublic | BindingFlags.Instance)
+            //    .GetProperty("Root", BindingFlags.NonPublic | BindingFlags.Instance)
             //    .GetSetMethod(true)
             //    .Invoke(structure, new [] { root });
 
@@ -80,7 +81,11 @@ namespace Nhonho
 
             structure.Add(new Pair() { Index = 3 });
             structure.Add(new Pair() { Index = 1 });
-            structure.Add(new Pair() { Index = 2 });            
+            structure.Add(new Pair() { Index = 2 });
+            structure.Add(new Pair() { Index = 4 });
+            structure.Add(new Pair() { Index = 5 });
+            structure.Add(new Pair() { Index = 7 });
+            structure.Add(new Pair() { Index = 6 });            
 		}
 
         private static void TestReverseEnumerable()

@@ -69,7 +69,7 @@ namespace Rogue.FastLane.Queries.Mixins
                 state.Length + itemAmmountToSum;
 
             double totalOfSpacesCount =
-                Math.Pow(state.OptimumLenghtPerSegment, state.Levels.Length);
+                Math.Pow(state.OptimumLenghtPerSegment, state.Levels.Length - 1);
 
             //if there is not enough room for this new item
             if (totalOfSpacesCount < newLength)
@@ -87,8 +87,8 @@ namespace Rogue.FastLane.Queries.Mixins
         }
 
         public static bool NeedsAugmentation<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> refNode, int itemAmmountToSum)
-        { 
-            return refNode.Values.Length < self.State.OptimumLenghtPerSegment + itemAmmountToSum;
+        {
+            return (refNode.Values.Length + itemAmmountToSum) <= self.State.OptimumLenghtPerSegment;
         }
 	}
 }

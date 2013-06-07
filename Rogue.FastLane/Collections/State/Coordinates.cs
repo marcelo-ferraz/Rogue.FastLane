@@ -7,6 +7,6 @@ namespace Rogue.FastLane.Collections.State
 {
     public class Coordinates :Pair
     {
-        public int FullFlatPosition { get; set; }
+        public int OverallIndex { get; set; }
     }
 }

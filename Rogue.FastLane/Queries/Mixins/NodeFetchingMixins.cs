@@ -8,8 +8,25 @@ using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
-	public static class NodeFetchingMixins
-	{
+    public static class NodeFetchingMixins
+    {
+        private static int GetOverallIndex<TItem, TKey>(ReferenceNode<TItem, TKey> nodeRef, int coordPos, Coordinates coord)
+        {
+            if (nodeRef.Parent == null) { return coord.Index; }
+
+            var restCount = 
+                //is root
+                nodeRef.Parent == null ? 0 :
+                
+                nodeRef.Values.Length > 0 ?
+                //has values
+                nodeRef.Parent.Values.Length - 1 * coordPos :
+                //has no values
+                0;
+
+            return coord.Index + restCount;
+        }
+
         public static ReferenceNode<TItem, TKey> GetRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, Action<int, int, ReferenceNode<TItem, TKey>> getCoordinates, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
         {
@@ -48,10 +65,10 @@ namespace Rogue.FastLane.Queries.Mixins
             this UniqueKeyQuery<TItem, TKey> self, ref OneTimeValue[] offsets, ReferenceNode<TItem, TKey> node = null)
         {
             var offs = (offsets ?? (offsets = new OneTimeValue[self.State.Levels.Length - 1]));
-            
+
             var refNode = GetRefByUniqueKey(
-                self, 
-                (lvlIndex, index, n) => 
+                self,
+                (lvlIndex, index, n) =>
                     offs[lvlIndex] = new OneTimeValue() { Value = index < 0 ? ~index : index }, node);
 
             offsets = offs;
@@ -75,32 +92,63 @@ namespace Rogue.FastLane.Queries.Mixins
         public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref Coordinates[] absoluteCoordinates, ReferenceNode<TItem, TKey> node = null)
         {
-            var coordinates = (absoluteCoordinates?? 
-                (absoluteCoordinates= new Coordinates[self.State.Levels.Length + 1/*- 1*/]));
+            var coordinates = (absoluteCoordinates ??
+                (absoluteCoordinates = new Coordinates[self.State.Levels.Length]));
 
             int lastIndex = 0;
 
             var refNode = GetRefByUniqueKey(
                 self,
-                (lvlIndex, index, n) => {
+                (lvlIndex, index, n) =>
+                {
                     var coord = new Coordinates()
                     {
                         Length = n.Parent != null ? n.Parent.References.Length : 0,
-                        Index = index < 0 ? ~index : index,                        
+                        Index = index < 0 ? ~index : index,
                     };
 
-                    coord.FullFlatPosition = 
+                    coord.OverallIndex =
                         coord.Index + (lvlIndex * coord.Length);
-                    
+
                     coordinates[lvlIndex] = coord;
-                    
+
                     lastIndex = index;
-                }, 
+                },
                 node);
 
             absoluteCoordinates = coordinates;
 
             return refNode;
+        }
+
+        public static int FirstValueIndexByUniqueKey<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, ref Coordinates[] absoluteCoordinates, ref ReferenceNode<TItem, TKey> closestRef)
+        {
+            closestRef = FirstRefByUniqueKey(
+                self, ref absoluteCoordinates);
+
+            if (closestRef == null) { return -1; }
+
+            var index = closestRef.Values.BinarySearch(
+                val =>
+                    self.CompareKeys(self.Key, self.SelectKey(val.Value)));
+            
+            var coordPos = 
+                absoluteCoordinates.Length - 1;
+
+            var coord = 
+                new Coordinates() 
+                {
+                    Index = index < 0 ? ~index : index,
+                    Length = closestRef.Values.Length,        
+                };
+
+            coord.OverallIndex =  
+                GetOverallIndex<TItem, TKey>(closestRef, coordPos, coord);
+            
+            absoluteCoordinates[coordPos] = coord;
+            
+            return index;
         }
 
         /// <summary>
@@ -126,92 +174,12 @@ namespace Rogue.FastLane.Queries.Mixins
             return found != null ? FirstRefByUniqueKey(self, found) : null;
         }
 
-
-        /// <summary>
-        /// Gets the reference node that holds the value. This value is gotten by the following algorithm:  valueFlatIndex/(state.Length/state.OptimumLenghtPerSegment ^ levelIndex)
-        /// </summary>
-        /// <returns>
-        /// The reference node.
-        /// </returns>
-        /// <param name='node'>
-        /// The Node that holds the persued one.
-        /// </param>
-        /// <param name='valueFlatIndex'>
-        /// The flat index of the Value.
-        /// <remarks>The index keeps in mind that the final list is all just the same list</remarks>
-        /// </param>
-        /// <param name='offsets'>
-        /// the selectors State.
-        /// </param>
-        /// <param name='levelIndex'>
-        /// the current Level index.
-        /// </param>
-        [Obsolete("No real use for it until now, probably will be replaced")]
-        public static ReferenceNode<TItem, TKey> GetLastRefNodeByItsValueFlatIndex<TItem, TKey>(ReferenceNode<TItem, TKey> node, int valueFlatIndex, UniqueKeyQueryState state, ref OneTimeValue[] offsets, int levelIndex = 0, int itemCountToTheLeft = 0)
-        {
-            levelIndex++;
-            itemCountToTheLeft *= state.OptimumLenghtPerSegment;
-            //through This value is got by the following algorithm:  valueFlatIndex/(state.Length/state.OptimumLenghtPerSegment ^ levelIndex)
-            int currentIndex = (int)Math.Floor(
-                (double)(valueFlatIndex / (state.Length / Math.Pow(state.OptimumLenghtPerSegment, levelIndex))) - itemCountToTheLeft) - 1;
-
-            itemCountToTheLeft = currentIndex;
-            
-            (offsets ??
-                (offsets = new OneTimeValue[state.Levels.Length]))[levelIndex - 1] = new OneTimeValue { Value = currentIndex };
-            
-            if (node.Values != null) { return node; }
-            
-            return GetLastRefNodeByItsValueFlatIndex(
-                node.References[currentIndex],
-                valueFlatIndex,
-                state,
-                ref offsets,
-                levelIndex,
-                itemCountToTheLeft);
-        }
-        
         public static ReferenceNode<TItem, TKey> GetLastRefNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
         {
             return (node ?? (node = self.Root)).Values == null ?
-                GetLastRefNode(self, node.References[node.References.Length -1]) : 
+                GetLastRefNode(self, node.References[node.References.Length - 1]) :
                 node;
         }
-
-        public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefs<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, OneTimeValue[] offsets)
-        {
-            var iterator = 
-                new LowestReferencesEnumerable<TItem, TKey>();
-
-            return iterator.FromHereOn(root, offsets);
-        }
-
-        public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefsReverse<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, Pair[] coordinates)
-        {
-            var iterator =
-                new LowestReferencesReverseEnumerable<TItem, TKey>();
-
-            return iterator.UpToHere(root, coordinates);
-        }
-
-        public static void ForEachValuedNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, 
-            Pair[] offsetPerLvl, Action<ReferenceNode<TItem, TKey>, int> inEach)
-        {
-            var lvlIndex =
-                offsetPerLvl.Length;
-
-            foreach (var @ref in IntoLowestRefsReverse(self, self.Root, offsetPerLvl))
-            {
-                offsetPerLvl[lvlIndex].Index++;
-
-                for (int i = @ref.Values.Length - 1; i > 0 && offsetPerLvl[lvlIndex].Index < offsetPerLvl[lvlIndex].Length; i--)
-                {
-                    inEach(@ref, i);
-                }
-            }
-        }
-	}
+    }
 }
 

@@ -32,55 +32,44 @@ namespace Rogue.FastLane.Queries
         {
             Key =
                 SelectKey(node.Value);
+            State = state;
 
             Coordinates[] coordinates = null;
 
-            State = state;
+            ReferenceNode<TItem, TKey> closestRef = null;
 
-            var closestRef =
-                this.FirstRefByUniqueKey(ref coordinates);
-
-            var valueIndex = closestRef.Values.BinarySearch(
-                val =>
-                    CompareKeys(Key, SelectKey(val.Value)));
+            var valueIndex =
+                this.FirstValueIndexByUniqueKey(ref coordinates, ref closestRef);
 
             //talvez nao seja necessário realizar o update, ja que o mesmo ja acontece antes, com outro ponteiro, na estrutura real
-            if (valueIndex >= 0)
-            { closestRef.Values[valueIndex] = node; }
-            else
-                if (valueIndex < 0)
-                {
-                    if(this.NeedsAugmentation(closestRef, 1))
-                    {
-                        this.AugmentValueCount(Root, 1);
-                    }
+            if (valueIndex >= 0) { return; }
 
-                    Insert(node, coordinates);
-                }
+            if (this.NeedsAugmentation(closestRef, 1))
+            {
+                this.AugmentValueCount(Root, 1);
+            }
+
+            MoveAll(coordinates);
+
+            closestRef.Values[~valueIndex] = node;
         }
 
-        private void Insert(ValueNode<TItem> node, Coordinates[] coordinateSet)
+        private void MoveAll(Coordinates[] coordinateSet)
         {
             ReferenceNode<TItem, TKey> previousRef = null;
             var coordinates = coordinateSet[coordinateSet.Length - 1];
 
             this.ForEachValuedNode(coordinateSet, 
                 (@ref, i) => { 
-                    if (i < 1)
-                    { 
-                        previousRef = @ref;
-                        return;
-                    }
-
-                    if (previousRef != null)
-                    {
-                        @ref.Values[i] =
-                            @ref.Values[i - 1];
-                    }
+                    
+                    if (i < 1) 
+                    { previousRef = @ref; } 
+                    
+                    else if (previousRef == null)
+                    { @ref.Values[i] = @ref.Values[i - 1]; }
+                    
                     else
-                    {
-                        previousRef.Values[i] = @ref.Values[i];
-                    }
+                    { previousRef.Values[i] = @ref.Values[i]; }
                 });
         }
 
