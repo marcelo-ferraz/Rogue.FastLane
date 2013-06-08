@@ -29,19 +29,26 @@ namespace Rogue.FastLane.Queries.Mixins
         }
 
         public static void ForEachValuedNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, 
-            Coordinates[] offsetPerLvl, Action<ReferenceNode<TItem, TKey>, int> inEach)
+            Coordinates[] offsetPerLvl, Action<ReferenceNode<TItem, TKey>, int> inEach, Action<ReferenceNode<TItem, TKey>> withLast)
         {
             var offset =
                 offsetPerLvl[offsetPerLvl.Length - 1];
-
-            foreach (var @ref in IntoLowestRefsReverse(self, self.Root, offsetPerLvl))
+            
+            ReferenceNode<TItem, TKey> @ref = null;
+            var iterator = 
+                IntoLowestRefsReverse(self, self.Root, offsetPerLvl).GetEnumerator();
+            
+            while (iterator.MoveNext())
             {
+                @ref = iterator.Current;
                 for (int i = @ref.Values.Length - 1; i > 0 && offset.OverallIndex < offset.Length; i--)
                 {
                     offset.OverallIndex++;
                     inEach(@ref, i);
                 }
             }
+
+            //withLast(@ref);
         }
 	}
 }

@@ -44,34 +44,18 @@ namespace Rogue.FastLane.Queries
             //talvez nao seja necessário realizar o update, ja que o mesmo ja acontece antes, com outro ponteiro, na estrutura real
             if (valueIndex >= 0) { return; }
 
+            bool hadAugment = false;
             if (this.NeedsAugmentation(closestRef, 1))
             {
-                this.AugmentValueCount(Root, 1);
+                this.AugmentValueCount(1);
             }
 
-            MoveAll(coordinates);
-
+            this.MoveAndInsert(coordinates, node);
+            //until this, seems to be accetable
+            //now has to re-find, or recalculate the position finding the right reference node
             closestRef.Values[~valueIndex] = node;
         }
 
-        private void MoveAll(Coordinates[] coordinateSet)
-        {
-            ReferenceNode<TItem, TKey> previousRef = null;
-            var coordinates = coordinateSet[coordinateSet.Length - 1];
-
-            this.ForEachValuedNode(coordinateSet, 
-                (@ref, i) => { 
-                    
-                    if (i < 1) 
-                    { previousRef = @ref; } 
-                    
-                    else if (previousRef == null)
-                    { @ref.Values[i] = @ref.Values[i - 1]; }
-                    
-                    else
-                    { previousRef.Values[i] = @ref.Values[i]; }
-                });
-        }
 
         public override void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state)
         {

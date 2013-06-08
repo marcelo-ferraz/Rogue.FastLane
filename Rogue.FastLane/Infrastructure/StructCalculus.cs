@@ -52,7 +52,7 @@ namespace Rogue.FastLane.Infrastructure
 
             newState.MaxNumberOfIteractions = maxDesiredComparisons;
 
-            newState.OptimumLenghtPerSegment = 
+            newState.MaxLenghtPerSegment = 
                 GetOptimumLength(maxDesiredComparisons);
 
             newState.Length = newLenght;
@@ -60,12 +60,12 @@ namespace Rogue.FastLane.Infrastructure
             var lenght = newLenght;
             
             int levelCount = 
-                HowManyLevelsShouldExist(ref lenght, newState.OptimumLenghtPerSegment);
+                HowManyLevelsShouldExist(ref lenght, newState.MaxLenghtPerSegment);
 
             if (newState.Levels == null || newState.Levels.Length != levelCount)
             { 
                 newState.Levels = 
-                    GetQtdOfNodesPerLevel(newLenght, newState.OptimumLenghtPerSegment, levelCount);                 
+                    GetQtdOfNodesPerLevel(newLenght, newState.MaxLenghtPerSegment, levelCount);                 
             }
 
             return newState;

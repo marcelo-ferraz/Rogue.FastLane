@@ -73,9 +73,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\Mixins\NodeIterationMixins.cs" />
+    <Compile Include="Queries\Mixins\NodeMixins.cs" />
     <Compile Include="Queries\SimpleQuery.cs" />
     <Compile Include="Queries\UniqueKeyQuery.cs" />
-    <Compile Include="Queries\Mixins\AugmentMixins.cs" />
+    <Compile Include="Queries\Mixins\AugmentationMixins.cs" />
     <Compile Include="Queries\Mixins\NodeFetchingMixins.cs" />
   </ItemGroup>
   <ItemGroup>
