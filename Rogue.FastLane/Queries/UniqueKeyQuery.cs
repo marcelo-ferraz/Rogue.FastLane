@@ -4,6 +4,7 @@ using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries.Mixins;
+using Rogue.FastLane.Collections.Items.Mixins;
 using System.Threading.Tasks;
 
 namespace Rogue.FastLane.Queries
@@ -39,21 +40,36 @@ namespace Rogue.FastLane.Queries
             ReferenceNode<TItem, TKey> closestRef = null;
 
             var valueIndex =
-                this.FirstValueIndexByUniqueKey(ref coordinates, ref closestRef);
+                this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
 
             //talvez nao seja necessário realizar o update, ja que o mesmo ja acontece antes, com outro ponteiro, na estrutura real
             if (valueIndex >= 0) { return; }
 
-            bool hadAugment = false;
-            if (this.NeedsAugmentation(closestRef, 1))
-            {
-                this.AugmentValueCount(1);
-            }
-
+            this.AugmentValueCount(1);
+            
             this.MoveAndInsert(coordinates, node);
             //until this, seems to be accetable
             //now has to re-find, or recalculate the position finding the right reference node
-            closestRef.Values[~valueIndex] = node;
+            Insert(node, closestRef, ~valueIndex, coordinates);
+        }
+
+        private void Insert(ValueNode<TItem> node, ReferenceNode<TItem, TKey> closestRef, int index, Coordinates[] coordinateSet)
+        {
+            if (closestRef.Values == null)
+            {
+                index = 
+                    this.GetValueIndexByUniqueKey(ref coordinateSet, ref closestRef);
+            }
+
+            if (index < closestRef.Values.Length)
+            {
+                closestRef.Values[index] = node;
+            }
+            else 
+            {
+                (closestRef.Next(coordinateSet).Values ??
+                    (closestRef.Next(coordinateSet).Values = new ValueNode<TItem>[1]))[0] = node;
+            }
         }
 
 

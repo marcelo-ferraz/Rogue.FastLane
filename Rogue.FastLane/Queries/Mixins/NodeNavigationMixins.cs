@@ -8,7 +8,7 @@ using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
-    public static class NodeFetchingMixins
+    public static class NodeNavigationMixins
     {
         private static int GetOverallIndex<TItem, TKey>(ReferenceNode<TItem, TKey> nodeRef, int coordPos, Coordinates coord)
         {
@@ -121,9 +121,12 @@ namespace Rogue.FastLane.Queries.Mixins
             return refNode;
         }
 
-        public static int FirstValueIndexByUniqueKey<TItem, TKey>(
+        public static int GetValueIndexByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref Coordinates[] absoluteCoordinates, ref ReferenceNode<TItem, TKey> closestRef)
         {
+            absoluteCoordinates = 
+                new Coordinates[self.State.Levels.Length];
+
             closestRef = FirstRefByUniqueKey(
                 self, ref absoluteCoordinates);
 

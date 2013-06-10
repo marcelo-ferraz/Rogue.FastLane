@@ -67,7 +67,10 @@ namespace Rogue.FastLane.Queries.Mixins
         {
             //if there is not enough room for this new item
             if (self.Needs2AugmentLevelCount(itemAmmountToSum))
-            { self.AugmentLevelCount(itemAmmountToSum); }
+            { 
+                self.AugmentLevelCount(itemAmmountToSum); 
+                
+            }
 
             var nodeFound =
                 self.GetLastRefNode(self.Root);
@@ -85,7 +88,7 @@ namespace Rogue.FastLane.Queries.Mixins
 
             TryResizeReferences(node.Parent, state, toSum);
 
-            if (node.References.Length > state.MaxLenghtPerSegment)
+            if (node.References.Length > state.MaxLengthPerNode)
             {
                 node.References.Resize(
                     node.References.Length + 1);
@@ -97,7 +100,7 @@ namespace Rogue.FastLane.Queries.Mixins
 
         private static void TryResizeValues<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node, int toSum)
         {
-            if (node.Values.Length > self.State.MaxLenghtPerSegment)
+            if (node.Values.Length > self.State.MaxLengthPerNode)
             {
                 node = self.GetLastRefNode(self.Root);
             }
@@ -105,22 +108,14 @@ namespace Rogue.FastLane.Queries.Mixins
             node.Values = node.Values
                 .Resize(node.Values.Length + toSum);
         }
-
-        public static bool NeedsAugmentation<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> refNode, int itemAmmountToSum)
-        {
-            return (refNode.Values.Length + itemAmmountToSum) <= self.State.MaxLenghtPerSegment;
-        }
-
+        
         public static bool Needs2AugmentLevelCount<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, int itemAmmountToSum)
         {
-            double newLength =
-                self.State.Length + itemAmmountToSum;
-
             double totalOfSpacesCount =
-                Math.Pow(self.State.MaxLenghtPerSegment, self.State.Levels.Length - 1);
+                Math.Pow(self.State.MaxLengthPerNode, self.State.Levels.Length - 1);
 
             //if there is not enough room for this new item
-            return totalOfSpacesCount < newLength;
+            return totalOfSpacesCount < self.State.Length;
         }
 	}
 }

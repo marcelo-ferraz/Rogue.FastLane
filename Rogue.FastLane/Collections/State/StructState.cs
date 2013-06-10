@@ -9,7 +9,7 @@ namespace Rogue.FastLane.Collections.State
     {
         public int Length { get; set; }
         public int PercentageUsed { get; set; }
-        public int MaxLenghtPerSegment { get; set; }
+        public int MaxLengthPerNode { get; set; }
         public int MaxNumberOfIteractions { get; set; }
         
         public Pair[] Levels { get; set; }
@@ -21,7 +21,7 @@ namespace Rogue.FastLane.Collections.State
                 {
                     Length = Length,
                     PercentageUsed = PercentageUsed,
-                    MaxLenghtPerSegment = MaxLenghtPerSegment,
+                    MaxLengthPerNode = MaxLengthPerNode,
                     Levels = new Pair[Levels.Length]
                 };
             

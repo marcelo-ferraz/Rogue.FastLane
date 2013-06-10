@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\Items\Mixins\NodeMixins.cs" />
     <Compile Include="Collections\LowestReferencesEnumerable.cs" />
     <Compile Include="Collections\Mixins\ArrayMixins.cs" />
     <Compile Include="Collections\LowestReverseReferencesEnumerable.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="Queries\SimpleQuery.cs" />
     <Compile Include="Queries\UniqueKeyQuery.cs" />
     <Compile Include="Queries\Mixins\AugmentationMixins.cs" />
-    <Compile Include="Queries\Mixins\NodeFetchingMixins.cs" />
+    <Compile Include="Queries\Mixins\NodeNavigationMixins.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
