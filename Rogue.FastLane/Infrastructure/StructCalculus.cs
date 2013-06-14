@@ -1,48 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Rogue.FastLane.Collections.State;
+using Rogue.FastLane.Queries.State;
 
 namespace Rogue.FastLane.Infrastructure
 {
     public static class StructCalculus
     {
-        public static int GetworstCaseNumberOfComparisons(int listCount)
+        public static int GetMaxComparisons(int totalLength)
         {
             return (int)
-                (2 * Math.Log(listCount - 1, 2));
+                (2 * Math.Log(totalLength - 1, 2));
         }
 
-        public static int GetOptimumLength(int maxComparisons)
+        public static int GetMaxLength(int maxComparisons)
         {
             return (int) // the inverse of 2*log_2(qtd - 1) 
                 Math.Round(Math.Pow(2, (maxComparisons / 2)) + 1);
         }
 
-        public static int CountLevels(int length, int maxLenght)
+        public static int CountLevels(int length, int maxLength)
         {
-            return (int) // inverse of lvlCount^maxLenght = totalLength
-                Math.Ceiling(Math.Log(length != 1 ? length : 2, maxLenght)) + 1;
+            #region explanation
+            /* 
+                to get the level count, I get the inverse of lvlCount^maxLenght = totalLength, 
+                obs.: logarithm of anything smaller than 2, will result in 0, wich is not the desired behaviour, the minimum is 1
+             */
+            #endregion
+            return (int) 
+                Math.Ceiling(Math.Log(length < 2 ? length : 2, maxLength)) + 1;
         }
-
-        public static Pair[] GetQtdOfNodesPerLevel(int structureLenght, int optimumLength, int levelCount)
-        {
-            var ammountOfNodesPerLevel = new Pair[levelCount];
-
-            double percentage = structureLenght / Math.Pow(optimumLength, levelCount);
-
-            for (int i = 0; i < ammountOfNodesPerLevel.Length; i++)
-            {
-                ammountOfNodesPerLevel[i] = new Pair
-                {
-                    Index = i,
-                    Length = (int)Math.Ceiling(Math.Pow(optimumLength, i + 1) * percentage)
-                };
-            }
-            return ammountOfNodesPerLevel;
-        }
-
+        
         public static UniqueKeyQueryState Calculate(int totalLength, int maxComparisons)
         {
             var state =
@@ -52,20 +38,19 @@ namespace Rogue.FastLane.Infrastructure
                 maxComparisons;
 
             state.MaxLengthPerNode =
-                GetOptimumLength(maxComparisons);
+                GetMaxLength(maxComparisons);
 
-            state.LevelCount =
-                CountLevels(totalLength, state.MaxLengthPerNode);
+            state.LevelCount = CountLevels(
+                totalLength, state.MaxLengthPerNode);
 
-            int j =
-                state.LevelCount + 1;
+            int j = state
+                .LevelCount + 1;
             for (int i = 0; i < state.LevelCount; i++)
             {
                 state.Levels[i] =
                     new UniqueKeyQueryState.Level
                     {
                         Index = i,
-                        // 
                         TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
                         TotalUsed = (int)Math.Ceiling(Math.Pow(totalLength, 1 / j))
                     };

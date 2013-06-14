@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rogue.FastLane.Collections.State
+namespace Rogue.FastLane.Queries.State
 {
     public class UniqueKeyQueryState
     {

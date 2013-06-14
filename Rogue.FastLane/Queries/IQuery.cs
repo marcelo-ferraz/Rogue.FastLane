@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.State;
+using Rogue.FastLane.Queries.State;
 
 namespace Rogue.FastLane.Queries
 {

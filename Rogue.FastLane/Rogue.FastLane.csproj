@@ -59,7 +59,7 @@
     <Compile Include="Collections\LowestReverseReferencesEnumerable.cs" />
     <Compile Include="Collections\State\Coordinates.cs" />
     <Compile Include="Collections\State\Pair.cs" />
-    <Compile Include="Collections\State\UniqueKeyQueryState.cs" />
+    <Compile Include="Queries\State\UniqueKeyQueryState.cs" />
     <Compile Include="ProbableInsertioner.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="Infrastructure\StructCalculus.cs" />

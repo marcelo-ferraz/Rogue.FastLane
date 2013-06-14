@@ -4,6 +4,7 @@ using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Queries.Mixins;
+using Rogue.FastLane.Queries.State;
 
 namespace Rogue.FastLane.Queries.Mixins
 {

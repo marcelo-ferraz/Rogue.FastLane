@@ -10,6 +10,7 @@ using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Infrastructure;
+using Rogue.FastLane.Queries.State;
 
 namespace Rogue.FastLane.Collections
 {
