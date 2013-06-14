@@ -14,19 +14,16 @@ namespace Rogue.FastLane.Infrastructure
                 (2 * Math.Log(listCount - 1, 2));
         }
 
-        public static int GetOptimumLength(int maxDesiredComparisons)
+        public static int GetOptimumLength(int maxComparisons)
         {
-            return //função inversa para achar a quantidade de interações no pior cenário
-                (int)Math.Round(Math.Pow(2, (maxDesiredComparisons / 2)) + 1);
+            return (int) // the inverse of 2*log_2(qtd - 1) 
+                Math.Round(Math.Pow(2, (maxComparisons / 2)) + 1);
         }
 
-        public static int HowManyLevelsShouldExist(ref int length, int optimumLength, int level = 2)
+        public static int CountLevels(int length, int maxLenght)
         {
-            length = (int)Math.Ceiling((double)length / optimumLength);
-
-            return length > optimumLength ?
-                HowManyLevelsShouldExist(ref length, optimumLength, ++level) :
-                level;
+            return (int) // inverse of lvlCount^maxLenght = totalLength
+                Math.Ceiling(Math.Log(length != 1 ? length : 2, maxLenght)) + 1;
         }
 
         public static Pair[] GetQtdOfNodesPerLevel(int structureLenght, int optimumLength, int levelCount)
@@ -37,38 +34,45 @@ namespace Rogue.FastLane.Infrastructure
 
             for (int i = 0; i < ammountOfNodesPerLevel.Length; i++)
             {
-                ammountOfNodesPerLevel[i] = new Pair { 
+                ammountOfNodesPerLevel[i] = new Pair
+                {
                     Index = i,
-                    Length = (int)Math.Ceiling(Math.Pow(optimumLength, i + 1) * percentage) };
+                    Length = (int)Math.Ceiling(Math.Pow(optimumLength, i + 1) * percentage)
+                };
             }
             return ammountOfNodesPerLevel;
         }
 
-        public static UniqueKeyQueryState Calculate(UniqueKeyQueryState oldState, int newLenght, int maxDesiredComparisons)
+        public static UniqueKeyQueryState Calculate(int totalLength, int maxComparisons)
         {
-            var newState = oldState != null ? 
-                oldState.PassOn() :
+            var state =
                 new UniqueKeyQueryState();
 
-            newState.MaxNumberOfIteractions = maxDesiredComparisons;
+            state.MaxIteractionsPerSegment =
+                maxComparisons;
 
-            newState.MaxLengthPerNode = 
-                GetOptimumLength(maxDesiredComparisons);
+            state.MaxLengthPerNode =
+                GetOptimumLength(maxComparisons);
 
-            newState.Length = newLenght;
+            state.LevelCount =
+                CountLevels(totalLength, state.MaxLengthPerNode);
 
-            var lenght = newLenght;
-            
-            int levelCount = 
-                HowManyLevelsShouldExist(ref lenght, newState.MaxLengthPerNode);
-
-            if (newState.Levels == null || newState.Levels.Length != levelCount)
-            { 
-                newState.Levels = 
-                    GetQtdOfNodesPerLevel(newLenght, newState.MaxLengthPerNode, levelCount);                 
+            int j =
+                state.LevelCount + 1;
+            for (int i = 0; i < state.LevelCount; i++)
+            {
+                state.Levels[i] =
+                    new UniqueKeyQueryState.Level
+                    {
+                        Index = i,
+                        // 
+                        TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
+                        TotalUsed = (int)Math.Ceiling(Math.Pow(totalLength, 1 / j))
+                    };
+                j--;
             }
 
-            return newState;
+            return state;
         }
     }
 }

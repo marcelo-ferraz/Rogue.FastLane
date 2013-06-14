@@ -110,12 +110,9 @@ namespace Rogue.FastLane.Queries.Mixins
         }
         
         public static bool Needs2AugmentLevelCount<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, int itemAmmountToSum)
-        {
-            double totalOfSpacesCount =
-                Math.Pow(self.State.MaxLengthPerNode, self.State.Levels.Length - 1);
-
+        {            
             //if there is not enough room for this new item
-            return totalOfSpacesCount < self.State.Length;
+            return self.State.Last.TotalOfSpaces < self.State.Last.TotalUsed;
         }
 	}
 }
