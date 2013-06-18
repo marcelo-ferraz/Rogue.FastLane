@@ -29,7 +29,7 @@ namespace Rogue.FastLane.Infrastructure
                 Math.Ceiling(Math.Log(length < 2 ? length : 2, maxLength)) + 1;
         }
         
-        public static UniqueKeyQueryState Calculate(int totalLength, int maxComparisons)
+        public static UniqueKeyQueryState Calculate4UniqueKey(int totalLength, int maxComparisons)
         {
             var state =
                 new UniqueKeyQueryState();

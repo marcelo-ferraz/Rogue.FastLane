@@ -29,54 +29,61 @@ namespace Rogue.FastLane.Queries
                         CompareKeys(Key, SelectKey(node.Value)));
         }
 
-
-        public override void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state)
+        public override void AbridgeQueryValueCount(UniqueKeyQueryState newState)
         {
-            Key =
-                SelectKey(node.Value);
-            State = state;
+            throw new NotImplementedException();
+        }
 
+        public override void AbridgeQueryLevelCount(UniqueKeyQueryState newState)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void AugmentQueryValueCount(UniqueKeyQueryState newState)
+        {
+            this.AugmentValueCount(newState.LevelCount - State.LevelCount);
+        }
+        
+        public override void AugmentQueryLevelCount(UniqueKeyQueryState newState)
+        {
+            this.AugmentLevelCount(newState.LevelCount - State.LevelCount);
+        }
+
+        public override void Add(ValueNode<TItem> node)
+        {
             Coordinates[] coordinates = null;
-
             ReferenceNode<TItem, TKey> closestRef = null;
 
             var valueIndex =
                 this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
 
-            //talvez nao seja necessário realizar o update, ja que o mesmo ja acontece antes, com outro ponteiro, na estrutura real
+            //If is found, does not update anything, it was already made
             if (valueIndex >= 0) { return; }
 
-            this.AugmentValueCount(1);
-            
             this.MoveAndInsert(coordinates, node);
+
             //until this, seems to be accetable
             //now has to re-find, or recalculate the position finding the right reference node
             Insert(node, closestRef, ~valueIndex, coordinates);
-        }
 
-        private void Insert(ValueNode<TItem> node, ReferenceNode<TItem, TKey> closestRef, int index, Coordinates[] coordinateSet)
-        {
             if (closestRef.Values == null)
             {
-                index = 
-                    this.GetValueIndexByUniqueKey(ref coordinateSet, ref closestRef);
+                valueIndex =
+                    this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
             }
 
-            if (index < closestRef.Values.Length)
+            valueIndex = 
+                ~valueIndex;
+            
+            if (valueIndex < closestRef.Values.Length)
             {
-                closestRef.Values[index] = node;
+                closestRef.Values[valueIndex] = node;
             }
-            else 
+            else
             {
-                (closestRef.Next(coordinateSet).Values ??
-                    (closestRef.Next(coordinateSet).Values = new ValueNode<TItem>[1]))[0] = node;
+                (closestRef.Next(coordinates).Values ??
+                    (closestRef.Next(coordinates).Values = new ValueNode<TItem>[1]))[0] = node;
             }
-        }
-
-
-        public override void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state)
-        {
-            throw new NotImplementedException();
         }
     }
 }

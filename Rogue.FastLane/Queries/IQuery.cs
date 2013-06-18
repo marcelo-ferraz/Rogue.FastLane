@@ -15,5 +15,15 @@ namespace Rogue.FastLane.Queries
         ValueNode<TItem> First();
         void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state);
         void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state);
+
+        void AugmentQueryValueCount(UniqueKeyQueryState newState);
+
+        void AbridgeQueryValueCount(UniqueKeyQueryState newState);
+
+        void AugmentQueryLevelCount(UniqueKeyQueryState newState);
+
+        void AbridgeQueryLevelCount(UniqueKeyQueryState newState);
+
+        void Add(ValueNode<TItem> item);
     }
 }

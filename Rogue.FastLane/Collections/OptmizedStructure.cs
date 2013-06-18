@@ -51,7 +51,7 @@ namespace Rogue.FastLane.Collections
             }
 
             var newState =
-                StructCalculus.Calculate(Count + 1, MaxDesiredComparisons);
+                StructCalculus.Calculate4UniqueKey(Count + 1, MaxDesiredComparisons);
 
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
             foreach (var q in Queries)
@@ -80,7 +80,7 @@ namespace Rogue.FastLane.Collections
                 prior.Next = next;
 
                 var s = 
-                    StructCalculus.Calculate(Count + 1, 10);
+                    StructCalculus.Calculate4UniqueKey(Count + 1, 10);
 
                 Parallel.ForEach(Queries, 
                     sel => 

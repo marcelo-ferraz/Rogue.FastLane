@@ -24,11 +24,7 @@ namespace Rogue.FastLane.Queries
         protected int MaxComparisons;        
 
         protected OptmizedStructure<TItem> Structure;
-        
-        public abstract void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state);
-
-        public abstract void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state);
-
+                
         /// <summary>
         /// Used for caching, and therefore enhancing the performance, and keeping the inteligence 
         /// for typing variaty by keeping the type choosen comparison
@@ -39,6 +35,12 @@ namespace Rogue.FastLane.Queries
         /// Seletor de chaves, usado para obter a chave desse registro
         /// </summary>
         public virtual Func<TItem, TKey> SelectKey { get; set; }
+        
+        public SimpleQuery<TItem, TKey> Select(TKey key)
+        {
+            Key = key;
+            return this;
+        }
 
         /// <summary>
         /// Compara duas chaves
@@ -54,13 +56,23 @@ namespace Rogue.FastLane.Queries
                 (k1, k2) => ((IComparable)k1).CompareTo(k2))
                 )(key1, key2);
         }
-               
-        public SimpleQuery<TItem, TKey> Select(TKey key)
-        {
-            Key = key;
-            return this;
-        }
 
         public abstract ValueNode<TItem> First();
+
+        public abstract void AugmentQueryValueCount(UniqueKeyQueryState newState);
+
+        public abstract void AbridgeQueryValueCount(UniqueKeyQueryState newState);
+
+        public abstract void AugmentQueryLevelCount(UniqueKeyQueryState newState);
+
+        public abstract void AbridgeQueryLevelCount(UniqueKeyQueryState newState);
+
+        public abstract void Add(ValueNode<TItem> item);
+
+
+        public abstract void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state);
+
+        public abstract void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state);
+
     }
 }
