@@ -14,7 +14,11 @@ namespace Rogue.FastLane.Queries
     {
         public UniqueKeyQuery()
         {
-            Root = new ReferenceNode<TItem, TKey>() { Values = new ValueNode<TItem>[0] };
+            Root = 
+                new ReferenceNode<TItem, TKey>() 
+                { Values = new ValueNode<TItem>[0] };
+
+            State = new UniqueKeyQueryState();
         }
 
         protected internal UniqueKeyQueryState State;
@@ -29,24 +33,24 @@ namespace Rogue.FastLane.Queries
                         CompareKeys(Key, SelectKey(node.Value)));
         }
 
-        public override void AbridgeQueryValueCount(UniqueKeyQueryState newState)
+        public override void AbridgeQueryValueCount(int qtd)
         {
             throw new NotImplementedException();
         }
 
-        public override void AbridgeQueryLevelCount(UniqueKeyQueryState newState)
+        public override void AbridgeQueryLevelCount(int qtd)
         {
             throw new NotImplementedException();
         }
 
-        public override void AugmentQueryValueCount(UniqueKeyQueryState newState)
-        {
-            this.AugmentValueCount(newState.LevelCount - State.LevelCount);
+        public override void AugmentQueryValueCount(int qtd)
+        {            
+            this.AugmentValueCount(qtd);
         }
-        
-        public override void AugmentQueryLevelCount(UniqueKeyQueryState newState)
+
+        public override void AugmentQueryLevelCount(int qtd)
         {
-            this.AugmentLevelCount(newState.LevelCount - State.LevelCount);
+            this.AugmentLevelCount(qtd);
         }
 
         public override void Add(ValueNode<TItem> node)
@@ -61,10 +65,6 @@ namespace Rogue.FastLane.Queries
             if (valueIndex >= 0) { return; }
 
             this.MoveAndInsert(coordinates, node);
-
-            //until this, seems to be accetable
-            //now has to re-find, or recalculate the position finding the right reference node
-            Insert(node, closestRef, ~valueIndex, coordinates);
 
             if (closestRef.Values == null)
             {
@@ -85,5 +85,7 @@ namespace Rogue.FastLane.Queries
                     (closestRef.Next(coordinates).Values = new ValueNode<TItem>[1]))[0] = node;
             }
         }
+
+        public override void Remove(ValueNode<TItem> item) { }
     }
 }

@@ -15,45 +15,54 @@ namespace Rogue.FastLane.Queries.Dispatchers
             : base(queries) 
         {
             MaxComparisons = 10;
+            State = new UniqueKeyQueryState
+            {
+                LevelCount = 1
+            };
         }
 
-        protected UniqueKeyQueryState OldState;
+        protected UniqueKeyQueryState State;
         protected UniqueKeyQueryState NewState;
         
         public int MaxComparisons { get; set; }
 
-        protected override void DeriveANewState(OptmizedStructure<TItem> @struct)
+        protected override void DeriveNewState(OptmizedStructure<TItem> @struct)
         {
-            var newState =
-                StructCalculus.Calculate4UniqueKey(@struct.Count + 1, MaxComparisons);
-        }
-
-        protected override void TryChangeQueryValueCount()
-        {
-            if (OldState.Last.TotalUsed < NewState.Last.TotalUsed)
-            {
-                foreach (var query in Queries)
-                { query.AugmentQueryValueCount(NewState); }
-            }
-            else if (OldState.Last.TotalUsed > NewState.Last.TotalUsed)
-            {
-                foreach (var query in Queries)
-                { query.AbridgeQueryValueCount(NewState); }
-            }
+            NewState =
+                StructCalculus.Calculate4UniqueKey(@struct.Count + 1, MaxComparisons);            
         }
 
         protected override void TryChangeQueryLevelCount()
         {
-            if (OldState.LevelCount < NewState.LevelCount)
+            if (State.LevelCount < NewState.LevelCount)
             {
                 foreach (var query in Queries)
-                { query.AugmentQueryLevelCount(NewState); }
+                { query.AugmentQueryLevelCount(NewState.LevelCount - State.LevelCount); }
             }
-            else if (OldState.LevelCount > NewState.LevelCount)
+            else if (State.LevelCount > NewState.LevelCount)
             {
                 foreach (var query in Queries)
-                { query.AbridgeQueryLevelCount(NewState); }
+                { query.AbridgeQueryLevelCount(NewState.LevelCount - State.LevelCount); }
             }
+        }
+
+        protected override void TryChangeQueryValueCount()
+        {
+            if (State.Last == null || State.Last.TotalUsed < NewState.Last.TotalUsed)
+            {
+                foreach (var query in Queries)
+                { query.AugmentQueryValueCount(NewState.Last.TotalUsed); }
+            }
+            else if (State.Last == null || State.Last.TotalUsed > NewState.Last.TotalUsed)
+            {
+                foreach (var query in Queries)
+                { query.AbridgeQueryValueCount(NewState.Last.TotalUsed); }
+            }
+        }
+
+        protected override void SaveState()
+        {
+            this.State = this.NewState;
         }
     }
 }

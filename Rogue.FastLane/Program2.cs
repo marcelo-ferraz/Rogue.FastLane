@@ -6,13 +6,16 @@ using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Queries;
-using Rogue.FastLane.Queries.Mixins;
 using System.Reflection;
 
 namespace Nhonho
 {
     class Program2
     {
+        public class Query<TKey>:UniqueKeyQuery<Pair, TKey>
+        {
+        }
+
         #region
         static ReferenceNode<Pair, int> GetRef(int key, int count = 5, ReferenceNode<Pair, int> parent = null)
         {
@@ -34,7 +37,7 @@ namespace Nhonho
             //TestReverseEnumerable();
 
             var query =
-                new UniqueKeyQuery<Pair, int>()
+                new Query<int>
                 {
                     SelectKey = item => item.Index
                 };

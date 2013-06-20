@@ -11,26 +11,19 @@ using Rogue.FastLane.Items;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Infrastructure;
 using Rogue.FastLane.Queries.State;
+using Rogue.FastLane.Queries.Dispatchers;
+using Rogue.FastLane.Config;
 
 namespace Rogue.FastLane.Collections
 {
-    public class OptmizedStructure<TItem>
+    public class OptmizedStructure<TItem> : BasicStructure<TItem>
     {
         public OptmizedStructure(params IQuery<TItem>[] queries)
-        {
-            Queries = queries;
-            MaxDesiredComparisons = 5;
-        }
-
-        protected int MaxDesiredComparisons;
-
-        protected IQuery<TItem>[] Queries;
-
-        protected internal UniqueKeyQueryState State { get; set; }
+            : base(queries) { }
+        
+        protected ValueNode<TItem> CurrentNode;
 
         public int Count { get; set; }
-
-        protected ValueNode<TItem> CurrentNode;
 
         public void Add(TItem item)
         {
@@ -50,16 +43,15 @@ namespace Rogue.FastLane.Collections
                 CurrentNode = node;
             }
 
-            var newState =
-                StructCalculus.Calculate4UniqueKey(Count + 1, MaxDesiredComparisons);
-
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
-            foreach (var q in Queries)
+            foreach (var dispatcher in Dispatchers)
             {
-                q.AfterAdd(node, newState);
+                dispatcher
+                    .ChangeStructures4Queries(this);
+                dispatcher
+                    .Add2QueriesStructures(node);
             }
 
-            State = newState;
             Count++;
         }
 
@@ -82,9 +74,9 @@ namespace Rogue.FastLane.Collections
                 var s = 
                     StructCalculus.Calculate4UniqueKey(Count + 1, 10);
 
-                Parallel.ForEach(Queries, 
-                    sel => 
-                        sel.AfterRemove(node, s));
+                //Parallel.ForEach(Queries, 
+                //    sel => 
+                //        sel.AfterRemove(node, s));
 
                 Task.Factory.StartNew(
                     () => GC.SuppressFinalize(node));

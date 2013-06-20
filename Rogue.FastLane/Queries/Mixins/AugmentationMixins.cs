@@ -24,8 +24,6 @@ namespace Rogue.FastLane.Queries.Mixins
         /// </param>
         public static void AugmentLevelCount<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, int itemAmmountToSum)
         {
-            if (!self.Needs2AugmentLevelCount(itemAmmountToSum)) { return; }
-
             var root = self.Root;
 
             //increases one level
@@ -66,13 +64,6 @@ namespace Rogue.FastLane.Queries.Mixins
 
         public static void AugmentValueCount<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, int itemAmmountToSum)
         {
-            //if there is not enough room for this new item
-            if (self.Needs2AugmentLevelCount(itemAmmountToSum))
-            { 
-                self.AugmentLevelCount(itemAmmountToSum); 
-                
-            }
-
             var nodeFound =
                 self.GetLastRefNode(self.Root);
 

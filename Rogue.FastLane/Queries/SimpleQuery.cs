@@ -59,20 +59,16 @@ namespace Rogue.FastLane.Queries
 
         public abstract ValueNode<TItem> First();
 
-        public abstract void AugmentQueryValueCount(UniqueKeyQueryState newState);
+        public abstract void AugmentQueryValueCount(int qtd);
 
-        public abstract void AbridgeQueryValueCount(UniqueKeyQueryState newState);
-
-        public abstract void AugmentQueryLevelCount(UniqueKeyQueryState newState);
-
-        public abstract void AbridgeQueryLevelCount(UniqueKeyQueryState newState);
+        public abstract void AbridgeQueryValueCount(int qtd);
+        
+        public abstract void AugmentQueryLevelCount(int qtd);
+        
+        public abstract void AbridgeQueryLevelCount(int qtd);
 
         public abstract void Add(ValueNode<TItem> item);
-
-
-        public abstract void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state);
-
-        public abstract void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state);
-
+        
+        public abstract void Remove(ValueNode<TItem> item);
     }
 }

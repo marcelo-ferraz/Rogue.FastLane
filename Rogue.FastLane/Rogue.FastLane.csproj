@@ -53,15 +53,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\BasicStructure.cs" />
     <Compile Include="Collections\Items\Mixins\NodeMixins.cs" />
     <Compile Include="Collections\LowestReferencesEnumerable.cs" />
     <Compile Include="Collections\Mixins\ArrayMixins.cs" />
     <Compile Include="Collections\LowestReverseReferencesEnumerable.cs" />
     <Compile Include="Collections\State\Coordinates.cs" />
     <Compile Include="Collections\State\Pair.cs" />
+    <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Infrastructure\Mixins\InheritanceMixins.cs" />
+    <Compile Include="JumpStarter.cs" />
     <Compile Include="Queries\Dispatchers\SimpleDispatcher.cs" />
     <Compile Include="Queries\State\UniqueKeyQueryState.cs" />
-    <Compile Include="ProbableInsertioner.cs" />
+    <Compile Include="Config\QueryDispatcher.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="Infrastructure\StructCalculus.cs" />
     <Compile Include="Collections\Items\Node.cs" />
@@ -71,7 +75,6 @@
     <Compile Include="Collections\Mixins\ByteArrayMixins.cs" />
     <Compile Include="Collections\Mixins\ListMixins.cs" />
     <Compile Include="Collections\OptmizedStructure.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\Mixins\NodeIterationMixins.cs" />
@@ -97,5 +100,6 @@
   <ItemGroup>
     <Compile Include="Collections\Items\OneTimeValue.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

@@ -13,17 +13,17 @@ namespace Rogue.FastLane.Queries
     public interface IQuery<TItem> 
     { 
         ValueNode<TItem> First();
-        void AfterAdd(ValueNode<TItem> node, UniqueKeyQueryState state);
-        void AfterRemove(ValueNode<TItem> item, UniqueKeyQueryState state);
 
-        void AugmentQueryValueCount(UniqueKeyQueryState newState);
+        void AugmentQueryValueCount(int qtd);
+        
+        void AbridgeQueryValueCount(int qtd);
+        
+        void AugmentQueryLevelCount(int qtd);
 
-        void AbridgeQueryValueCount(UniqueKeyQueryState newState);
-
-        void AugmentQueryLevelCount(UniqueKeyQueryState newState);
-
-        void AbridgeQueryLevelCount(UniqueKeyQueryState newState);
+        void AbridgeQueryLevelCount(int qtd);
 
         void Add(ValueNode<TItem> item);
+        
+        void Remove(ValueNode<TItem> item);
     }
 }
