@@ -63,8 +63,10 @@
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Infrastructure\Mixins\InheritanceMixins.cs" />
     <Compile Include="JumpStarter.cs" />
+    <Compile Include="Queries\Dispatchers\IDispatcher.cs" />
+    <Compile Include="Queries\IUniqueKeyQuery.cs" />
     <Compile Include="Queries\Dispatchers\SimpleDispatcher.cs" />
-    <Compile Include="Queries\State\UniqueKeyQueryState.cs" />
+    <Compile Include="Queries\States\UniqueKeyQueryState.cs" />
     <Compile Include="Config\QueryDispatcher.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="Infrastructure\StructCalculus.cs" />

@@ -29,7 +29,7 @@ namespace Rogue.FastLane.Queries.Mixins
         }
 
         public static void ForEachValuedNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, 
-            Coordinates[] offsetPerLvl, Action<ReferenceNode<TItem, TKey>, int> inEach, Action<ReferenceNode<TItem, TKey>> withLast)
+            Coordinates[] offsetPerLvl, Action<ReferenceNode<TItem, TKey>, int> inEach)
         {
             var offset =
                 offsetPerLvl[offsetPerLvl.Length - 1];
@@ -47,8 +47,6 @@ namespace Rogue.FastLane.Queries.Mixins
                     inEach(@ref, i);
                 }
             }
-
-            //withLast(@ref);
         }
 	}
 }

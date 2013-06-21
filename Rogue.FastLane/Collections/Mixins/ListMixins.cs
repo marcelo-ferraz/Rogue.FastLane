@@ -40,10 +40,10 @@ namespace Rogue.FastLane.Collections.Mixins
                 {
                     midpoint = low + (high - low) / 2;
 
-                    var item = 
-                        self[midpoint];
+                    //var item = 
+                    //    self[midpoint];
 
-                    if (item.Equals(default(T))) { continue; }
+                    //if (object.Equals(item, default(T))) { continue; }
 
                     int comparisonResult =
                         comparison(self[midpoint]);

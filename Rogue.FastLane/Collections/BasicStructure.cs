@@ -15,27 +15,27 @@ namespace Rogue.FastLane.Collections
         public BasicStructure(params IQuery<TItem>[] queries)
         {
             Dispatchers =
-                new SimpleDispatcher<TItem>[0];
+                new IDispatcher<TItem>[0];
             Add2Dispatchers(queries);
         }
 
         private int _dispatcherInsertionIndex;
 
-        protected SimpleDispatcher<TItem>[] Dispatchers;
+        protected IDispatcher<TItem>[] Dispatchers;
 
         protected virtual bool Is4UniqueKey(IQuery<TItem> query)
         {
             return query.IsOrInherits(typeof(UniqueKeyQuery<,>));
         }
 
-        protected virtual bool Is4UniqueKey(SimpleDispatcher<TItem> dispatcher)
+        protected virtual bool Is4UniqueKey(IDispatcher<TItem> dispatcher)
         {
             return typeof(UniqueKeyDispatcher<TItem>).IsAssignableFrom(dispatcher.GetType());
         }
 
         protected virtual void Add2Dispatchers(IQuery<TItem>[] queries)
         {
-            SimpleDispatcher<TItem> dispatcher = null;
+            IDispatcher<TItem> dispatcher = null;
             for (int i = 0; i < queries.Length; i++)
             {
                 if (Is4UniqueKey(queries[i]))

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.State;
-using Rogue.FastLane.Queries.State;
+using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries
 {
     public interface IQuery<TItem> 
-    { 
+    {
         ValueNode<TItem> First();
 
         void AugmentQueryValueCount(int qtd);
@@ -22,7 +22,7 @@ namespace Rogue.FastLane.Queries
 
         void AbridgeQueryLevelCount(int qtd);
 
-        void Add(ValueNode<TItem> item);
+        void Add(ValueNode<TItem> item, Action<IQuery<TItem>> resizeValueCount);
         
         void Remove(ValueNode<TItem> item);
     }

@@ -17,9 +17,9 @@ namespace Rogue.FastLane.Config
 {
     public class QueryDispatchmentResolver<TItem>
     {
-        private Func<SimpleDispatcher<TItem>> _getDispatcher4UniqueKeyQuery;                
-                
-        protected internal Func<SimpleDispatcher<TItem>> GetDispatcher4UniqueKeyQuery 
+        private Func<IDispatcher<TItem>> _getDispatcher4UniqueKeyQuery;
+
+        protected internal Func<IDispatcher<TItem>> GetDispatcher4UniqueKeyQuery 
         {
             get 
             {

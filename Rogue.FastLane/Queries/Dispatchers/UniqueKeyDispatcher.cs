@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rogue.FastLane.Queries.State;
+using Rogue.FastLane.Queries.States;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Infrastructure;
 
 namespace Rogue.FastLane.Queries.Dispatchers
 {
-    public class UniqueKeyDispatcher<TItem> : SimpleDispatcher<TItem>
+    public class UniqueKeyDispatcher<TItem> : SimpleDispatcher<TItem, IUniqueKeyQuery<TItem>>
     {
-        public UniqueKeyDispatcher(params IQuery<TItem>[] queries)
+        public UniqueKeyDispatcher(params IUniqueKeyQuery<TItem>[] queries)
             : base(queries) 
         {
-            MaxComparisons = 10;
-            State = new UniqueKeyQueryState
-            {
-                LevelCount = 1
-            };
+            MaxComparisons = 4;
+            State = new UniqueKeyQueryState();
         }
 
         protected UniqueKeyQueryState State;
@@ -29,7 +26,10 @@ namespace Rogue.FastLane.Queries.Dispatchers
         protected override void DeriveNewState(OptmizedStructure<TItem> @struct)
         {
             NewState =
-                StructCalculus.Calculate4UniqueKey(@struct.Count + 1, MaxComparisons);            
+                StructCalculus.Calculate4UniqueKey(@struct.Count + 1, MaxComparisons);
+
+            foreach (var query in Queries)
+            { query.State = NewState; }
         }
 
         protected override void TryChangeQueryLevelCount()
@@ -46,17 +46,15 @@ namespace Rogue.FastLane.Queries.Dispatchers
             }
         }
 
-        protected override void TryChangeQueryValueCount()
+        protected override void TryChangeQueryValueCount(IUniqueKeyQuery<TItem> query)
         {
             if (State.Last == null || State.Last.TotalUsed < NewState.Last.TotalUsed)
             {
-                foreach (var query in Queries)
-                { query.AugmentQueryValueCount(NewState.Last.TotalUsed); }
+                query.AugmentQueryValueCount(NewState.Last.TotalUsed - State.Last.TotalUsed);                
             }
             else if (State.Last == null || State.Last.TotalUsed > NewState.Last.TotalUsed)
             {
-                foreach (var query in Queries)
-                { query.AbridgeQueryValueCount(NewState.Last.TotalUsed); }
+                query.AbridgeQueryValueCount(NewState.Last.TotalUsed - State.Last.TotalUsed); 
             }
         }
 

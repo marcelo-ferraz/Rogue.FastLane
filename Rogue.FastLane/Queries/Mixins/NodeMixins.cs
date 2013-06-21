@@ -10,7 +10,7 @@ namespace Rogue.FastLane.Queries.Mixins
 {
     public static class NodeMixins
     {
-        public static void MoveAndInsert<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet, ValueNode<TItem> valNode)
+        public static void MoveAllAside<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet, ValueNode<TItem> valNode)
         {
             ReferenceNode<TItem, TKey> previousRef = null;
 
@@ -30,7 +30,7 @@ namespace Rogue.FastLane.Queries.Mixins
                         previousRef.Values[
                             previousRef.Values.Length - 1] = @ref.Values[i];
                     }
-                },r => {});
+                });
         }
     }
 }

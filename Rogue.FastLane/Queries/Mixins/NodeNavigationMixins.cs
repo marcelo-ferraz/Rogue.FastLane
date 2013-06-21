@@ -64,7 +64,8 @@ namespace Rogue.FastLane.Queries.Mixins
         public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref OneTimeValue[] offsets, ReferenceNode<TItem, TKey> node = null)
         {
-            var offs = (offsets ?? (offsets = new OneTimeValue[self.State.Levels.Length - 1]));
+            var offs = (offsets = 
+                new OneTimeValue[self.State.LevelCount]);
 
             var refNode = GetRefByUniqueKey(
                 self,
@@ -92,8 +93,8 @@ namespace Rogue.FastLane.Queries.Mixins
         public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref Coordinates[] absoluteCoordinates, ReferenceNode<TItem, TKey> node = null)
         {
-            var coordinates = (absoluteCoordinates ??
-                (absoluteCoordinates = new Coordinates[self.State.Levels.Length]));
+            var coordinates =
+                new Coordinates[self.State.LevelCount];
 
             int lastIndex = 0;
 
@@ -101,6 +102,7 @@ namespace Rogue.FastLane.Queries.Mixins
                 self,
                 (lvlIndex, index, n) =>
                 {
+                    if (coordinates.Length <= lvlIndex) { return; }
                     var coord = new Coordinates()
                     {
                         Length = n.Parent != null ? n.Parent.References.Length : 0,
@@ -125,7 +127,7 @@ namespace Rogue.FastLane.Queries.Mixins
             this UniqueKeyQuery<TItem, TKey> self, ref Coordinates[] absoluteCoordinates, ref ReferenceNode<TItem, TKey> closestRef)
         {
             absoluteCoordinates = 
-                new Coordinates[self.State.Levels.Length];
+                new Coordinates[self.State.LevelCount];
 
             closestRef = FirstRefByUniqueKey(
                 self, ref absoluteCoordinates);

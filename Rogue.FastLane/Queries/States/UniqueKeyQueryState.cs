@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rogue.FastLane.Queries.State
+namespace Rogue.FastLane.Queries.States
 {
     public class UniqueKeyQueryState
     {
@@ -16,6 +16,14 @@ namespace Rogue.FastLane.Queries.State
         
         public UniqueKeyQueryState()
         {
+            LevelCount = 2;
+            _levels = 
+                new[] 
+                {
+                    new UniqueKeyQueryState.Level { Index = 0 },
+                    new UniqueKeyQueryState.Level { Index = 1 },
+                };                                           
+            
             _gLvls = 
                 () => 
                     _levels = new Level[LevelCount];

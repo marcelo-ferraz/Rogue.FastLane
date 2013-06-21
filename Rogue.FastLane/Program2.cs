@@ -7,13 +7,20 @@ using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Queries;
 using System.Reflection;
+using Rogue.FastLane.Queries.States;
 
 namespace Nhonho
 {
     class Program2
     {
-        public class Query<TKey>:UniqueKeyQuery<Pair, TKey>
+        public class Query<TKey>:
+            UniqueKeyQuery<Pair, TKey>, IUniqueKeyQuery<Pair>
         {
+            public new UniqueKeyQueryState State
+            {
+                get { return base.State; }
+                set { base.State = value; }
+            }
         }
 
         #region

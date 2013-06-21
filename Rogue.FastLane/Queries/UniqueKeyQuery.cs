@@ -6,7 +6,7 @@ using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Collections.Items.Mixins;
 using System.Threading.Tasks;
-using Rogue.FastLane.Queries.State;
+using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries
 {
@@ -18,7 +18,8 @@ namespace Rogue.FastLane.Queries
                 new ReferenceNode<TItem, TKey>() 
                 { Values = new ValueNode<TItem>[0] };
 
-            State = new UniqueKeyQueryState();
+            State = 
+                new UniqueKeyQueryState();
         }
 
         protected internal UniqueKeyQueryState State;
@@ -53,8 +54,10 @@ namespace Rogue.FastLane.Queries
             this.AugmentLevelCount(qtd);
         }
 
-        public override void Add(ValueNode<TItem> node)
+        public override void Add(ValueNode<TItem> node, Action<IQuery<TItem>> resizeValueCount)
         {
+            Key = SelectKey(node.Value);
+
             Coordinates[] coordinates = null;
             ReferenceNode<TItem, TKey> closestRef = null;
 
@@ -63,18 +66,14 @@ namespace Rogue.FastLane.Queries
 
             //If is found, does not update anything, it was already made
             if (valueIndex >= 0) { return; }
-
-            this.MoveAndInsert(coordinates, node);
-
-            if (closestRef.Values == null)
-            {
-                valueIndex =
-                    this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
-            }
-
+            
             valueIndex = 
                 ~valueIndex;
             
+            resizeValueCount(this);
+
+            this.MoveAllAside(coordinates, node);
+
             if (valueIndex < closestRef.Values.Length)
             {
                 closestRef.Values[valueIndex] = node;

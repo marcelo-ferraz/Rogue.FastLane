@@ -1,5 +1,5 @@
 ﻿using System;
-using Rogue.FastLane.Queries.State;
+using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Infrastructure
 {
@@ -26,7 +26,7 @@ namespace Rogue.FastLane.Infrastructure
              */
             #endregion
             return (int) 
-                Math.Ceiling(Math.Log(length < 2 ? length : 2, maxLength)) + 1;
+                Math.Ceiling(Math.Log(length < 2 ? 2 : length, maxLength)) + 1;
         }
         
         public static UniqueKeyQueryState Calculate4UniqueKey(int totalLength, int maxComparisons)
@@ -44,7 +44,7 @@ namespace Rogue.FastLane.Infrastructure
                 totalLength, state.MaxLengthPerNode);
 
             int j = state
-                .LevelCount + 1;
+                .LevelCount;
             for (int i = 0; i < state.LevelCount; i++)
             {
                 state.Levels[i] =

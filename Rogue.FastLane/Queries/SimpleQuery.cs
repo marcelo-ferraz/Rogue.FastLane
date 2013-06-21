@@ -5,7 +5,7 @@ using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Items;
-using Rogue.FastLane.Queries.State;
+using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries
 {
@@ -67,7 +67,7 @@ namespace Rogue.FastLane.Queries
         
         public abstract void AbridgeQueryLevelCount(int qtd);
 
-        public abstract void Add(ValueNode<TItem> item);
+        public abstract void Add(ValueNode<TItem> item, Action<IQuery<TItem>> resizeValueCount);
         
         public abstract void Remove(ValueNode<TItem> item);
     }

@@ -10,7 +10,7 @@ using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Infrastructure;
-using Rogue.FastLane.Queries.State;
+using Rogue.FastLane.Queries.States;
 using Rogue.FastLane.Queries.Dispatchers;
 using Rogue.FastLane.Config;
 
@@ -36,20 +36,15 @@ namespace Rogue.FastLane.Collections
             if (CurrentNode != null)
             {
                 CurrentNode.Next = node;
-                node.Prior = CurrentNode;
+                node.Prior = CurrentNode;                
             }
-            else
-            {
-                CurrentNode = node;
-            }
+            
+            CurrentNode = node;
 
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
-            foreach (var dispatcher in Dispatchers)
+            foreach (var dispatcher in Dispatchers.Where( d => d != null))
             {
-                dispatcher
-                    .ChangeStructures4Queries(this);
-                dispatcher
-                    .Add2QueriesStructures(node);
+                dispatcher.AddNode(this, node);
             }
 
             Count++;
