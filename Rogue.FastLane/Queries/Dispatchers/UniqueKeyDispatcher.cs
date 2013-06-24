@@ -27,22 +27,23 @@ namespace Rogue.FastLane.Queries.Dispatchers
         {
             NewState =
                 StructCalculus.Calculate4UniqueKey(@struct.Count + 1, MaxComparisons);
-
-            foreach (var query in Queries)
-            { query.State = NewState; }
         }
 
-        protected override void TryChangeQueryLevelCount()
+        protected override void ApplyToEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
+        {
+            query.State = NewState;
+            base.ApplyToEach(query, item);
+        }
+
+        protected override void TryChangeQueryLevelCount(IUniqueKeyQuery<TItem> query)
         {
             if (State.LevelCount < NewState.LevelCount)
             {
-                foreach (var query in Queries)
-                { query.AugmentQueryLevelCount(NewState.LevelCount - State.LevelCount); }
+                query.AugmentQueryLevelCount(NewState.LevelCount - State.LevelCount); 
             }
             else if (State.LevelCount > NewState.LevelCount)
             {
-                foreach (var query in Queries)
-                { query.AbridgeQueryLevelCount(NewState.LevelCount - State.LevelCount); }
+                query.AbridgeQueryLevelCount(NewState.LevelCount - State.LevelCount); 
             }
         }
 

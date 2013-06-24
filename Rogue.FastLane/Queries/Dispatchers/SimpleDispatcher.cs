@@ -23,7 +23,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
 
         protected abstract void TryChangeQueryValueCount(TQuery query);
 
-        protected abstract void TryChangeQueryLevelCount();
+        protected abstract void TryChangeQueryLevelCount(TQuery query);
 
         protected abstract void SaveState();
 
@@ -33,6 +33,15 @@ namespace Rogue.FastLane.Queries.Dispatchers
             {
                 query.Add(item, q => resizeValueCount((TQuery)q));
             }
+        }
+
+        protected virtual void ApplyToEach(TQuery query, ValueNode<TItem> item)
+        {
+            TryChangeQueryLevelCount(query);
+
+            AddNode2Queries(item, TryChangeQueryValueCount);
+
+            SaveState();
         }
 
         public void Add(IQuery<TItem> query)
@@ -47,11 +56,10 @@ namespace Rogue.FastLane.Queries.Dispatchers
         {
             DeriveNewState(@struct);
 
-            TryChangeQueryLevelCount();
-
-            AddNode2Queries(item, TryChangeQueryValueCount);
-            
-            SaveState();
+            foreach (var query in Queries)
+            {
+                ApplyToEach(query, item);
+            }
         }
     }
 }

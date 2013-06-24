@@ -20,7 +20,7 @@ namespace Rogue.FastLane.Collections
     {
         public OptmizedStructure(params IQuery<TItem>[] queries)
             : base(queries) { }
-        
+
         protected ValueNode<TItem> CurrentNode;
 
         public int Count { get; set; }
@@ -36,13 +36,13 @@ namespace Rogue.FastLane.Collections
             if (CurrentNode != null)
             {
                 CurrentNode.Next = node;
-                node.Prior = CurrentNode;                
+                node.Prior = CurrentNode;
             }
-            
+
             CurrentNode = node;
 
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
-            foreach (var dispatcher in Dispatchers.Where( d => d != null))
+            foreach (var dispatcher in Dispatchers.Where(d => d != null))
             {
                 dispatcher.AddNode(this, node);
             }
@@ -53,6 +53,7 @@ namespace Rogue.FastLane.Collections
 
         public void Remove<TKey>(IQuery<TItem> selector)
         {
+            /*
             var node =
                 selector.First();
 
@@ -75,8 +76,7 @@ namespace Rogue.FastLane.Collections
 
                 Task.Factory.StartNew(
                     () => GC.SuppressFinalize(node));
-            }
+             */
         }
     }
 }
-

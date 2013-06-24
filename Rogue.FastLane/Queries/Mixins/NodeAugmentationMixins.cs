@@ -8,7 +8,7 @@ using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
-	public static class AugmentationMixins
+	public static class NodeAugmentationMixins
 	{
         /// <summary>
         /// Augments the level count.
@@ -32,11 +32,14 @@ namespace Rogue.FastLane.Queries.Mixins
             {
                 //Increase one level, and send them to the first node of this new level
                 root.References = new []
-                { new ReferenceNode<TItem, TKey>() };
-
-                root.References[0].Values =
-                    root.Values;
-                root.References[0].Parent = root;
+                { 
+                    new ReferenceNode<TItem, TKey> 
+                    {
+                        Values = root.Values,
+                        Parent = root,
+                        Key = root.Key
+                    } 
+                };
 
                 root.Values = null;
             }
@@ -47,10 +50,14 @@ namespace Rogue.FastLane.Queries.Mixins
                     root.References;
 
                 root.References = new[]  
-                { new ReferenceNode<TItem, TKey>() };
-
-                root.References[0].References = refs;
-                root.References[0].Parent = root;
+                { 
+                    new ReferenceNode<TItem, TKey>
+                    {
+                        References = refs,
+                        Key = root.Key,
+                        Parent = root,                        
+                    } 
+                };
 
                 for (int i = 0; i < refs.Length; i++) 
                 {
@@ -64,35 +71,42 @@ namespace Rogue.FastLane.Queries.Mixins
 
         public static void AugmentValueCount<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, int itemAmmountToSum)
         {
-            var nodeFound =
+            var node =
                 self.GetLastRefNode(self.Root);
 
             //if needs to change to the next ref node
-            TryResizeReferences(nodeFound.Parent, self.State, 1);
-
-            TryResizeValues(self, nodeFound, itemAmmountToSum);
+            if(node.Values.Length >= self.State.MaxLengthPerNode)
+            { TryResizeReferencesByOne(node.Parent, self.State); }
+            else
+            { TryResizeValues(self, node, itemAmmountToSum); }
         }
 
-        private static void TryResizeReferences<TItem, TKey>(ReferenceNode<TItem, TKey> node, UniqueKeyQueryState state, int toSum)
+        private static bool TryResizeReferencesByOne<TItem, TKey>(ReferenceNode<TItem, TKey> node, UniqueKeyQueryState state)
         {
-            if (node == null) { return; }
-            if (node.References == null) { return; }
+            if (node == null) { return false; }
+            if (node.References == null) { return false; }
 
-            TryResizeReferences(node.Parent, state, toSum);
+            TryResizeReferencesByOne(node.Parent, state);
 
-            if (node.References.Length > state.MaxLengthPerNode)
+            if (node.References.Length < state.MaxLengthPerNode)
             {
-                node.References.Resize(
+                node.References = node.References.Resize(
                     node.References.Length + 1);
+                
+                node.References[node.References.Length - 1] = 
+                    new ReferenceNode<TItem, TKey>()
+                    {
+                        Parent = node
+                    };
 
-                node = node.References[
-                    node.References.Length - 1];
+                return true;
             }
+            return false;
         }
 
         private static void TryResizeValues<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node, int toSum)
         {
-            if (node.Values.Length > self.State.MaxLengthPerNode)
+            if (node.Values.Length >= self.State.MaxLengthPerNode)
             {
                 node = self.GetLastRefNode(self.Root);
             }

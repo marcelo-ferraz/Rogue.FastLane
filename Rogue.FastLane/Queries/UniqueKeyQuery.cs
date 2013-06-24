@@ -7,6 +7,7 @@ using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Collections.Items.Mixins;
 using System.Threading.Tasks;
 using Rogue.FastLane.Queries.States;
+using Rogue.FastLane.Collections;
 
 namespace Rogue.FastLane.Queries
 {
@@ -63,14 +64,17 @@ namespace Rogue.FastLane.Queries
 
             var valueIndex =
                 this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
+                //this.GetValueIndexByUniqueKey(ref closestRef);
+
+            resizeValueCount(this);
+
+            //valueIndex =
+            //    this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
 
             //If is found, does not update anything, it was already made
             if (valueIndex >= 0) { return; }
             
-            valueIndex = 
-                ~valueIndex;
-            
-            resizeValueCount(this);
+            valueIndex = ~valueIndex;
 
             this.MoveAllAside(coordinates, node);
 
@@ -80,9 +84,34 @@ namespace Rogue.FastLane.Queries
             }
             else
             {
-                (closestRef.Next(coordinates).Values ??
-                    (closestRef.Next(coordinates).Values = new ValueNode<TItem>[1]))[0] = node;
+                closestRef = closestRef.Next(coordinates);
+                (closestRef.Values ??
+                    (closestRef.Values = new ValueNode<TItem>[1]))[0] = node;
             }
+            
+            // corrigir os max keys corretos em toda a arvore. 
+            /*
+             * 
+             */
+
+            var @enum = 
+                new LowestReferencesEnumerable<TItem, TKey>();
+
+            foreach(var refNode in @enum.LastNLowestRefs(Root))
+            {
+                var highestKey = 
+                    SelectKey(refNode.Values[refNode.Values.Length - 1].Value);
+
+                ChangeKeyIfHigher(refNode, highestKey);
+            }
+        }
+
+        private void ChangeKeyIfHigher(ReferenceNode<TItem, TKey> refNode, TKey key)
+        {
+            if (refNode == null) { return; }
+
+            refNode.Key = key;
+            ChangeKeyIfHigher(refNode.Parent, key);            
         }
 
         public override void Remove(ValueNode<TItem> item) { }

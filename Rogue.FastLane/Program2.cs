@@ -95,7 +95,8 @@ namespace Nhonho
             structure.Add(new Pair() { Index = 4 });
             structure.Add(new Pair() { Index = 5 });
             structure.Add(new Pair() { Index = 7 });
-            structure.Add(new Pair() { Index = 6 });            
+            structure.Add(new Pair() { Index = 6 });
+            structure.Add(new Pair() { Index = 0 });            
 		}
 
         private static void TestReverseEnumerable()

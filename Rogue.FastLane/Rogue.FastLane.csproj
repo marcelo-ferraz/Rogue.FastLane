@@ -83,7 +83,7 @@
     <Compile Include="Queries\Mixins\NodeMixins.cs" />
     <Compile Include="Queries\SimpleQuery.cs" />
     <Compile Include="Queries\UniqueKeyQuery.cs" />
-    <Compile Include="Queries\Mixins\AugmentationMixins.cs" />
+    <Compile Include="Queries\Mixins\NodeAugmentationMixins.cs" />
     <Compile Include="Queries\Mixins\NodeNavigationMixins.cs" />
     <Compile Include="Queries\Dispatchers\UniqueKeyDispatcher.cs" />
   </ItemGroup>

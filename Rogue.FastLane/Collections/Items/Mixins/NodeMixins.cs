@@ -19,18 +19,20 @@ namespace Rogue.FastLane.Collections.Items.Mixins
 
             if (coordinateSet.Length < 2)
             { throw new InvalidOperationException("Cannot move to a next node. Coordinates are too shallow."); }
-            
-            var coordinates =
+
+            var penultimateCoord =
                 coordinateSet[coordinateSet.Length - 2];
-
+            
             Func<ReferenceNode<TItem,TKey>[], ReferenceNode<TItem,TKey>> tryNext = 
-                @refs => 
-                    @refs[coordinates.Index] ?? 
-                    (@refs[coordinates.Index] = new ReferenceNode<TItem,TKey>());
+                @refs =>
+                    @refs[penultimateCoord.Index] ??
+                    (@refs[penultimateCoord.Index] = new ReferenceNode<TItem, TKey>());
 
-            return ((++coordinates.Index) < self.Parent.References.Length) ?
-                tryNext(self.Parent.References) :
-                tryNext(self.Parent.References = self.Parent.References.Resize(coordinates.Index + 1));
+            if((++penultimateCoord.Index) < self.Parent.References.Length)
+            { return tryNext(self.Parent.References); }
+            else
+            { return tryNext(self.Parent.References = self.Parent.References.Resize(penultimateCoord.Index + 1)); }
+                            
         }
     }
 }
