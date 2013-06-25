@@ -29,21 +29,21 @@ namespace Rogue.FastLane.Queries.Dispatchers
                 StructCalculus.Calculate4UniqueKey(@struct.Count + 1, MaxComparisons);
         }
 
-        protected override void ApplyToEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
+        protected override void ApplyToEach(ValueNode<TItem> item)
         {
-            query.State = NewState;
-            base.ApplyToEach(query, item);
+            CurrentQuery.State = NewState;
+            base.ApplyToEach(item);
         }
 
-        protected override void TryChangeQueryLevelCount(IUniqueKeyQuery<TItem> query)
+        protected override void TryChangeQueryLevelCount()
         {
             if (State.LevelCount < NewState.LevelCount)
             {
-                query.AugmentQueryLevelCount(NewState.LevelCount - State.LevelCount); 
+                CurrentQuery.AugmentQueryLevelCount(NewState.LevelCount - State.LevelCount); 
             }
             else if (State.LevelCount > NewState.LevelCount)
             {
-                query.AbridgeQueryLevelCount(NewState.LevelCount - State.LevelCount); 
+                CurrentQuery.AbridgeQueryLevelCount(NewState.LevelCount - State.LevelCount); 
             }
         }
 
@@ -51,11 +51,11 @@ namespace Rogue.FastLane.Queries.Dispatchers
         {
             if (State.Last == null || State.Last.TotalUsed < NewState.Last.TotalUsed)
             {
-                query.AugmentQueryValueCount(NewState.Last.TotalUsed - State.Last.TotalUsed);                
+                CurrentQuery.AugmentQueryValueCount(NewState.Last.TotalUsed - State.Last.TotalUsed);                
             }
             else if (State.Last == null || State.Last.TotalUsed > NewState.Last.TotalUsed)
             {
-                query.AbridgeQueryValueCount(NewState.Last.TotalUsed - State.Last.TotalUsed); 
+                CurrentQuery.AbridgeQueryValueCount(NewState.Last.TotalUsed - State.Last.TotalUsed); 
             }
         }
 

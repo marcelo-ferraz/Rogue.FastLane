@@ -10,39 +10,6 @@ namespace Rogue.FastLane.Queries.Mixins
 {
     public static class NodeNavigationMixins
     {
-        #region to be erased
-        
-        /// <summary>
-        /// Retrieves the referenceNode next to a valuenode, and give it back a set of coordinates, to be used as offsets, when iterating
-        /// </summary>
-        /// <typeparam name="TItem">The type of the Item</typeparam>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="node"></param>
-        /// <param name="compareKeys"></param>
-        /// <param name="offsets"></param>
-        /// <param name="lvlCount"></param>
-        /// <param name="lvlIndex"></param>
-        /// <returns></returns>
-        [Obsolete]
-        public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, ref OneTimeValue[] offsets, ReferenceNode<TItem, TKey> node = null)
-        {
-            var offs = (offsets =
-                new OneTimeValue[self.State.LevelCount]);
-
-            var refNode = GetRefByUniqueKey(
-                self,
-                (lvlIndex, index, n) =>
-                    offs[lvlIndex] = new OneTimeValue() { Value = index < 0 ? ~index : index }, node);
-
-            offsets = offs;
-
-            return refNode;
-        }
-
-        #endregion
-
         public static ReferenceNode<TItem, TKey> GetRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, Action<int, int, ReferenceNode<TItem, TKey>> getCoordinates, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
         {
@@ -106,12 +73,31 @@ namespace Rogue.FastLane.Queries.Mixins
                             Index = index < 0 ? ~index : index,
                             OverallIndex = lastIndex
                         };
+
+                    CorrectIndexes<TItem, TKey>(self, coordinates, lvlIndex);
                 },
                 node);
 
             absoluteCoordinates = coordinates;
 
             return refNode;
+        }
+
+        private static void CorrectIndexes<TItem, TKey>(UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinates, int lvlIndex)
+        {
+            if (lvlIndex < 0) 
+            { return; }
+
+            if (coordinates[lvlIndex].Index < self.State.MaxLengthPerNode) 
+            { return; }
+
+            coordinates[lvlIndex - 1].OverallIndex =
+                coordinates[lvlIndex - 1].OverallIndex + 1;
+
+            //coordinates[lvlIndex].Index =
+            //    self.State.MaxLengthPerNode - self.State.MaxLengthPerNode;
+
+            CorrectIndexes(self, coordinates, lvlIndex - 1);
         }
 
         public static int GetValueIndexByUniqueKey<TItem, TKey>(

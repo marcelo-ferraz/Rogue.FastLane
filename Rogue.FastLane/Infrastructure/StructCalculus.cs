@@ -42,6 +42,9 @@ namespace Rogue.FastLane.Infrastructure
 
             state.LevelCount = CountLevels(
                 totalLength, state.MaxLengthPerNode);
+            
+            double percentageUsed =
+                totalLength / Math.Pow(state.MaxLengthPerNode, state.LevelCount);
 
             int j = state
                 .LevelCount;
@@ -52,7 +55,7 @@ namespace Rogue.FastLane.Infrastructure
                     {
                         Index = i,
                         TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
-                        TotalUsed = (int)Math.Ceiling(Math.Pow(totalLength, 1 / j))
+                        TotalUsed = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i + 1) * percentageUsed)
                     };
                 j--;
             }

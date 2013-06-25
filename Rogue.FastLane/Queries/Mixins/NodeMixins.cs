@@ -12,23 +12,24 @@ namespace Rogue.FastLane.Queries.Mixins
     {
         public static void MoveAllAside<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet, ValueNode<TItem> valNode)
         {
-            ReferenceNode<TItem, TKey> previousRef = null;
+            var coordinates = 
+                coordinateSet[coordinateSet.Length - 1];
 
-            var coordinates = coordinateSet[coordinateSet.Length - 1];
+            ReferenceNode<TItem, TKey> previousRef = null;
 
             self.ForEachValuedNode(coordinateSet,
                 (@ref, i) =>
                 {
                     if (i < 1)
                     { previousRef = @ref; }
-
-                    else if (previousRef == null)
-                    { @ref.Values[i] = @ref.Values[i - 1]; }
-
-                    else
-                    {
-                        previousRef.Values[
-                            previousRef.Values.Length - 1] = @ref.Values[i];
+                    else {
+                        if (previousRef != null)
+                        {
+                            previousRef.Values[0] = @ref.Values[@ref.Values.Length - 1];
+                            previousRef = null;                            
+                        }
+                        
+                        @ref.Values[i] = @ref.Values[i - 1]; 
                     }
                 });
         }

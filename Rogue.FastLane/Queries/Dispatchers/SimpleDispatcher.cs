@@ -11,33 +11,30 @@ namespace Rogue.FastLane.Queries.Dispatchers
         private int CurrentQueryIndex = 0;
 
         protected TQuery[] Queries;
-
+        protected TQuery CurrentQuery;
         public SimpleDispatcher() { }
 
         public SimpleDispatcher(params TQuery[] queries)
         {
             Queries = queries;
         }
-
+        
         protected abstract void DeriveNewState(OptmizedStructure<TItem> @struct);
 
         protected abstract void TryChangeQueryValueCount(TQuery query);
 
-        protected abstract void TryChangeQueryLevelCount(TQuery query);
+        protected abstract void TryChangeQueryLevelCount();
 
         protected abstract void SaveState();
 
         protected internal virtual void AddNode2Queries(ValueNode<TItem> item, Action<TQuery> resizeValueCount)
         {
-            foreach (var query in Queries)
-            {
-                query.Add(item, q => resizeValueCount((TQuery)q));
-            }
+            CurrentQuery.Add(item, q => resizeValueCount((TQuery)q));            
         }
 
-        protected virtual void ApplyToEach(TQuery query, ValueNode<TItem> item)
+        protected virtual void ApplyToEach(ValueNode<TItem> item)
         {
-            TryChangeQueryLevelCount(query);
+            TryChangeQueryLevelCount();
 
             AddNode2Queries(item, TryChangeQueryValueCount);
 
@@ -58,7 +55,8 @@ namespace Rogue.FastLane.Queries.Dispatchers
 
             foreach (var query in Queries)
             {
-                ApplyToEach(query, item);
+                CurrentQuery = query;
+                ApplyToEach(item);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Rogue.FastLane.Queries.Mixins
         }
 
         public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefsReverse<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, Pair[] coordinates)
+            this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, Coordinates[] coordinates)
         {
             var iterator =
                 new LowestReferencesReverseEnumerable<TItem, TKey>();
@@ -35,15 +35,18 @@ namespace Rogue.FastLane.Queries.Mixins
                 offsetPerLvl[offsetPerLvl.Length - 1];
             
             ReferenceNode<TItem, TKey> @ref = null;
+            
             var iterator = 
                 IntoLowestRefsReverse(self, self.Root, offsetPerLvl).GetEnumerator();
-            
+
+            int reverseIndex = offset.Length;
+
             while (iterator.MoveNext())
             {
                 @ref = iterator.Current;
-                for (int i = @ref.Values.Length - 1; i > 0 && offset.OverallIndex < offset.Length; i--)
+                for (int i = @ref.Values.Length - 1; i > -1 && offset.OverallIndex < reverseIndex; i--)
                 {
-                    offset.OverallIndex++;
+                    reverseIndex--;
                     inEach(@ref, i);
                 }
             }

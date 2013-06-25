@@ -29,7 +29,7 @@ namespace Rogue.FastLane.Collections
             }
         }
 
-        public IEnumerable<ReferenceNode<TItem, TKey>> UpToHere(ReferenceNode<TItem, TKey> node, Pair[] offsetPerLvl, int lvlIndex = 0)
+        public IEnumerable<ReferenceNode<TItem, TKey>> UpToHere(ReferenceNode<TItem, TKey> node, Coordinates[] offsetPerLvl, int lvlIndex = 1)
         {
             if (node != null)
             {
@@ -39,9 +39,12 @@ namespace Rogue.FastLane.Collections
                 }
                 else if (node.References != null)
                 {
-                    for (int i = node.References.Length - 1; i > 0 && offsetPerLvl[lvlIndex].Index < offsetPerLvl[lvlIndex].Length; i--)
+                    int reverseIndex = 
+                        offsetPerLvl[lvlIndex].Length;
+                    //                                                         0                                8
+                    for (int i = node.References.Length - 1; i > -1 && offsetPerLvl[lvlIndex].OverallIndex < reverseIndex; i--)
                     {
-                        offsetPerLvl[lvlIndex].Index++;
+                        reverseIndex--;
 
                         foreach (var grandChild in UpToHere(node.References[i], offsetPerLvl, lvlIndex + 1))
                         {

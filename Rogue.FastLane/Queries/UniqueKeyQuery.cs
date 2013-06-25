@@ -64,12 +64,8 @@ namespace Rogue.FastLane.Queries
 
             var valueIndex =
                 this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
-                //this.GetValueIndexByUniqueKey(ref closestRef);
 
             resizeValueCount(this);
-
-            //valueIndex =
-            //    this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
 
             //If is found, does not update anything, it was already made
             if (valueIndex >= 0) { return; }
@@ -89,11 +85,6 @@ namespace Rogue.FastLane.Queries
                     (closestRef.Values = new ValueNode<TItem>[1]))[0] = node;
             }
             
-            // corrigir os max keys corretos em toda a arvore. 
-            /*
-             * 
-             */
-
             var @enum = 
                 new LowestReferencesEnumerable<TItem, TKey>();
 
