@@ -102,7 +102,7 @@ namespace Rogue.FastLane.Queries.Mixins
                     coordinates[lvlIndex] = 
                         new Coordinates()
                         {
-                            Length = overallLength,
+                            Length = self.State.Levels[lvlIndex].TotalUsed,
                             Index = index < 0 ? ~index : index,
                             OverallIndex = lastIndex
                         };
