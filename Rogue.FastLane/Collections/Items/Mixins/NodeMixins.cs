@@ -28,7 +28,7 @@ namespace Rogue.FastLane.Collections.Items.Mixins
                     @refs[penultimateCoord.Index] ??
                     (@refs[penultimateCoord.Index] = new ReferenceNode<TItem, TKey>());
 
-            if((++penultimateCoord.Index) < self.Parent.References.Length)
+            if((++penultimateCoord.Index) <= self.Parent.References.Length)
             { return tryNext(self.Parent.References); }
             else
             { return tryNext(self.Parent.References = self.Parent.References.Resize(penultimateCoord.Index + 1)); }

@@ -10,6 +10,19 @@ namespace Rogue.FastLane.Queries.Mixins
 {
     public static class NodeNavigationMixins
     {
+        private static int GetCorrectIndex<TItem, TKey>(ReferenceNode<TItem, TKey> node, int index)
+        {
+            index = index < 0 ? ~index : index;
+
+            if (node == null) { return index; }
+
+            var length =
+                ((INode[])node.References ?? node.Values).Length;
+
+            return index < length ? index : length - 1; ;
+        }
+
+
         public static ReferenceNode<TItem, TKey> GetRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, Action<int, int, ReferenceNode<TItem, TKey>> getCoordinates, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
         {
@@ -23,8 +36,12 @@ namespace Rogue.FastLane.Queries.Mixins
 
             if (node.Values != null) { return node; }
 
+            //TODO: Refator to understand fully why does only when inserting the 8 in the tests, it asks for a third reference (father) node
+            //POG: 
+            index = GetCorrectIndex(node, index);
+            //POG: 
             var found =
-                node.References[index < 0 ? ~index : index];
+                node.References[index];
 
             return found != null ?
                 GetRefByUniqueKey(self, getCoordinates, found, lvlIndex) :

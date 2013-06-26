@@ -55,11 +55,14 @@ namespace Nhonho
             structure.Add(new Pair() { Index = 1 });
             structure.Add(new Pair() { Index = 2 });
             structure.Add(new Pair() { Index = 4 });
-            structure.Add(new Pair() { Index = 5 });// needs to be discovered what happened
+            structure.Add(new Pair() { Index = 5 });
             structure.Add(new Pair() { Index = 7 });
-            structure.Add(new Pair() { Index = 6 }); // <-- so far so good
-            structure.Add(new Pair() { Index = 0 }); // <-- the real test, passed, kind of
+            structure.Add(new Pair() { Index = 6 }); 
+            structure.Add(new Pair() { Index = 0 });
+            structure.Add(new Pair() { Index = 8 });
+            structure.Add(new Pair() { Index = 10 });
+            structure.Add(new Pair() { Index = 11 });
+            structure.Add(new Pair() { Index = 9 }); 
         }
-
     }
 }
