@@ -41,13 +41,13 @@ namespace Rogue.FastLane.Collections
 
             CurrentNode = node;
 
+            Count++;
+
             //Parallel.ForEach(Queries, sel => sel.AfterAdd(node, newState));
             foreach (var dispatcher in Dispatchers.Where(d => d != null))
             {
                 dispatcher.AddNode(this, node);
-            }
-
-            Count++;
+            }            
         }
 
 

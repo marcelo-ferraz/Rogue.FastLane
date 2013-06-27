@@ -26,7 +26,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         protected override void DeriveNewState(OptmizedStructure<TItem> @struct)
         {
             NewState =
-                StructCalculus.Calculate4UniqueKey(@struct.Count + 1, MaxComparisons);
+                StructCalculus.Calculate4UniqueKey(@struct.Count, MaxComparisons);
         }
 
         protected override void ApplyToEach(ValueNode<TItem> item)

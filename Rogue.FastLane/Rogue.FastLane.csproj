@@ -66,6 +66,7 @@
     <Compile Include="Queries\Dispatchers\IDispatcher.cs" />
     <Compile Include="Queries\IUniqueKeyQuery.cs" />
     <Compile Include="Queries\Dispatchers\SimpleDispatcher.cs" />
+    <Compile Include="Queries\Mixins\Insertion\NodeNavigationMixins.cs" />
     <Compile Include="Queries\States\UniqueKeyQueryState.cs" />
     <Compile Include="Config\QueryDispatcher.cs" />
     <Compile Include="Program2.cs" />
