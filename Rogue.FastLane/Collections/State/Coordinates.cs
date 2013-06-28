@@ -13,5 +13,7 @@ namespace Rogue.FastLane.Collections.State
         }
 
         public int OverallIndex { get; set; }
+
+        public int OverallLength { get; set; }
     }
 }

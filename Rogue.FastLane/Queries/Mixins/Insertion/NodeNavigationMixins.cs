@@ -52,6 +52,47 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
             return true;
         }
 
+        private static void SetOverallIndexes<TItem, TKey>(UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinates)
+        {
+            int lastOverallIndex = 0;
+
+            for (int i = 0; i < coordinates.Length; i++)
+            {
+                //putting the index inseide the boundaries of the array it is within
+                var index = 
+                    coordinates[i].Index;
+                var toAdd = 0;
+                if(index >= self.State.MaxLengthPerNode)
+                {
+                    index = self.State.MaxLengthPerNode % index;
+                    toAdd = 1;
+                }
+
+                coordinates[i].OverallIndex =
+                    ((lastOverallIndex + toAdd) * self.State.MaxLengthPerNode) + index;
+
+                lastOverallIndex = 
+                    coordinates[i].OverallIndex;
+            }
+
+            for (int i = coordinates.Length -1; i > 1; i--)
+            {
+                var index =
+                    coordinates[i].Index;
+
+                if (index < self.State.MaxLengthPerNode)
+                { continue; }
+
+                if (coordinates[i - 1].Index + 1 < coordinates[i].Length)
+                {
+                    coordinates[i - 1].OverallIndex++;
+                    coordinates[i - 1].Index++;
+                }
+
+                
+                coordinates[i].Index = index;
+            }
+        }
 
         public static ReferenceNode<TItem, TKey> GetRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, Action<int, int, ReferenceNode<TItem, TKey>> getCoordinates, ReferenceNode<TItem, TKey> node = null, int lvlIndex = 0)
@@ -99,8 +140,6 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
             coordinates[0] =
                 new Coordinates();
 
-            int lastOverallIndex = 0;
-
             var refNode = GetRefByUniqueKey(
                 self,
                 (lvlIndex, index, parentNode) =>
@@ -111,22 +150,13 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                     coordinates[lvlIndex] =
                         new Coordinates()
                         {
-                            Length = self.State.Levels[lvlIndex].TotalUsed,
+                            Length = parentNode.Length,
                             Index = index < 0 ? ~index : index,
-                            //OverallIndex = (lastOverallIndex * self.State.MaxLengthPerNode) + index,
+                            OverallLength = self.State.Levels[lvlIndex].TotalUsed,
                         };
-
-                    if (!Try2Set2RightNode(self, coordinates, lvlIndex))
-                    {
-                        coordinates[lvlIndex].OverallIndex =
-                            (lastOverallIndex * self.State.MaxLengthPerNode) + coordinates[lvlIndex].Index;
-                    }
-
-                    lastOverallIndex = 
-                        coordinates[lvlIndex].OverallIndex;
                 },
                 node);
-
+            SetOverallIndexes(self, coordinates);
             absoluteCoordinates = coordinates;
 
             return refNode;

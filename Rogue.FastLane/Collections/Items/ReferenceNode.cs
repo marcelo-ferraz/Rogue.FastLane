@@ -12,5 +12,13 @@ namespace Rogue.FastLane.Collections.Items
         public TKey Key { get; set; }
         public ReferenceNode<TItem, TKey>[] References { get; set; }
         public ValueNode<TItem>[] Values { get; set; }
+
+        public int Length
+        {
+            get 
+            {
+                return ((INode[])this.Values ?? this.References).Length;
+            }
+        }
     }
 }
