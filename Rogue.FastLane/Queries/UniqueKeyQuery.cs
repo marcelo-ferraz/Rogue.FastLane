@@ -62,18 +62,23 @@ namespace Rogue.FastLane.Queries
         {
             Key = SelectKey(node.Value);
 
-            Coordinates[] coordinates = null;
-            ReferenceNode<TItem, TKey> closestRef = null;
-
-            var valueIndex =
-                this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
+            //var valueIndex =
+            //    this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
 
             resizeValueCount(this);
 
+            ReferenceNode<TItem, TKey> closestRef = null;
+            int valueIndex;
+           
+            var coordinates =
+                this.Search(ref closestRef, out valueIndex);
+
+            var valueCoord= coordinates[coordinates.Length - 1];
+
             //If is found, does not update anything, it was already made
-            if (valueIndex >= 0) { return; }
-            
-            valueIndex = ~valueIndex;
+            //if (valueIndex >= 0) { return; }
+
+            valueIndex = valueCoord.Index; //~valueIndex;
 
             this.MoveAllAside(coordinates, node);
 

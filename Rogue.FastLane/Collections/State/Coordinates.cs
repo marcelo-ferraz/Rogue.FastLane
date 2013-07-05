@@ -10,6 +10,7 @@ namespace Rogue.FastLane.Collections.State
         public Coordinates()
         {
             Length = 1;
+            OverallLength = 1;
         }
 
         public int OverallIndex { get; set; }

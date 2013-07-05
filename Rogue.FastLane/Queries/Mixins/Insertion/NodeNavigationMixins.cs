@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Items;
+using Rogue.FastLane.Queries.Mixins;
 
 namespace Rogue.FastLane.Queries.Mixins.Insertion
 {
@@ -21,7 +22,7 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
 
             return index < length ? index : length - 1; ;
         }
-        
+
         private static bool Try2Set2RightNode<TItem, TKey>(UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinates, int lvlIndex)
         {
             //First level passed, finish
@@ -36,7 +37,7 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
 
             //set the index within the boundaries
             index = index >= self.State.MaxLengthPerNode ?
-               self.State.MaxLengthPerNode % index:
+               self.State.MaxLengthPerNode % index :
                index;
 
             coordinates[lvlIndex].Index = index;
@@ -59,10 +60,10 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
             for (int i = 0; i < coordinates.Length; i++)
             {
                 //putting the index inseide the boundaries of the array it is within
-                var index = 
+                var index =
                     coordinates[i].Index;
                 var toAdd = 0;
-                if(index >= self.State.MaxLengthPerNode)
+                if (index >= self.State.MaxLengthPerNode)
                 {
                     index = self.State.MaxLengthPerNode % index;
                     toAdd = 1;
@@ -71,11 +72,11 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                 coordinates[i].OverallIndex =
                     ((lastOverallIndex + toAdd) * self.State.MaxLengthPerNode) + index;
 
-                lastOverallIndex = 
+                lastOverallIndex =
                     coordinates[i].OverallIndex;
             }
 
-            for (int i = coordinates.Length -1; i > 1; i--)
+            for (int i = coordinates.Length - 1; i > 1; i--)
             {
                 var index =
                     coordinates[i].Index;
@@ -89,7 +90,7 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                     coordinates[i - 1].Index++;
                 }
 
-                
+
                 coordinates[i].Index = index;
             }
         }
@@ -146,7 +147,7 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                 {
                     if (coordinates.Length <= lvlIndex) { return; }
 
-                    
+
                     coordinates[lvlIndex] =
                         new Coordinates()
                         {
@@ -176,6 +177,131 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
             return closestRef.Values
                 .BinarySearch(n =>
                     self.CompareKeys(self.Key, self.SelectKey(n.Value)));
+        }
+
+        public static Coordinates[] Search<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, out int valIndex)
+        {
+            var coordinates =
+                new Coordinates[self.State.LevelCount];
+
+            coordinates[0] =
+                new Coordinates();
+
+            return Search(self, ref node, out valIndex, coordinates);
+        }
+
+        private static Coordinates[] Search<TItem, TKey>(
+            this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, out int valIndex, Coordinates[] coordinateSet, int lvlIndex = 1, int lastOverallIndex = 0)
+        {
+            node = node ?? self.Root;
+
+            var keyComparison =
+                self.CompareKeys(node.Key, self.Key);
+
+            //the key in the node is lower than the new key
+            if (keyComparison < 0 && node.References != null)
+            {
+                /* set the rest of the coordinates to the right
+                 * if the node has the maximum length, go to the parent and move one to the right
+                 * all in the first position
+                 * return coordinates set
+                 */
+                int i = 0;
+
+                if (node.Length >= self.State.MaxLengthPerNode)
+                {
+                    i = lvlIndex;
+                }
+                else
+                {
+                    var index =
+                        self.BinarySearch(node);
+
+                    index = index < 0 ? ~index : index;
+
+                    coordinateSet[lvlIndex] =
+                        new Coordinates
+                        {
+                            Length = node.Length,
+                            Index = index,
+                            OverallLength = self.State.Levels[lvlIndex].TotalUsed,
+                            OverallIndex = (lastOverallIndex * self.State.MaxLengthPerNode) + index,
+                        };
+                    i = lvlIndex + 1;
+                }
+
+                while (i < coordinateSet.Length)
+                {
+                    coordinateSet[i] =
+                        new Coordinates
+                        {
+                            Length = 0,
+                            Index = 0,
+                            OverallLength = self.State.Levels[i].TotalUsed,
+                            OverallIndex = lastOverallIndex * self.State.MaxLengthPerNode,
+                        };
+                    i++;
+                }
+                node = self.GetLastRefNode();
+                valIndex = -1;
+                return coordinateSet;
+            }
+            //the key in the node is higher than the new key
+            else //if (rootComparison > 0) 
+            {
+                /*
+                 * if it is a reference one, search inside the child node, 
+                 * else search inside the values and return the coordinates set
+                 */
+                return SearchWithin<TItem, TKey>(self, ref node, coordinateSet, lvlIndex, lastOverallIndex, out valIndex);
+            }
+        }
+
+        private static Coordinates[] SearchWithin<TItem, TKey>(
+            UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex, int lastOverallIndex, out int valIndex)
+        {
+            var rawIndex =
+                self.BinarySearch(node);
+
+            var found = node[rawIndex < 0 ? ~rawIndex : rawIndex];
+
+            var index = rawIndex < 0 ? ~rawIndex : rawIndex;
+
+            coordinateSet[lvlIndex] =
+                new Coordinates
+                {
+                    Length = node.Length,
+                    Index = index,
+                    OverallLength = self.State.Levels[lvlIndex].TotalUsed,
+                    OverallIndex = (lastOverallIndex * self.State.MaxLengthPerNode) + index,
+                };
+
+            if (found is ReferenceNode<TItem, TKey>)
+            {
+                node =
+                    (ReferenceNode<TItem, TKey>)found;
+                return self.Search(
+                    ref node, out valIndex, coordinateSet, lvlIndex + 1);
+            }
+            else { valIndex = rawIndex; }
+
+            return coordinateSet;
+        }
+
+
+        private static int BinarySearch<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node)
+        {
+            if (node.Values != null)
+            {
+                return node.Values.BinarySearch(n =>
+                    n != null ?
+                        self.CompareKeys(self.Key, self.SelectKey(n.Value)) : 0);
+            }
+            return node.References.BinarySearch(
+                n =>
+                    n != null ? self.CompareKeys(self.Key, n.Key) : 0);
+
         }
     }
 }

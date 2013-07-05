@@ -45,10 +45,17 @@ namespace Rogue.FastLane.Queries.Mixins
 
         public static ReferenceNode<TItem, TKey> GetLastRefNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
         {
-            return (node ?? (node = self.Root)).Values == null ?
+            if (node == null) { node = self.Root; }
+
+            return node.Values == null ?
                 node.References == null ? node :
                 GetLastRefNode(self, node.References[node.References.Length - 1]) :
                 node;
+        }
+
+        public static ReferenceNode<TItem, TKey> Root<TItem, TKey>(this ReferenceNode<TItem, TKey> node)
+        {
+            return node.Parent != null ? node.Parent.Root() : node;
         }
     }
 }

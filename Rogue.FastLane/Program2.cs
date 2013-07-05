@@ -66,6 +66,7 @@ namespace Nhonho
             Write(7, query);//count: 7
             structure.Add(new Pair() { Index = 6 });
             Write(6,query);//count: 8
+            System.Diagnostics.Debugger.Break();
             structure.Add(new Pair() { Index = 0 });
             Write(0,query);//count: 9
             structure.Add(new Pair() { Index = 8 });
