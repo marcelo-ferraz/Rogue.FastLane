@@ -12,9 +12,6 @@ namespace Rogue.FastLane.Queries.Mixins
     {
         public static void MoveAllAside<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet, ValueNode<TItem> valNode)
         {
-            var coordinates = 
-                coordinateSet[coordinateSet.Length - 1];
-
             ReferenceNode<TItem, TKey> previousRef = null;
 
             self.ForEachValuedNode(coordinateSet,

@@ -46,7 +46,7 @@ namespace Rogue.FastLane.Collections
                     {
                         reverseIndex--;
 
-                        foreach (var grandChild in UpToHere(node.References[i], offsetPerLvl, lvlIndex + 1))
+                        foreach (var grandChild in UpToHere(node.References[reverseIndex], offsetPerLvl, lvlIndex + 1))
                         {
                             yield return grandChild;
                         }

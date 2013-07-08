@@ -236,7 +236,7 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                     coordinateSet[i] =
                         new Coordinates
                         {
-                            Length = 0,
+                            Length = 1,
                             Index = 0,
                             OverallLength = self.State.Levels[i].TotalUsed,
                             OverallIndex = lastOverallIndex * self.State.MaxLengthPerNode,

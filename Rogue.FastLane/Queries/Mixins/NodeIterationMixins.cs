@@ -39,8 +39,8 @@ namespace Rogue.FastLane.Queries.Mixins
             var iterator = 
                 IntoLowestRefsReverse(self, self.Root, offsetPerLvl).GetEnumerator();
 
-            int reverseIndex = offset.Length;
-
+            int reverseIndex = offset.OverallLength;
+            
             while (iterator.MoveNext())
             {
                 @ref = iterator.Current;
