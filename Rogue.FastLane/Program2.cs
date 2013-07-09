@@ -70,13 +70,26 @@ namespace Nhonho
             Write(0, query);//count: 9
             System.Diagnostics.Debugger.Break();
             structure.Add(new Pair() { Index = 8 });
-            Write(8,query);//count: 10
+            Write(8, query);//count: 10
             structure.Add(new Pair() { Index = 10 });
             Write(10,query);//count: 11
             structure.Add(new Pair() { Index = 11 });
             Write(11,query);//count: 12
             structure.Add(new Pair() { Index = 9 });
             Write(9, query);
+
+
+            for (int i = 12; i < 200; i++)
+            {
+                structure.Add(new Pair() { Index = i });
+                Write(i, query);
+            }
+
+            //<!-------------------------------------------->
+            //System.Diagnostics.Debugger.Break(); 
+            //structure.Add(new Pair() { Index = 21 });
+            //Write(21, query);
+            //<!-------------------------------------------->
         }
         static int _count = 0;
         static void Write(int index, Query<int> query)

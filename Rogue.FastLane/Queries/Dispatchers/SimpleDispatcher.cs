@@ -21,22 +21,24 @@ namespace Rogue.FastLane.Queries.Dispatchers
         
         protected abstract void DeriveNewState(OptmizedStructure<TItem> @struct);
 
-        protected abstract void TryChangeQueryValueCount(TQuery query);
+        protected abstract void TryChangeQueryValueCount();
 
         protected abstract void TryChangeQueryLevelCount();
 
         protected abstract void SaveState();
 
-        protected internal virtual void AddNode2Queries(ValueNode<TItem> item, Action<TQuery> resizeValueCount)
+        protected internal virtual void AddNode2Queries(ValueNode<TItem> item)
         {
-            CurrentQuery.Add(item, q => resizeValueCount((TQuery)q));            
+            CurrentQuery.Add(item);            
         }
 
         protected virtual void ApplyToEach(ValueNode<TItem> item)
         {
             TryChangeQueryLevelCount();
 
-            AddNode2Queries(item, TryChangeQueryValueCount);
+            TryChangeQueryValueCount();
+
+            AddNode2Queries(item);
 
             SaveState();
         }

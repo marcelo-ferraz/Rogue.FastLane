@@ -47,7 +47,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
             }
         }
 
-        protected override void TryChangeQueryValueCount(IUniqueKeyQuery<TItem> query)
+        protected override void TryChangeQueryValueCount()
         {
             if (State.Last == null || State.Last.TotalUsed < NewState.Last.TotalUsed)
             {

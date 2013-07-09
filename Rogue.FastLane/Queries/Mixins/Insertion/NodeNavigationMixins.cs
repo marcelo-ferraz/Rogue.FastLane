@@ -179,7 +179,7 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                     self.CompareKeys(self.Key, self.SelectKey(n.Value)));
         }
 
-        public static Coordinates[] Search<TItem, TKey>(
+        public static Coordinates[] Locate<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, out int valIndex)
         {
             var coordinates =
@@ -188,10 +188,10 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
             coordinates[0] =
                 new Coordinates();
 
-            return Search(self, ref node, out valIndex, coordinates);
+            return Locate(self, ref node, out valIndex, coordinates);
         }
 
-        private static Coordinates[] Search<TItem, TKey>(
+        private static Coordinates[] Locate<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, out int valIndex, Coordinates[] coordinateSet, int lvlIndex = 1, int lastOverallIndex = 0)
         {
             node = node ?? self.Root;
@@ -207,19 +207,16 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                  * all in the first position
                  * return coordinates set
                  */
-                int i = 0;
-
-                if (node.Length >= self.State.MaxLengthPerNode)
                 {
-                    i = lvlIndex;
-                }
-                else
-                {
-                    var index =
-                        self.BinarySearch(node);
+                    var found = node[node.Length - 1];
 
-                    index = index < 0 ? ~index : index;
+                    var index = node.Length - 1;
 
+<<<<<<< HEAD
+                    return GetCoordinates<TItem, TKey>(
+                        self, ref node, coordinateSet, lvlIndex, lastOverallIndex, found, index, out valIndex);
+                }                
+=======
                     coordinateSet[lvlIndex] =
                         new Coordinates
                         {
@@ -246,6 +243,7 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                 node = self.GetLastRefNode();
                 valIndex = -1;
                 return coordinateSet;
+>>>>>>> 4ab850a6737415654a83bcbdd1e2ce6ce2bc85d1
             }
             //the key in the node is higher than the new key
             else //if (rootComparison > 0) 
@@ -254,18 +252,18 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                  * if it is a reference one, search inside the child node, 
                  * else search inside the values and return the coordinates set
                  */
-                return SearchWithin<TItem, TKey>(self, ref node, coordinateSet, lvlIndex, lastOverallIndex, out valIndex);
+                var rawIndex =
+                    self.BinarySearch(node);
+
+                var found = node[rawIndex < 0 ? ~rawIndex : rawIndex];
+
+                return GetCoordinates<TItem, TKey>(
+                    self, ref node, coordinateSet, lvlIndex, lastOverallIndex, found, rawIndex, out valIndex);
             }
         }
 
-        private static Coordinates[] SearchWithin<TItem, TKey>(
-            UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex, int lastOverallIndex, out int valIndex)
+        private static Coordinates[] GetCoordinates<TItem, TKey>(UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex, int lastOverallIndex, INode found, int rawIndex, out int valIndex)
         {
-            var rawIndex =
-                self.BinarySearch(node);
-
-            var found = node[rawIndex < 0 ? ~rawIndex : rawIndex];
-
             var index = rawIndex < 0 ? ~rawIndex : rawIndex;
 
             coordinateSet[lvlIndex] =
@@ -277,14 +275,16 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
                     OverallIndex = (lastOverallIndex * self.State.MaxLengthPerNode) + index,
                 };
 
+            lastOverallIndex = (lastOverallIndex * self.State.MaxLengthPerNode) + index;
+
             if (found is ReferenceNode<TItem, TKey>)
             {
                 node =
                     (ReferenceNode<TItem, TKey>)found;
-                return self.Search(
-                    ref node, out valIndex, coordinateSet, lvlIndex + 1);
+                return self.Locate(
+                    ref node, out valIndex, coordinateSet, lvlIndex + 1, lastOverallIndex);
             }
-            else { valIndex = rawIndex; }
+            else { valIndex = index; }
 
             return coordinateSet;
         }
@@ -301,7 +301,6 @@ namespace Rogue.FastLane.Queries.Mixins.Insertion
             return node.References.BinarySearch(
                 n =>
                     n != null ? self.CompareKeys(self.Key, n.Key) : 0);
-
         }
     }
 }

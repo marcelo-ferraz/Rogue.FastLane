@@ -58,33 +58,24 @@ namespace Rogue.FastLane.Queries
             this.AugmentLevelCount(qtd);
         }
 
-        public override void Add(ValueNode<TItem> node, Action<IQuery<TItem>> resizeValueCount)
+        public override void Add(ValueNode<TItem> node)
         {
             Key = SelectKey(node.Value);
-
-            //var valueIndex =
-            //    this.GetValueIndexByUniqueKey(ref coordinates, ref closestRef);
-
-            resizeValueCount(this);
-
+            
             ReferenceNode<TItem, TKey> closestRef = null;
             int valueIndex;
            
             var coordinates =
-                this.Search(ref closestRef, out valueIndex);
+                this.Locate(ref closestRef, out valueIndex);
 
-            var valueCoord= coordinates[coordinates.Length - 1];
-
-            //If is found, does not update anything, it was already made
-            //if (valueIndex >= 0) { return; }
-
-            valueIndex = valueCoord.Index; //~valueIndex;
+            var valueCoord = 
+                coordinates[coordinates.Length - 1];
 
             this.MoveAllAside(coordinates, node);
 
-            if (valueIndex < closestRef.Values.Length)
+            if (valueCoord.Index < closestRef.Values.Length)
             {
-                closestRef.Values[valueIndex] = node;
+                closestRef.Values[valueCoord.Index] = node;
             }
             else
             {

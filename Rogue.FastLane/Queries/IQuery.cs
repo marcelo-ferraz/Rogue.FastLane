@@ -22,7 +22,7 @@ namespace Rogue.FastLane.Queries
 
         void AbridgeQueryLevelCount(int qtd);
 
-        void Add(ValueNode<TItem> item, Action<IQuery<TItem>> resizeValueCount);
+        void Add(ValueNode<TItem> item);
         
         void Remove(ValueNode<TItem> item);
     }
