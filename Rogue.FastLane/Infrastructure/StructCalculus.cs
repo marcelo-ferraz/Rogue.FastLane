@@ -55,7 +55,7 @@ namespace Rogue.FastLane.Infrastructure
                     {
                         Index = i,
                         TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
-                        TotalUsed = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i + 1) * percentageUsed)
+                        TotalUsed = (int)Math.Round(Math.Pow(state.MaxLengthPerNode, i + 1) * percentageUsed)
                     };
                 j--;
             }

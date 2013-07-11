@@ -14,7 +14,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         public UniqueKeyDispatcher(params IUniqueKeyQuery<TItem>[] queries)
             : base(queries) 
         {
-            MaxComparisons = 4;
+            MaxComparisons = 10;
             State = new UniqueKeyQueryState();
         }
 

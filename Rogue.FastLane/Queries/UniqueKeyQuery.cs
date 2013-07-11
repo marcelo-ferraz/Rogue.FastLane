@@ -38,6 +38,12 @@ namespace Rogue.FastLane.Queries
                         CompareKeys(Key, SelectKey(node.Value)));
         }
 
+        public ValueNode<TItem> First(TKey key)
+        {
+            this.Key = key;
+            return First();
+        }
+
         public override void AbridgeQueryValueCount(int qtd)
         {
             throw new NotImplementedException();
@@ -63,10 +69,9 @@ namespace Rogue.FastLane.Queries
             Key = SelectKey(node.Value);
             
             ReferenceNode<TItem, TKey> closestRef = null;
-            int valueIndex;
            
             var coordinates =
-                this.Locate(ref closestRef, out valueIndex);
+                this.Locate(ref closestRef);
 
             var valueCoord = 
                 coordinates[coordinates.Length - 1];
@@ -87,9 +92,9 @@ namespace Rogue.FastLane.Queries
             var @enum = 
                 new LowestReferencesEnumerable<TItem, TKey>();
 
-            foreach(var refNode in @enum.LastNLowestRefs(Root))
+            foreach (var refNode in @enum.LastNLowestRefs(Root))
             {
-                var highestKey = 
+                var highestKey =
                     SelectKey(refNode.Values[refNode.Values.Length - 1].Value);
 
                 ChangeKeyIfHigher(refNode, highestKey);

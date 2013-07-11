@@ -48,7 +48,7 @@ namespace Rogue.FastLane.Collections
                         if (Dispatchers.Length <= _dispatcherInsertionIndex)
                         {
                             Dispatchers = 
-                                Dispatchers.Resize(Dispatchers.Length + 2);
+                                Dispatchers.Resize(Dispatchers.Length + 1);
 
                             Dispatchers[_dispatcherInsertionIndex] =
                                 (dispatcher = Configuration<TItem>.Dispatch.GetDispatcher4UniqueKeyQuery());
@@ -56,7 +56,7 @@ namespace Rogue.FastLane.Collections
                         }
                     }
                 }
-                else { throw new NotImplementedException("Any query other than Unique key is not supported"); }
+                else { throw new NotImplementedException("Any query other than Unique key is not yet supported"); }
 
                 dispatcher.Add(queries[i]);
             }
