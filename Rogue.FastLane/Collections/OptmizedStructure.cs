@@ -53,7 +53,6 @@ namespace Rogue.FastLane.Collections
 
         public void Remove<TKey>(IQuery<TItem> selector)
         {
-            /*
             var node =
                 selector.First();
 
@@ -67,16 +66,16 @@ namespace Rogue.FastLane.Collections
                 next.Prior = prior;
                 prior.Next = next;
 
-                var s = 
-                    StructCalculus.Calculate4UniqueKey(Count + 1, 10);
+                Count--;
 
-                //Parallel.ForEach(Queries, 
-                //    sel => 
-                //        sel.AfterRemove(node, s));
+                foreach (var dispatcher in Dispatchers)
+                {
+                    dispatcher.RemoveNode(this, node);
+                }
 
                 Task.Factory.StartNew(
                     () => GC.SuppressFinalize(node));
-             */
+            }
         }
     }
 }

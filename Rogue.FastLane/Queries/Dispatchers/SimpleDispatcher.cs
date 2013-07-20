@@ -27,18 +27,38 @@ namespace Rogue.FastLane.Queries.Dispatchers
 
         protected abstract void SaveState();
 
-        protected internal virtual void AddNode2Queries(ValueNode<TItem> item)
+        protected internal virtual void AddNode2Query(ValueNode<TItem> item)
         {
             CurrentQuery.Add(item);            
         }
 
-        protected virtual void ApplyToEach(ValueNode<TItem> item)
+        protected internal virtual void RemoveNodeInQuery(ValueNode<TItem> item)
         {
+            CurrentQuery.Remove(item);
+        }
+
+        protected virtual void AddInEach(TQuery query, ValueNode<TItem> item)
+        {
+            CurrentQuery = query;
+
             TryChangeQueryLevelCount();
 
             TryChangeQueryValueCount();
 
-            AddNode2Queries(item);
+            AddNode2Query(item);
+
+            SaveState();      
+        }
+
+        protected virtual void RemoveInEach(TQuery query, ValueNode<TItem> item)
+        {
+            CurrentQuery = query;
+
+            RemoveNodeInQuery(item);
+
+            TryChangeQueryValueCount();
+            
+            TryChangeQueryLevelCount();            
 
             SaveState();
         }
@@ -55,11 +75,16 @@ namespace Rogue.FastLane.Queries.Dispatchers
         {
             DeriveNewState(@struct);
 
+            foreach (var query in Queries) 
+            { AddInEach(query, item); }
+        }
+
+        public virtual void RemoveNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> item)
+        {
+            DeriveNewState(@struct);
+
             foreach (var query in Queries)
-            {
-                CurrentQuery = query;
-                ApplyToEach(item);
-            }
+            { RemoveInEach(query, item); }
         }
     }
 }

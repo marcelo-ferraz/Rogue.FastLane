@@ -10,11 +10,11 @@ namespace Rogue.FastLane.Queries.Mixins
 {
     public static class NodeMixins
     {
-        public static void MoveAllAside<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet, ValueNode<TItem> valNode)
+        public static Stack<ReferenceNode<TItem, TKey>> MoveAll2TheRight<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet)
         {
             ReferenceNode<TItem, TKey> previousRef = null;
 
-            self.ForEachValuedNode(coordinateSet,
+            return self.ForEachValuedNodeReverse(coordinateSet,
                 (@ref, i) =>
                 {
                     if (i < 1)
@@ -27,6 +27,29 @@ namespace Rogue.FastLane.Queries.Mixins
                         }
                         
                         @ref.Values[i] = @ref.Values[i - 1]; 
+                    }
+                });
+        }
+
+        public static Stack<ReferenceNode<TItem, TKey>> MoveAll2TheLeft<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet)
+        {
+            ReferenceNode<TItem, TKey> previousRef = null;
+
+            return self.ForEachValuedNode(coordinateSet,
+                (@ref, i) =>
+                {
+                    if (i == @ref.Length -1)
+                    { previousRef = @ref; }
+                    else
+                    {
+                        if (previousRef != null)
+                        {
+                            previousRef.Values
+                                [previousRef.Length] = @ref.Values[0];
+                            previousRef = null;
+                        }
+
+                        @ref.Values[i] = @ref.Values[i + 1];
                     }
                 });
         }

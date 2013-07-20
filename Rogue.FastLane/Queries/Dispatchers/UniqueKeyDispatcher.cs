@@ -14,7 +14,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         public UniqueKeyDispatcher(params IUniqueKeyQuery<TItem>[] queries)
             : base(queries) 
         {
-            MaxComparisons = 10;
+            MaxComparisons = 4;
             State = new UniqueKeyQueryState();
         }
 
@@ -29,10 +29,16 @@ namespace Rogue.FastLane.Queries.Dispatchers
                 StructCalculus.Calculate4UniqueKey(@struct.Count, MaxComparisons);
         }
 
-        protected override void ApplyToEach(ValueNode<TItem> item)
+        protected override void RemoveInEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
         {
-            CurrentQuery.State = NewState;
-            base.ApplyToEach(item);
+            query.State = NewState;
+            base.RemoveInEach(query, item);
+        }
+
+        protected override void AddInEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
+        {
+            query.State = NewState;
+            base.AddInEach(query, item);
         }
 
         protected override void TryChangeQueryLevelCount()

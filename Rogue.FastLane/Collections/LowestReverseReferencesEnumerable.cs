@@ -40,13 +40,13 @@ namespace Rogue.FastLane.Collections
                 else if (node.References != null)
                 {
                     int reverseIndex = 
-                        offsetPerLvl[lvlIndex].Length;
+                        offsetPerLvl[lvlIndex].OverallLength;
                     //                                                         0                                8
                     for (int i = node.References.Length - 1; i > -1 && offsetPerLvl[lvlIndex].OverallIndex < reverseIndex; i--)
                     {
                         reverseIndex--;
 
-                        foreach (var grandChild in UpToHere(node.References[reverseIndex], offsetPerLvl, lvlIndex + 1))
+                        foreach (var grandChild in UpToHere(node.References[i], offsetPerLvl, lvlIndex + 1))
                         {
                             yield return grandChild;
                         }
