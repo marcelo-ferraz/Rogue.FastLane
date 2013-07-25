@@ -50,34 +50,32 @@ namespace Rogue.FastLane.Infrastructure
                 .LevelCount;
             for (int i = 0; i < state.LevelCount; i++)
             {
-                var lvl = 
+                state.Levels[i] =
                     new UniqueKeyQueryState.Level
                     {
                         Index = i,
                         TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
+                        TotalUsed = GetTotalUsed(state, percentageUsed, i)
                     };
-
-                lvl.TotalUsed = 
-                    WorkaroundForAproximationInNet(lvl.TotalOfSpaces, percentageUsed);
-
-                state.Levels[i] = lvl;
                 j--;
             }
 
             return state;
         }
 
-        private static int WorkaroundForAproximationInNet(int length, double percentage)
+        private static int GetTotalUsed(UniqueKeyQueryState state, double percentageUsed, int i)
         {
-            var correctionFactor = 100000; 
-            
-            double val = 
-                 length * percentage;
+            var value = Math.Pow(state.MaxLengthPerNode, i + 1) * percentageUsed;
 
-            val = Math.Floor(val * correctionFactor) / correctionFactor;
+            var integerVal = 
+                (int)Math.Round(value);
 
-            return (int)
-                Math.Round(val);
+            var lessThanZero = 
+                value - integerVal;
+
+            return (int)(lessThanZero > 0.000001 ?
+                Math.Ceiling(value) :
+                integerVal);
         }
     }
 }

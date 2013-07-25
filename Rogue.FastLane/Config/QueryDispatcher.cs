@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Collections.State;
 using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries;
 using Rogue.FastLane.Queries.Mixins;
@@ -34,8 +33,5 @@ namespace Rogue.FastLane.Config
         }
 
         //protected internal Func<TItem, SimpleDispatcher<TItem>> Dispatch4DuplicateKey { get; set; }
-        
-
-
     }
 }

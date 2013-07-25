@@ -7,6 +7,6 @@ namespace Rogue.FastLane.Queries.Dispatchers
     {
         void Add(IQuery<TItem> query);
         void AddNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> item);
-        void RemoveNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> node);
+        void RemoveNode(OptmizedStructure<TItem> optmizedStructure, ValueNode<TItem> node);
     }
 }

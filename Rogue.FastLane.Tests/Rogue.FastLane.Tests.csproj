@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BaseNodeTest.cs" />
     <Compile Include="Crud\InsertionTests.cs" />
+    <Compile Include="Crud\InsertNDeleteTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

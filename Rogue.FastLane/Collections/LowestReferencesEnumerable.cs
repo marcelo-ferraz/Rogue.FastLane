@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Collections.State;
+using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Collections
 {
@@ -51,7 +51,7 @@ namespace Rogue.FastLane.Collections
             }
         }
 
-        public IEnumerable<ReferenceNode<TItem, TKey>> FromHereOn(ReferenceNode<TItem, TKey> node, Coordinates[] offsetPerLvl, int lvlIndex = 1)
+        public IEnumerable<ReferenceNode<TItem, TKey>> FromHereOn(ReferenceNode<TItem, TKey> node, Coordinates[] coordinates, int lvlIndex = 1)
         {
             if (node != null)
             {
@@ -62,13 +62,13 @@ namespace Rogue.FastLane.Collections
                 else if (node.References != null)
                 {
                     int overallIndex =
-                        offsetPerLvl[lvlIndex].OverallIndex;
+                        coordinates[lvlIndex].OverallIndex;
 
-                    for (int i = 0; i > node.Length && overallIndex > offsetPerLvl[lvlIndex].OverallLength; i++)
+                    for (int i = coordinates[lvlIndex].Index; i < node.Length && overallIndex < coordinates[lvlIndex].OverallLength; i++)
                     {
                         overallIndex++;
 
-                        foreach (var grandChild in FromHereOn(node.References[i], offsetPerLvl, lvlIndex + 1))
+                        foreach (var grandChild in FromHereOn(node.References[i], coordinates, lvlIndex + 1))
                         {
                             yield return grandChild;
                         }

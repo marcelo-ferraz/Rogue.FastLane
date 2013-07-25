@@ -1,10 +1,13 @@
-﻿using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Collections.State;
-using Rogue.FastLane.Items;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Rogue.FastLane.Collections.Items;
+using Rogue.FastLane.Infrastructure.Positioning;
+using Rogue.FastLane.Items;
+using Rogue.FastLane.Queries;
+using NUnit.Framework;
+using Rogue.FastLane.Collections.Items.Mixins;
+using Rogue.FastLane.Collections;
 
 namespace Rogue.FastLane.Tests
 {
@@ -16,9 +19,9 @@ namespace Rogue.FastLane.Tests
         /// <param name="parent"></param>
         /// <param name="childGetters">An array of functions that returns the children</param>
         /// <returns></returns>
-        protected ReferenceNode<Pair, int> GetRef(ReferenceNode<Pair, int> parent = null, params Func<ReferenceNode<Pair, int>>[] childGetters)
+        protected ReferenceNode<Coordinates, int> GetRef(ReferenceNode<Coordinates, int> parent = null, params Func<ReferenceNode<Coordinates, int>>[] childGetters)
         {
-            var refs = new List<ReferenceNode<Pair, int>>();
+            var refs = new List<ReferenceNode<Coordinates, int>>();
 
             foreach (var getChild in childGetters)
             {
@@ -39,9 +42,9 @@ namespace Rogue.FastLane.Tests
         /// <param name="parent"></param>
         /// <param name="childGetters">An array of functions that returns the children</param>
         /// <returns></returns>
-        protected ReferenceNode<Pair, int> GetRef(ReferenceNode<Pair, int> parent = null, params Func<ValueNode<Pair>>[] childGetters)
+        protected ReferenceNode<Coordinates, int> GetRef(ReferenceNode<Coordinates, int> parent = null, params Func<ValueNode<Coordinates>>[] childGetters)
         {
-            var vals = new List<ValueNode<Pair>>();
+            var vals = new List<ValueNode<Coordinates>>();
 
             foreach (var getChild in childGetters)
             {
@@ -63,9 +66,9 @@ namespace Rogue.FastLane.Tests
         /// <param name="count">the ammount of referenced nodes</param>
         /// <param name="parent">the node Parent</param>
         /// <returns>returns a reference node</returns>
-        protected ReferenceNode<Pair, int> GetRef(int key, int count = 5, ReferenceNode<Pair, int> parent = null)
+        protected ReferenceNode<Coordinates, int> GetRef(int key, int count = 5, ReferenceNode<Coordinates, int> parent = null)
         {
-            return new ReferenceNode<Pair, int>() { Key = key, References = new ReferenceNode<Pair, int>[count], Parent = parent };
+            return new ReferenceNode<Coordinates, int>() { Key = key, References = new ReferenceNode<Coordinates, int>[count], Parent = parent };
         }
 
         /// <summary>
@@ -75,9 +78,9 @@ namespace Rogue.FastLane.Tests
         /// <param name="count">the ammount of referenced nodes</param>
         /// <param name="parent">the node Parent</param>
         /// <returns>returns a reference node</returns>
-        protected ReferenceNode<Pair, int> GetRef2Val(int key, int count = 5, ReferenceNode<Pair, int> parent = null)
+        protected ReferenceNode<Coordinates, int> GetRef2Val(int key, int count = 5, ReferenceNode<Coordinates, int> parent = null)
         {
-            return new ReferenceNode<Pair, int>() { Key = key, Values = new ValueNode<Pair>[count], Parent = parent };
+            return new ReferenceNode<Coordinates, int>() { Key = key, Values = new ValueNode<Coordinates>[count], Parent = parent };
         }
 
         /// <summary>
@@ -85,9 +88,37 @@ namespace Rogue.FastLane.Tests
         /// </summary>
         /// <param name="key"></param>
         /// <returns>returns a valued node</returns>
-        protected ValueNode<Pair> GetVal(int key)
+        protected ValueNode<Coordinates> GetVal(int key)
         {
-            return new ValueNode<Pair>() { Value = new Pair() { Index = key } };
+            return new ValueNode<Coordinates>() { Value = new Coordinates() { Index = key } };
+        }
+        
+
+        protected int RightIndex = 0;
+
+        protected void ValidateOrder(ReferenceNode<Coordinates, int> node)
+        {
+            var root = node.Root();
+            
+            var enu =
+                new LowestReferencesEnumerable<Coordinates, int>();
+
+            foreach (var @ref in enu.AllFrom(root))
+            {
+                ValidateOrder(@ref.Values);
+            }
+        }
+
+        protected void ValidateOrder(ValueNode<Coordinates>[] values)
+        {
+            Assert.Less(values.Length, 34);            
+
+            foreach (var val in values)
+            {                
+                Assert.AreEqual(RightIndex, val.Value.Index, "The values in are wrong order");
+
+                RightIndex++;
+            }
         }
     }
 }

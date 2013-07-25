@@ -1,14 +1,10 @@
-﻿using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Collections.State;
-using Rogue.FastLane.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using Rogue.FastLane.Collections.Items;
+using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
-    public static class NodeMixins
+    public static class NodeMovingMixins
     {
         public static Stack<ReferenceNode<TItem, TKey>> MoveAll2TheRight<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet)
         {
@@ -34,18 +30,22 @@ namespace Rogue.FastLane.Queries.Mixins
         public static Stack<ReferenceNode<TItem, TKey>> MoveAll2TheLeft<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet)
         {
             ReferenceNode<TItem, TKey> previousRef = null;
-
+            
             return self.ForEachValuedNode(coordinateSet,
                 (@ref, i) =>
                 {
-                    if (i == @ref.Length -1)
+                    if (@ref.Key.Equals(1089) || (@ref.Key.Equals(1088) && i == 32))
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }
+
+                    if (i == (@ref.Length - 1))
                     { previousRef = @ref; }
                     else
                     {
                         if (previousRef != null)
                         {
-                            previousRef.Values
-                                [previousRef.Length] = @ref.Values[0];
+                            previousRef.Values[previousRef.Length - 1] = @ref.Values[0];
                             previousRef = null;
                         }
 

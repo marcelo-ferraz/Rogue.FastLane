@@ -4,12 +4,10 @@ using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.Items.Mixins;
 using Rogue.FastLane.Collections.Mixins;
-using Rogue.FastLane.Collections.State;
 
 using Rogue.FastLane.Items;
 
 using Rogue.FastLane.Queries.Mixins;
-using Rogue.FastLane.Queries.Mixins.Insertion;
 using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries
@@ -18,11 +16,10 @@ namespace Rogue.FastLane.Queries
     {
         public UniqueKeyQuery()
         {
-            Root = 
-                new ReferenceNode<TItem, TKey>() 
-                { Values = new ValueNode<TItem>[0] };
+            Root =
+                new ReferenceNode<TItem, TKey>() { Values = new ValueNode<TItem>[0] };
 
-            State = 
+            State =
                 new UniqueKeyQueryState();
         }
 
@@ -46,16 +43,16 @@ namespace Rogue.FastLane.Queries
 
         public override void AbridgeQueryValueCount(int qtd)
         {
-            throw new NotImplementedException();
+            this.AbridgeValueCount(qtd);
         }
 
         public override void AbridgeQueryLevelCount(int qtd)
         {
-            throw new NotImplementedException();
+            this.AbridgeLevelCount(qtd);
         }
 
         public override void AugmentQueryValueCount(int qtd)
-        {            
+        {
             this.AugmentValueCount(qtd);
         }
 
@@ -67,16 +64,16 @@ namespace Rogue.FastLane.Queries
         public override void Add(ValueNode<TItem> node)
         {
             Key = SelectKey(node.Value);
-            
+
             ReferenceNode<TItem, TKey> closestRef = null;
-           
+
             var coordinates =
                 this.Locate(ref closestRef);
 
-            var valueCoordinates = 
+            var valueCoordinates =
                 coordinates[coordinates.Length - 1];
 
-            var affected = 
+            var affected =
                 this.MoveAll2TheRight(coordinates);
 
             closestRef.
@@ -87,7 +84,7 @@ namespace Rogue.FastLane.Queries
              * keeping in mind that the alteration must obey the rule of the most valuable, 
              * or just the key of the last child.
              */
-            
+
             //while (affected.Count > 0)
             //{
             //    var @ref = affected.Pop();
@@ -119,37 +116,31 @@ namespace Rogue.FastLane.Queries
             if (refNode == null) { return; }
 
             refNode.Key = key;
-            ChangeKey2LastKey(refNode.Parent, key);            
+            ChangeKey2LastKey(refNode.Parent, key);
         }
 
         private void ChangeKey2LastKey(ReferenceNode<TItem, TKey> refNode)
         {
             if (refNode == null) { return; }
-            
-            var lastIndex = 
+
+            var lastIndex =
                 refNode.Length - 1;
 
-            refNode.Key = 
+            refNode.Key =
                 refNode.References[lastIndex].Key;
-            
+
             ChangeKey2LastKey(refNode.Parent);
         }
 
-        public override void Remove(ValueNode<TItem> item) 
+        public override void Remove(ValueNode<TItem> item)
         {
             Key = this.SelectKey(item.Value);
 
             ReferenceNode<TItem, TKey> closestRef = null;
-            //    this.FirstRefByUniqueKey();
-            //if (closestRef == null) 
-            //{
-            //    //TODO: the node does not exist. Think if is necessary to throw an exception
-            //    return;
-            //}
 
-            var coordinates = 
-                this.Locate(ref closestRef);
-
+            var coordinates =
+                this.Locate(ref closestRef, ephemeral: true);
+            
             this.MoveAll2TheLeft(coordinates);
 
             StraightUpKeys();

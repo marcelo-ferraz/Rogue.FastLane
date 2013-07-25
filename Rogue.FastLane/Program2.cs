@@ -1,21 +1,18 @@
-﻿using System.Diagnostics;
-using Rogue.FastLane;
-using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Collections.State;
-using Rogue.FastLane.Items;
-using Rogue.FastLane.Queries.Mixins;
+﻿using System;
+using System.Diagnostics;
 using Rogue.FastLane.Collections;
+using Rogue.FastLane.Collections.Items;
+using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries;
-using System.Reflection;
 using Rogue.FastLane.Queries.States;
-using System;
+using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Nhonho
 {
     class Program2
     {
         public class Query<TKey> :
-            UniqueKeyQuery<Pair, TKey>, IUniqueKeyQuery<Pair>
+            UniqueKeyQuery<Coordinates, TKey>, IUniqueKeyQuery<Coordinates>
         {
             public new UniqueKeyQueryState State
             {
@@ -25,19 +22,19 @@ namespace Nhonho
         }
 
         #region
-        static ReferenceNode<Pair, int> GetRef(int key, int count = 5, ReferenceNode<Pair, int> parent = null)
+        static ReferenceNode<Coordinates, int> GetRef(int key, int count = 5, ReferenceNode<Coordinates, int> parent = null)
         {
-            return new ReferenceNode<Pair, int>() { Key = key, References = new ReferenceNode<Pair, int>[count], Parent = parent };
+            return new ReferenceNode<Coordinates, int>() { Key = key, References = new ReferenceNode<Coordinates, int>[count], Parent = parent };
         }
 
-        static ReferenceNode<Pair, int> GetRefVal(int key, int count = 5, ReferenceNode<Pair, int> parent = null)
+        static ReferenceNode<Coordinates, int> GetRefVal(int key, int count = 5, ReferenceNode<Coordinates, int> parent = null)
         {
-            return new ReferenceNode<Pair, int>() { Key = key, Values = new ValueNode<Pair>[count], Parent = parent };
+            return new ReferenceNode<Coordinates, int>() { Key = key, Values = new ValueNode<Coordinates>[count], Parent = parent };
         }
 
-        static ValueNode<Pair> GetVal(int key)
+        static ValueNode<Coordinates> GetVal(int key)
         {
-            return new ValueNode<Pair>() { Value = new Pair() { Index = key } };
+            return new ValueNode<Coordinates>() { Value = new Coordinates() { Index = key } };
         }
         #endregion
 
@@ -50,25 +47,35 @@ namespace Nhonho
                 };
 
             var structure =
-                new OptmizedStructure<Pair>(query);
+                new OptmizedStructure<Coordinates>(query);
  
             var watch = new Stopwatch();
             watch.Start();
-            for (int i = 1; i < (int)(Math.Pow(33,1)); i++)
+            for (int i = 1; i < (int)(Math.Pow(33,2)); i++)
             {
-                structure.Add(new Pair() { Index = i });
+                structure.Add(new Coordinates() { Index = i });
                 //Write(i, query);
             }
             watch.Stop();
             watch.Reset();
             watch.Start();
-            structure.Add(new Pair() { Index = 0 });
+            structure.Add(new Coordinates() { Index = 0 });
+            structure.Add(new Coordinates() { Index = (int)(Math.Pow(33, 2)) });
             watch.Stop();
             watch.Reset();
             watch.Start();
             var n = query.First(5);
             watch.Stop();
-            query.Key = 7;
+
+            var enu = 
+                new LowestReferencesEnumerable<Coordinates, int>();
+
+            foreach (var @ref in enu.AllFrom(query.Root))
+            {
+                Write(@ref.Values);
+            }
+
+            query.Key = 5;
             structure.Remove<int>(query);
         }
 
@@ -89,13 +96,31 @@ namespace Nhonho
             Console.WriteLine("==================================");
         }
 
-        private static void Write(ValueNode<Pair>[] values)
+        static int _rightIndex = 0;
+
+        private static void Write(ValueNode<Coordinates>[] values)
         {
+            Console.WriteLine("contains {0} items, which is {1}.", values.Length, values.Length < 34 ? "right" : "wrong");
+            
+            if(values.Length > 33) { System.Diagnostics.Debugger.Break(); }
+
             foreach (var val in values)
-            { Console.WriteLine("key: {0}", val.Value.Index); }
+            {
+                var comp = 
+                    _rightIndex.CompareTo(val.Value.Index);
+                
+                Console.Write("key: {0} ", val.Value.Index);
+
+                Console.Write(comp == 0 ? "is right" : string.Concat("is wrong, should be", _rightIndex));
+                
+                if (comp != 0) { System.Diagnostics.Debugger.Break(); }
+
+                Console.WriteLine();
+                _rightIndex++;
+            }
         }
 
-        static void Write(params ReferenceNode<Pair, int>[] refs)
+        static void Write(params ReferenceNode<Coordinates, int>[] refs)
         {
             if (refs != null)
             {

@@ -1,11 +1,7 @@
 ﻿using System;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Collections.Mixins;
-using Rogue.FastLane.Collections.State;
-using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Items;
-using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries
 {

@@ -14,7 +14,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         public UniqueKeyDispatcher(params IUniqueKeyQuery<TItem>[] queries)
             : base(queries) 
         {
-            MaxComparisons = 4;
+            MaxComparisons = 10;
             State = new UniqueKeyQueryState();
         }
 
@@ -31,8 +31,17 @@ namespace Rogue.FastLane.Queries.Dispatchers
 
         protected override void RemoveInEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
         {
+            CurrentQuery = query;
+
+            RemoveNodeInQuery(item);
+
             query.State = NewState;
-            base.RemoveInEach(query, item);
+
+            TryChangeQueryValueCount();
+
+            TryChangeQueryLevelCount();
+
+            SaveState();
         }
 
         protected override void AddInEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
@@ -49,7 +58,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
             }
             else if (State.LevelCount > NewState.LevelCount)
             {
-                CurrentQuery.AbridgeQueryLevelCount(NewState.LevelCount - State.LevelCount); 
+                CurrentQuery.AbridgeQueryLevelCount(State.LevelCount - NewState.LevelCount); 
             }
         }
 
@@ -61,7 +70,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
             }
             else if (State.Last == null || State.Last.TotalUsed > NewState.Last.TotalUsed)
             {
-                CurrentQuery.AbridgeQueryValueCount(NewState.Last.TotalUsed - State.Last.TotalUsed); 
+                CurrentQuery.AbridgeQueryValueCount(State.Last.TotalUsed - NewState.Last.TotalUsed); 
             }
         }
 

@@ -6,7 +6,7 @@ using System;
 namespace Rogue.FastLane.Queries.Dispatchers
 {
     public abstract class SimpleDispatcher<TItem, TQuery> : IDispatcher<TItem>
-        where TQuery: IQuery<TItem>
+        where TQuery : IQuery<TItem>
     {
         private int CurrentQueryIndex = 0;
 
@@ -18,7 +18,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         {
             Queries = queries;
         }
-        
+
         protected abstract void DeriveNewState(OptmizedStructure<TItem> @struct);
 
         protected abstract void TryChangeQueryValueCount();
@@ -29,7 +29,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
 
         protected internal virtual void AddNode2Query(ValueNode<TItem> item)
         {
-            CurrentQuery.Add(item);            
+            CurrentQuery.Add(item);
         }
 
         protected internal virtual void RemoveNodeInQuery(ValueNode<TItem> item)
@@ -47,7 +47,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
 
             AddNode2Query(item);
 
-            SaveState();      
+            SaveState();
         }
 
         protected virtual void RemoveInEach(TQuery query, ValueNode<TItem> item)
@@ -57,8 +57,8 @@ namespace Rogue.FastLane.Queries.Dispatchers
             RemoveNodeInQuery(item);
 
             TryChangeQueryValueCount();
-            
-            TryChangeQueryLevelCount();            
+
+            TryChangeQueryLevelCount();
 
             SaveState();
         }
@@ -75,7 +75,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         {
             DeriveNewState(@struct);
 
-            foreach (var query in Queries) 
+            foreach (var query in Queries)
             { AddInEach(query, item); }
         }
 

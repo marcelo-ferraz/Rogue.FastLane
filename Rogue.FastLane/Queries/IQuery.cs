@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rogue.FastLane.Items;
-using Rogue.FastLane.Collections;
-using Rogue.FastLane.Collections.State;
-using Rogue.FastLane.Queries.States;
+﻿using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane.Queries
 {
