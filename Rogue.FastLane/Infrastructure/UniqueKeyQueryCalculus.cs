@@ -3,7 +3,7 @@ using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Infrastructure
 {
-    public static class StructCalculus
+    public static class UniqueKeyQueryCalculus
     {
         public static int GetMaxComparisons(int totalLength)
         {
@@ -70,10 +70,13 @@ namespace Rogue.FastLane.Infrastructure
             var integerVal = 
                 (int)Math.Round(value);
 
-            var lessThanZero = 
+            var lessThanZeroValue = 
                 value - integerVal;
 
-            return (int)(lessThanZero > 0.000001 ?
+            var factorOfValueCorrection =
+                1 / Math.Pow(state.MaxLengthPerNode, i + 1);
+
+            return (int)(lessThanZeroValue >= factorOfValueCorrection ?
                 Math.Ceiling(value) :
                 integerVal);
         }

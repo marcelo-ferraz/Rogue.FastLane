@@ -39,7 +39,7 @@ namespace Rogue.FastLane.Queries.Mixins
                         System.Diagnostics.Debugger.Break();
                     }
 
-                    if (i == (@ref.Length - 1))
+                    if (i == (@ref.Length - 1) && i > 1)
                     { previousRef = @ref; }
                     else
                     {
@@ -49,7 +49,10 @@ namespace Rogue.FastLane.Queries.Mixins
                             previousRef = null;
                         }
 
-                        @ref.Values[i] = @ref.Values[i + 1];
+                        if (i != (@ref.Length - 1))
+                        {
+                            @ref.Values[i] = @ref.Values[i + 1];
+                        }
                     }
                 });
         }

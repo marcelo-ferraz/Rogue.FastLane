@@ -71,7 +71,7 @@
     <Compile Include="Queries\States\UniqueKeyQueryState.cs" />
     <Compile Include="Config\QueryDispatcher.cs" />
     <Compile Include="Program2.cs" />
-    <Compile Include="Infrastructure\StructCalculus.cs" />
+    <Compile Include="Infrastructure\UniqueKeyQueryCalculus.cs" />
     <Compile Include="Collections\Items\Node.cs" />
     <Compile Include="Collections\Items\ReferenceNode.cs" />
     <Compile Include="Collections\Items\ValueNode.cs" />

@@ -26,7 +26,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         protected override void DeriveNewState(OptmizedStructure<TItem> @struct)
         {
             NewState =
-                StructCalculus.Calculate4UniqueKey(@struct.Count, MaxComparisons);
+                UniqueKeyQueryCalculus.Calculate4UniqueKey(@struct.Count, MaxComparisons);
         }
 
         protected override void RemoveInEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
