@@ -5,8 +5,21 @@ using Rogue.FastLane.Queries.States.Mixins;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
-    public static class NodeSearchMixins
+    public static class QuerySearchMixins
     {
+        /// <summary>
+        /// Creates the set 
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="node"></param>
+        /// <param name="coordinateSet"></param>
+        /// <param name="lvlIndex"></param>
+        /// <param name="lastOverallIndex"></param>
+        /// <param name="found"></param>
+        /// <param name="rawIndex"></param>
+        /// <returns></returns>
         internal static Coordinates[] GetCoordinates<TItem, TKey>(UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex, int lastOverallIndex, INode found, int rawIndex)
         {
             var index = rawIndex < 0 ? ~rawIndex : rawIndex;
@@ -32,6 +45,14 @@ namespace Rogue.FastLane.Queries.Mixins
             return coordinateSet;
         }
         
+        /// <summary>
+        /// Searches whithn the node hierarchy, using the binary search method
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
         internal static int BinarySearch<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node)
         {
             if (node.Values != null)
@@ -45,6 +66,17 @@ namespace Rogue.FastLane.Queries.Mixins
                     n != null ? self.CompareKeys(self.Key, n.Key) : 0);
         }
 
+        /// <summary>
+        /// Locates and maps the node by its unique key
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="node"></param>
+        /// <param name="coordinateSet"></param>
+        /// <param name="lvlIndex"></param>
+        /// <param name="lastOverallIndex"></param>
+        /// <returns></returns>
         internal static Coordinates[] Locate<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex = 1, int lastOverallIndex = 0)
         {
@@ -86,6 +118,15 @@ namespace Rogue.FastLane.Queries.Mixins
             }
         }
 
+        /// <summary>
+        /// Locates and maps the node by its unique key
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="node"></param>
+        /// <param name="ephemeral"></param>
+        /// <returns></returns>
         public static Coordinates[] Locate<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, bool ephemeral = false)
         {
@@ -95,21 +136,8 @@ namespace Rogue.FastLane.Queries.Mixins
             return self.Locate(ref node, coordinates);
         }
 
-        public static int GetValueIndexByUniqueKey<TItem, TKey>(
-            this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> closestRef)
-        {
-            closestRef = 
-                FirstRefByUniqueKey(self);
-
-            if (closestRef == null) { return -1; }
-
-            return closestRef.Values
-                .BinarySearch(n =>
-                    self.CompareKeys(self.Key, self.SelectKey(n.Value)));
-        }
-
         /// <summary>
-        /// 
+        /// Retrieves the first reference node by its unique key
         /// </summary>
         /// <typeparam name="TItem"></typeparam>
         /// <typeparam name="TKey"></typeparam>
@@ -132,14 +160,22 @@ namespace Rogue.FastLane.Queries.Mixins
                 FirstRefByUniqueKey(self, node.References[index]) : 
                 null;
         }
-
-        public static ReferenceNode<TItem, TKey> GetLastRefNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
+        
+        /// <summary>
+        /// Retrieves the last reference node from the root. The last in depth and in index
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static ReferenceNode<TItem, TKey> LastRefNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
         {
             if (node == null) { node = self.Root; }
 
             return node.Values == null ?
                 node.References == null ? node :
-                GetLastRefNode(self, node.References[node.References.Length - 1]) :
+                LastRefNode(self, node.References[node.References.Length - 1]) :
                 node;
         }
     }

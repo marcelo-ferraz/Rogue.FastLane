@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Rogue.FastLane.Queries.States;
-using Rogue.FastLane.Infrastructure.Positioning;
+﻿using Rogue.FastLane.Infrastructure.Positioning;
+using System;
 
 namespace Rogue.FastLane.Queries.States.Mixins
 {
     public static class UniqueKeyQueryStateMixins
     {
+        /// <summary>
+        /// Creates a map with coordinates whether ephemeral or regular.
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="ephemeral">States that the coordinate for index will vanish after the first use</param>
+        /// <returns></returns>
         public static Coordinates[] AcquireMap(this UniqueKeyQueryState self, bool ephemeral = false)
         {
             Func<Coordinates> getCoordinates =

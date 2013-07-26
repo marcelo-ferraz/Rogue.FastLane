@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Rogue.FastLane.Queries.States;
-using Rogue.FastLane.Items;
-using Rogue.FastLane.Collections;
+﻿using Rogue.FastLane.Collections;
 using Rogue.FastLane.Infrastructure;
+using Rogue.FastLane.Items;
+using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries.Dispatchers
 {
@@ -33,7 +29,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         {
             CurrentQuery = query;
 
-            RemoveNodeInQuery(item);
+            CurrentQuery.Remove(item);
 
             query.State = NewState;
 

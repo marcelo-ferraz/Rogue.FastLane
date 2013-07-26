@@ -62,7 +62,7 @@
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Infrastructure\Mixins\InheritanceMixins.cs" />
     <Compile Include="Infrastructure\Positioning\EphemeralCoordinates.cs" />
-    <Compile Include="Queries\Mixins\NodeAbridgmentMixins.cs" />
+    <Compile Include="Queries\Mixins\QueryAbridgmentMixins.cs" />
     <Compile Include="Queries\States\Mixins\UniqueKeyQueryStateMixins.cs" />
     <Compile Include="JumpStarter.cs" />
     <Compile Include="Queries\Dispatchers\IDispatcher.cs" />
@@ -81,12 +81,12 @@
     <Compile Include="Collections\OptmizedStructure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\IQuery.cs" />
-    <Compile Include="Queries\Mixins\NodeIterationMixins.cs" />
-    <Compile Include="Queries\Mixins\NodeMovingMixins.cs" />
+    <Compile Include="Queries\Mixins\QueryIterationMixins.cs" />
+    <Compile Include="Queries\Mixins\QueryMovingMixins.cs" />
     <Compile Include="Queries\SimpleQuery.cs" />
     <Compile Include="Queries\UniqueKeyQuery.cs" />
-    <Compile Include="Queries\Mixins\NodeAugmentationMixins.cs" />
-    <Compile Include="Queries\Mixins\NodeSearchMixins.cs" />
+    <Compile Include="Queries\Mixins\QueryAugmentationMixins.cs" />
+    <Compile Include="Queries\Mixins\QuerySearchMixins.cs" />
     <Compile Include="Queries\Dispatchers\UniqueKeyDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>

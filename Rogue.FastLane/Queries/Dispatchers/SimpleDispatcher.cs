@@ -8,8 +8,6 @@ namespace Rogue.FastLane.Queries.Dispatchers
     public abstract class SimpleDispatcher<TItem, TQuery> : IDispatcher<TItem>
         where TQuery : IQuery<TItem>
     {
-        private int CurrentQueryIndex = 0;
-
         protected TQuery[] Queries;
         protected TQuery CurrentQuery;
         public SimpleDispatcher() { }
@@ -19,50 +17,30 @@ namespace Rogue.FastLane.Queries.Dispatchers
             Queries = queries;
         }
 
+        /// <summary>
+        /// When inherited, derive a new state of that query
+        /// </summary>
         protected abstract void DeriveNewState(OptmizedStructure<TItem> @struct);
 
+        /// <summary>
+        /// When inherited, it tries to change the value count of that query
+        /// </summary>
         protected abstract void TryChangeQueryValueCount();
 
+        /// <summary>
+        /// When inherited, it tries to change the reference count of that query
+        /// </summary>
         protected abstract void TryChangeQueryLevelCount();
 
+        /// <summary>
+        /// When inherited, saves the state of that query
+        /// </summary>
         protected abstract void SaveState();
 
-        protected internal virtual void AddNode2Query(ValueNode<TItem> item)
-        {
-            CurrentQuery.Add(item);
-        }
-
-        protected internal virtual void RemoveNodeInQuery(ValueNode<TItem> item)
-        {
-            CurrentQuery.Remove(item);
-        }
-
-        protected virtual void AddInEach(TQuery query, ValueNode<TItem> item)
-        {
-            CurrentQuery = query;
-
-            TryChangeQueryLevelCount();
-
-            TryChangeQueryValueCount();
-
-            AddNode2Query(item);
-
-            SaveState();
-        }
-
-        protected virtual void RemoveInEach(TQuery query, ValueNode<TItem> item)
-        {
-            CurrentQuery = query;
-
-            RemoveNodeInQuery(item);
-
-            TryChangeQueryValueCount();
-
-            TryChangeQueryLevelCount();
-
-            SaveState();
-        }
-
+        /// <summary>
+        /// Adds a query to the dispatcher
+        /// </summary>
+        /// <param name="query"></param>
         public void Add(IQuery<TItem> query)
         {
             Queries =
@@ -70,7 +48,12 @@ namespace Rogue.FastLane.Queries.Dispatchers
 
             Queries[Queries.Length - 1] = (TQuery)query;
         }
-
+        
+        /// <summary>
+        /// Adds to all queries, the value node
+        /// </summary>
+        /// <param name="struct"></param>
+        /// <param name="item"></param>
         public virtual void AddNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> item)
         {
             DeriveNewState(@struct);
@@ -79,12 +62,53 @@ namespace Rogue.FastLane.Queries.Dispatchers
             { AddInEach(query, item); }
         }
 
+        /// <summary>
+        /// Adds to each query, the value node
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="item"></param>
+        protected virtual void AddInEach(TQuery query, ValueNode<TItem> item)
+        {
+            CurrentQuery = query;
+
+            TryChangeQueryLevelCount();
+
+            TryChangeQueryValueCount();
+
+            CurrentQuery.Add(item);
+
+            SaveState();
+        }
+
+        /// <summary>
+        /// Removes to all queries, the value node
+        /// </summary>
+        /// <param name="optmizedStructure"></param>
+        /// <param name="node"></param>
         public virtual void RemoveNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> item)
         {
             DeriveNewState(@struct);
 
             foreach (var query in Queries)
             { RemoveInEach(query, item); }
+        }
+
+        /// <summary>
+        /// Removes in each query, the value node
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="item"></param>
+        protected virtual void RemoveInEach(TQuery query, ValueNode<TItem> item)
+        {
+            CurrentQuery = query;
+
+            CurrentQuery.Remove(item);
+
+            TryChangeQueryValueCount();
+
+            TryChangeQueryLevelCount();
+
+            SaveState();
         }
     }
 }

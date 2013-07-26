@@ -8,8 +8,16 @@ using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
-    public static class NodeIterationMixins
+    public static class QueryIterationMixins
 	{
+        /// <summary>
+        /// Iterates throughtout the lowest reference nodes, the ones closer to the values
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
         public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefs<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinates)
         {
@@ -19,6 +27,15 @@ namespace Rogue.FastLane.Queries.Mixins
             return iterator.FromHereOn(self.Root, coordinates);
         }
 
+        /// <summary>
+        /// Iterates throughtout the lowest reference nodes, the ones closer to the values, in reverse
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="root"></param>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
         public static IEnumerable<ReferenceNode<TItem, TKey>> IntoLowestRefsReverse<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, Coordinates[] coordinates)
         {
@@ -28,6 +45,15 @@ namespace Rogue.FastLane.Queries.Mixins
             return iterator.UpToHere(root, coordinates);
         }
 
+        /// <summary>
+        /// Loops throughtout all the value nodes, starting from a set of coordinates, in reverse
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="coordinates"></param>
+        /// <param name="inEach"></param>
+        /// <returns></returns>
         public static Stack<ReferenceNode<TItem, TKey>> ForEachValuedNodeReverse<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self,
             Coordinates[] coordinates, Action<ReferenceNode<TItem, TKey>, int> inEach)
         {
@@ -57,7 +83,15 @@ namespace Rogue.FastLane.Queries.Mixins
             return queue;
         }
 
-
+        /// <summary>
+        /// Loops throughtout all the value nodes, starting from a set of coordinates
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="coordinateSet"></param>
+        /// <param name="inEach"></param>
+        /// <returns></returns>
         public static Stack<ReferenceNode<TItem, TKey>> ForEachValuedNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self,
             Coordinates[] coordinateSet, Action<ReferenceNode<TItem, TKey>, int> inEach)
         {

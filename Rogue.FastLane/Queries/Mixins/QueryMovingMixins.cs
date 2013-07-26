@@ -1,11 +1,19 @@
-﻿using System.Collections.Generic;
-using Rogue.FastLane.Collections.Items;
+﻿using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Infrastructure.Positioning;
+using System.Collections.Generic;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
-    public static class NodeMovingMixins
+    public static class QueryMovingMixins
     {
+        /// <summary>
+        /// Moves all the references to values one position to the right, starting from a set of coordinates
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="coordinateSet"></param>
+        /// <returns></returns>
         public static Stack<ReferenceNode<TItem, TKey>> MoveAll2TheRight<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet)
         {
             ReferenceNode<TItem, TKey> previousRef = null;
@@ -27,6 +35,14 @@ namespace Rogue.FastLane.Queries.Mixins
                 });
         }
 
+        /// <summary>
+        /// Moves all the references to values one position to the left, starting from a set of coordinates
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="coordinateSet"></param>
+        /// <returns></returns>
         public static Stack<ReferenceNode<TItem, TKey>> MoveAll2TheLeft<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinateSet)
         {
             ReferenceNode<TItem, TKey> previousRef = null;
