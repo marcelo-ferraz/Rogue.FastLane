@@ -23,6 +23,22 @@ namespace Rogue.FastLane.Collections
 
         protected IDispatcher<TItem>[] Dispatchers;
 
+        protected IList<IQuery<TItem>> Queries;
+        
+        private TQuery Where<TQuery>(Func<IQuery<TItem>, bool> predicate)
+            where TQuery: class, IQuery<TItem> 
+        {
+            for (int i = 0; i < Queries.Count; i++)
+            {
+                var query = Queries[i];
+                if (predicate(query))
+                {
+                    return query as TQuery;
+                }
+            }
+            return null;
+        }
+
         protected virtual bool Is4UniqueKey(IQuery<TItem> query)
         {
             return query.IsOrInherits(typeof(UniqueKeyQuery<,>));
@@ -56,10 +72,25 @@ namespace Rogue.FastLane.Collections
                         }
                     }
                 }
-                else { throw new NotImplementedException("Any query other than Unique key is not yet supported"); }
+                else { throw new NotImplementedException("Any query other than Unique key is yet to be supported. Sorry."); }
 
                 dispatcher.Add(queries[i]);
+
+                Queries.Add(queries[i]);
             }
+        }
+
+        public virtual IQuery<TItem> Using(string name)
+        {
+            return Where<IQuery<TItem>>(q =>
+                name.Equals(q.Name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public virtual TQuery Using<TQuery>()
+            where TQuery: class, IQuery<TItem>
+        {
+            return Where<TQuery>(
+                q => q.IsOrInherits<TQuery>());
         }
     }
 }

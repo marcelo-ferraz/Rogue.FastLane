@@ -46,25 +46,25 @@ namespace Nhonho
                     SelectKey = item => item.Index
                 };
 
-            var structure =
+            var list =
                 new OptmizedStructure<Coordinates>(query);
  
             var watch = new Stopwatch();
             watch.Start();
             for (int i = 1; i < (int)(Math.Pow(33,2)); i++)
             {
-                structure.Add(new Coordinates() { Index = i });
+                list.Add(new Coordinates() { Index = i });
                 //Write(i, query);
             }
             watch.Stop();
             watch.Reset();
             watch.Start();
-            structure.Add(new Coordinates() { Index = 0 });
-            structure.Add(new Coordinates() { Index = (int)(Math.Pow(33, 2)) });
+            list.Add(new Coordinates() { Index = 0 });
+            list.Add(new Coordinates() { Index = (int)(Math.Pow(33, 2)) });
             watch.Stop();
             watch.Reset();
             watch.Start();
-            var n = query.First(5);
+            var n = query.Get(5);
             watch.Stop();
 
             var enu = 
@@ -76,7 +76,11 @@ namespace Nhonho
             }
 
             query.Key = 5;
-            structure.Remove<int>(query);
+            list.Remove<int>(query);
+
+            list.Using<Query<int>>().Get(5);
+            list.Using<Query<string>>().Get("name");
+            
         }
 
         static int _count = 0;

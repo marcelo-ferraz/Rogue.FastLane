@@ -35,7 +35,7 @@ namespace Rogue.FastLane.Queries
                         CompareKeys(Key, SelectKey(node.Value)));
         }
 
-        public ValueNode<TItem> First(TKey key)
+        public ValueNode<TItem> Get(TKey key)
         {
             this.Key = key;
             return First();

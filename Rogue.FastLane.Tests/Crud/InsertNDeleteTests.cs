@@ -30,7 +30,7 @@ namespace Rogue.FastLane.Tests.Crud
 
             structure.Add(new Coordinates() { Index = 0 });
 
-            var n = query.First(5);
+            var n = query.Get(5);
 
             ValidateOrder(query.Root);
         }
