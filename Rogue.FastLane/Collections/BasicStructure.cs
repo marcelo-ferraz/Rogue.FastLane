@@ -16,6 +16,7 @@ namespace Rogue.FastLane.Collections
         {
             Dispatchers =
                 new IDispatcher<TItem>[0];
+            Queries = new List<IQuery<TItem>>();
             Add2Dispatchers(queries);
         }
 

@@ -4,6 +4,8 @@ namespace Rogue.FastLane.Queries
 {
     public interface IQuery<TItem> 
     {
+        string Name { get; set; }
+
         ValueNode<TItem> First();
 
         void AugmentQueryValueCount(int qtd);

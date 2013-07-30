@@ -20,7 +20,8 @@ namespace Rogue.FastLane.Queries
         protected int MaxComparisons;        
 
         protected OptmizedStructure<TItem> Structure;
-                
+
+        public string Name { get; set; }  
         /// <summary>
         /// Used for caching, and therefore enhancing the performance, and keeping the inteligence 
         /// for typing variaty by keeping the type choosen comparison
