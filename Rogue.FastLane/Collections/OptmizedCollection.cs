@@ -1,23 +1,13 @@
-﻿using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Queries;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
-using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Items;
-using Rogue.FastLane.Infrastructure;
-using Rogue.FastLane.Queries.States;
-using Rogue.FastLane.Queries.Dispatchers;
-using Rogue.FastLane.Config;
+using Rogue.FastLane.Queries;
 
 namespace Rogue.FastLane.Collections
 {
-    public class OptmizedStructure<TItem> : BasicStructure<TItem>
+    public class OptmizedCollection<TItem> : SimpleCollection<TItem>
     {
-        public OptmizedStructure(params IQuery<TItem>[] queries)
+        public OptmizedCollection(params IQuery<TItem>[] queries)
             : base(queries) { }
 
         protected ValueNode<TItem> CurrentNode;

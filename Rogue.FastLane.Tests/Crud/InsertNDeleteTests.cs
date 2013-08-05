@@ -12,27 +12,25 @@ namespace Rogue.FastLane.Tests.Crud
     public class InsertNDeleteTests : BaseNodeTest
     {
         [Test]
-        public void GrandInsertionTest()
+        public void GrandInsertionNDeleteTest()
         {
-            var query =
-                new UniqueKeyQuery<Coordinates, int>
-                {
-                    SelectKey = item => item.Index
-                };
+            var insertionTest =
+                new InsertionTests();
 
-            var structure =
-                new OptmizedStructure<Coordinates>(query);
+            insertionTest.Setup();
+            insertionTest.GrandInsertionTest();
 
-            for (int i = 1; i < (int)(Math.Pow(33, 2)); i++)
+            Query = insertionTest.Query;
+            
+            Query.Key = 5;
+            
+            insertionTest.Collection.Remove<int>(Query);
+
+            ValidateOrder(Query.Root, (item, index) =>
             {
-                structure.Add(new Coordinates() { Index = i });
-            }
-
-            structure.Add(new Coordinates() { Index = 0 });
-
-            var n = query.Get(5);
-
-            ValidateOrder(query.Root);
+                //if the index is 5, the one that was deleted, correct the index.
+                if (index == 5) { RightIndex++; }
+            });
         }
     }
 }

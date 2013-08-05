@@ -6,7 +6,7 @@ using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Collections
 {
-    public class LowestReferencesReverseEnumerable<TItem, TKey>
+    public class LowRefsReverseEnumerable<TItem, TKey>
     {
         public IEnumerable<ReferenceNode<TItem, TKey>> AllBellow(ReferenceNode<TItem, TKey> node)
         {

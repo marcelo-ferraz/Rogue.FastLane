@@ -10,9 +10,9 @@ using Rogue.FastLane.Infrastructure.Mixins;
 
 namespace Rogue.FastLane.Collections
 {
-    public abstract class BasicStructure<TItem>
+    public abstract class SimpleCollection<TItem>
     {
-        public BasicStructure(params IQuery<TItem>[] queries)
+        public SimpleCollection(params IQuery<TItem>[] queries)
         {
             Dispatchers =
                 new IDispatcher<TItem>[0];

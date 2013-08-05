@@ -50,10 +50,10 @@ namespace Rogue.FastLane.Queries.Mixins
             return self.ForEachValuedNode(coordinateSet,
                 (@ref, i) =>
                 {
-                    if (@ref.Key.Equals(1089) || (@ref.Key.Equals(1088) && i == 32))
-                    {
-                        System.Diagnostics.Debugger.Break();
-                    }
+                    //if (@ref.Key.Equals(1089) || (@ref.Key.Equals(1088) && i == 32))
+                    //{
+                    //    System.Diagnostics.Debugger.Break();
+                    //}
 
                     if (i == (@ref.Length - 1) && i > 1)
                     { previousRef = @ref; }

@@ -16,13 +16,13 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// </summary>
         /// <param name="struct"></param>
         /// <param name="item"></param>
-        void AddNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> item);
+        void AddNode(OptmizedCollection<TItem> @struct, ValueNode<TItem> item);
 
         /// <summary>
         /// Removes to all queries, the value node
         /// </summary>
         /// <param name="optmizedStructure"></param>
         /// <param name="node"></param>
-        void RemoveNode(OptmizedStructure<TItem> optmizedStructure, ValueNode<TItem> node);
+        void RemoveNode(OptmizedCollection<TItem> optmizedStructure, ValueNode<TItem> node);
     }
 }

@@ -9,20 +9,20 @@ namespace Rogue.FastLane.Collections.Items.Mixins
 {
     public static class NodeMixins
     {
-        public static ReferenceNode<TItem, TKey> Next<TItem, TKey>(this ReferenceNode<TItem, TKey> self, Coordinates[] coordinateSet)
-        {
-            if (self.Parent == null)
-            { throw new InvalidOperationException("Cannot move to a next node. There`s no parent"); }
+        //public static ReferenceNode<TItem, TKey> Next<TItem, TKey>(this ReferenceNode<TItem, TKey> self, Coordinates[] coordinateSet)
+        //{
+        //    if (self.Parent == null)
+        //    { throw new InvalidOperationException("Cannot move to a next node. There`s no parent"); }
 
-            if (self.Parent.References == null)
-            { throw new InvalidOperationException("Cannot move to a next node. Parent has no references."); }
+        //    if (self.Parent.References == null)
+        //    { throw new InvalidOperationException("Cannot move to a next node. Parent has no references."); }
 
-            if (coordinateSet.Length < 2)
-            { throw new InvalidOperationException("Cannot move to a next node. Coordinates are too shallow."); }
+        //    if (coordinateSet.Length < 2)
+        //    { throw new InvalidOperationException("Cannot move to a next node. Coordinates are too shallow."); }
 
-            return self.Parent.References[
-                coordinateSet[coordinateSet.Length - 2].Index];                            
-        }
+        //    return self.Parent.References[
+        //        coordinateSet[coordinateSet.Length - 2].Index];                            
+        //}
 
 
         public static ReferenceNode<TItem, TKey> Root<TItem, TKey>(this ReferenceNode<TItem, TKey> node)

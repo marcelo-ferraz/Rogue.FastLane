@@ -53,11 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\BasicStructure.cs" />
+    <Compile Include="Collections\BasicCollection.cs" />
     <Compile Include="Collections\Items\Mixins\NodeMixins.cs" />
-    <Compile Include="Collections\LowestReferencesEnumerable.cs" />
+    <Compile Include="Collections\LowRefsEnumerable.cs" />
     <Compile Include="Collections\Mixins\ArrayMixins.cs" />
-    <Compile Include="Collections\LowestReverseReferencesEnumerable.cs" />
+    <Compile Include="Collections\LowRefsReverseEnumerable.cs" />
     <Compile Include="Infrastructure\Positioning\Coordinates.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Infrastructure\Mixins\InheritanceMixins.cs" />
@@ -69,7 +69,7 @@
     <Compile Include="Queries\IUniqueKeyQuery.cs" />
     <Compile Include="Queries\Dispatchers\SimpleDispatcher.cs" />
     <Compile Include="Queries\States\UniqueKeyQueryState.cs" />
-    <Compile Include="Config\QueryDispatcher.cs" />
+    <Compile Include="Config\QueryDispatchmentResolver.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="Infrastructure\UniqueKeyQueryCalculus.cs" />
     <Compile Include="Collections\Items\Node.cs" />
@@ -78,7 +78,7 @@
     <Compile Include="Collections\Items\INode.cs" />
     <Compile Include="Collections\Mixins\ByteArrayMixins.cs" />
     <Compile Include="Collections\Mixins\ListMixins.cs" />
-    <Compile Include="Collections\OptmizedStructure.cs" />
+    <Compile Include="Collections\OptmizedCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\Mixins\QueryIterationMixins.cs" />

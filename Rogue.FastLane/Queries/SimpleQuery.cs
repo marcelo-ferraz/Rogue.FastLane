@@ -19,7 +19,7 @@ namespace Rogue.FastLane.Queries
         /// </summary>
         protected int MaxComparisons;        
 
-        protected OptmizedStructure<TItem> Structure;
+        protected OptmizedCollection<TItem> Structure;
 
         public string Name { get; set; }  
         /// <summary>

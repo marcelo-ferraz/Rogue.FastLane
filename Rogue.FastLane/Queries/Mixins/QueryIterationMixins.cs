@@ -22,7 +22,7 @@ namespace Rogue.FastLane.Queries.Mixins
             this UniqueKeyQuery<TItem, TKey> self, Coordinates[] coordinates)
         {
             var iterator = 
-                new LowestReferencesEnumerable<TItem, TKey>();
+                new LowRefsEnumerable<TItem, TKey>();
 
             return iterator.FromHereOn(self.Root, coordinates);
         }
@@ -40,7 +40,7 @@ namespace Rogue.FastLane.Queries.Mixins
             this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> root, Coordinates[] coordinates)
         {
             var iterator =
-                new LowestReferencesReverseEnumerable<TItem, TKey>();
+                new LowRefsReverseEnumerable<TItem, TKey>();
 
             return iterator.UpToHere(root, coordinates);
         }

@@ -20,7 +20,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// <summary>
         /// When inherited, derive a new state of that query
         /// </summary>
-        protected abstract void DeriveNewState(OptmizedStructure<TItem> @struct);
+        protected abstract void DeriveNewState(OptmizedCollection<TItem> @struct);
 
         /// <summary>
         /// When inherited, it tries to change the value count of that query
@@ -54,7 +54,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// </summary>
         /// <param name="struct"></param>
         /// <param name="item"></param>
-        public virtual void AddNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> item)
+        public virtual void AddNode(OptmizedCollection<TItem> @struct, ValueNode<TItem> item)
         {
             DeriveNewState(@struct);
 
@@ -85,7 +85,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// </summary>
         /// <param name="optmizedStructure"></param>
         /// <param name="node"></param>
-        public virtual void RemoveNode(OptmizedStructure<TItem> @struct, ValueNode<TItem> item)
+        public virtual void RemoveNode(OptmizedCollection<TItem> @struct, ValueNode<TItem> item)
         {
             DeriveNewState(@struct);
 

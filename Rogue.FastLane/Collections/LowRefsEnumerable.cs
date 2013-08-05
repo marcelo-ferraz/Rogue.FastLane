@@ -4,7 +4,7 @@ using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Collections
 {
-    public class LowestReferencesEnumerable<TItem, TKey>
+    public class LowRefsEnumerable<TItem, TKey>
     {
         public IEnumerable<ReferenceNode<TItem, TKey>> LastNLowestRefs(ReferenceNode<TItem, TKey> node)
         {

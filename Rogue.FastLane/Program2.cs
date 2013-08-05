@@ -47,7 +47,7 @@ namespace Nhonho
                 };
 
             var list =
-                new OptmizedStructure<Coordinates>(query);
+                new OptmizedCollection<Coordinates>(query);
  
             var watch = new Stopwatch();
             watch.Start();
@@ -68,7 +68,7 @@ namespace Nhonho
             watch.Stop();
 
             var enu = 
-                new LowestReferencesEnumerable<Coordinates, int>();
+                new LowRefsEnumerable<Coordinates, int>();
 
             foreach (var @ref in enu.AllFrom(query.Root))
             {
@@ -79,7 +79,7 @@ namespace Nhonho
             list.Remove<int>(query);
 
             list.Using<Query<int>>().Get(5);
-            list.Using<Query<string>>().Get("name");
+            //list.Using<Query<string>>().Get("name");
             
         }
 

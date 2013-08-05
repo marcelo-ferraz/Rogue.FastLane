@@ -12,7 +12,7 @@ using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries
 {
-    public class UniqueKeyQuery<TItem, TKey> : SimpleQuery<TItem, TKey>
+    public class UniqueKeyQuery<TItem, TKey> : SimpleQuery<TItem, TKey>, IUniqueKeyQuery<TItem>
     {
         public UniqueKeyQuery()
         {
@@ -23,7 +23,7 @@ namespace Rogue.FastLane.Queries
                 new UniqueKeyQueryState();
         }
 
-        protected internal UniqueKeyQueryState State;
+        public UniqueKeyQueryState State { get; set; }
 
         public override ValueNode<TItem> First()
         {
@@ -100,7 +100,7 @@ namespace Rogue.FastLane.Queries
         private void StraightUpKeys()
         {
             var @enum =
-                new LowestReferencesEnumerable<TItem, TKey>();
+                new LowRefsEnumerable<TItem, TKey>();
 
             foreach (var refNode in @enum.LastNLowestRefs(Root))
             {
@@ -132,18 +132,24 @@ namespace Rogue.FastLane.Queries
             ChangeKey2LastKey(refNode.Parent);
         }
 
-        public override void Remove(ValueNode<TItem> item)
+        public void Remove(TKey key)
         {
-            Key = this.SelectKey(item.Value);
-
+            Key = key;
             ReferenceNode<TItem, TKey> closestRef = null;
 
             var coordinates =
                 this.Locate(ref closestRef, ephemeral: true);
-            
+
             this.MoveAll2TheLeft(coordinates);
 
             StraightUpKeys();
         }
+
+        public override void Remove(ValueNode<TItem> item)
+        {
+            Remove(this.SelectKey(item.Value));
+        }
+
+
     }
 }
