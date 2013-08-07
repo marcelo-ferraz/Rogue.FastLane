@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <StartupObject>Nhonho.Program2</StartupObject>
+    <StartupObject>
+    </StartupObject>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -12,7 +13,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{710C56E2-4DDA-4CE4-A867-31D1F7CBB38C}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rogue.FastLane</RootNamespace>
     <AssemblyName>Rogue.FastLane</AssemblyName>
@@ -72,7 +73,6 @@
     <Compile Include="Config\QueryDispatchmentResolver.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="Infrastructure\UniqueKeyQueryCalculus.cs" />
-    <Compile Include="Collections\Items\Node.cs" />
     <Compile Include="Collections\Items\ReferenceNode.cs" />
     <Compile Include="Collections\Items\ValueNode.cs" />
     <Compile Include="Collections\Items\INode.cs" />

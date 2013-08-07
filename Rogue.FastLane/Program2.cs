@@ -9,6 +9,7 @@ using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Nhonho
 {
+#if DEBUG
     class Program2
     {
         public class Query<TKey> :
@@ -143,4 +144,5 @@ namespace Nhonho
             }
         }
     }
+#endif
 }
