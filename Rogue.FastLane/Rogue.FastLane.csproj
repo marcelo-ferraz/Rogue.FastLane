@@ -13,7 +13,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{710C56E2-4DDA-4CE4-A867-31D1F7CBB38C}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rogue.FastLane</RootNamespace>
     <AssemblyName>Rogue.FastLane</AssemblyName>
@@ -63,6 +63,7 @@
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Infrastructure\Mixins\InheritanceMixins.cs" />
     <Compile Include="Infrastructure\Positioning\EphemeralCoordinates.cs" />
+    <Compile Include="Queries\ICrudQuery.cs" />
     <Compile Include="Queries\Mixins\QueryAbridgmentMixins.cs" />
     <Compile Include="Queries\States\Mixins\UniqueKeyQueryStateMixins.cs" />
     <Compile Include="JumpStarter.cs" />

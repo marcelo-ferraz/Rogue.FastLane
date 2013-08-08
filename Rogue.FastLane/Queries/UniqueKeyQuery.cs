@@ -12,7 +12,7 @@ using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries
 {
-    public class UniqueKeyQuery<TItem, TKey> : SimpleQuery<TItem, TKey>, IUniqueKeyQuery<TItem>
+    public class UniqueKeyQuery<TItem, TKey> : SimpleQuery<TItem, TKey>, IUniqueKeyQuery<TItem>, ICrudQuery<TItem>
     {
         public UniqueKeyQuery()
         {
@@ -80,21 +80,31 @@ namespace Rogue.FastLane.Queries
                 Values[valueCoordinates.Index] = node;
 
 
-            /*TODO: this stands as part of the solution, whereas the solution must righten all the affected keys, 
-             * keeping in mind that the alteration must obey the rule of the most valuable, 
-             * or just the key of the last child.
-             */
+            ReferenceNode<TItem, TKey> @ref = null;
 
-            //while (affected.Count > 0)
-            //{
-            //    var @ref = affected.Pop();
-            //    @ref.Key =
-            //        SelectKey(@ref.Values[@ref.Values.Length - 1].Value);
-            //    ChangeKey2LastKey(@ref.Parent);
-            //}
+            while (affected.Count > 0)
+            {
+                try
+                {
+                    @ref = affected.Pop();
+                    @ref.Key =
+                        SelectKey(@ref.Values[@ref.Values.Length - 1].Value);
+                    ChangeKey2LastKey(@ref.Parent);
 
+                }
+                catch (NullReferenceException ex)
+                {
+                    /*Minor fix, before evaluating the calculus precision.
+                     * On tests, it fails after 5 million.
+                     */
+                    if (@ref == null) { throw ex; }
+                    @ref.Values =
+                        @ref.Values.Resize(@ref.Values.Length - 1);
+                    ChangeKey2LastKey(@ref.Parent);
+                }
+            }
 
-            StraightUpKeys();
+            //StraightUpKeys();
         }
 
         private void StraightUpKeys()

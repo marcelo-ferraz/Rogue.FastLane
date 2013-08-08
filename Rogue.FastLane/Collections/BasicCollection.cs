@@ -24,7 +24,7 @@ namespace Rogue.FastLane.Collections
 
         protected IDispatcher<TItem>[] Dispatchers;
 
-        protected IList<IQuery<TItem>> Queries;
+        protected internal IList<IQuery<TItem>> Queries { get; set; }
         
         private TQuery Where<TQuery>(Func<IQuery<TItem>, bool> predicate)
             where TQuery: class, IQuery<TItem> 

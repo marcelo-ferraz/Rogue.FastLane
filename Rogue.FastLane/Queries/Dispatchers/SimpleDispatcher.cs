@@ -6,7 +6,7 @@ using System;
 namespace Rogue.FastLane.Queries.Dispatchers
 {
     public abstract class SimpleDispatcher<TItem, TQuery> : IDispatcher<TItem>
-        where TQuery : IQuery<TItem>
+        where TQuery : IQuery<TItem>, ICrudQuery<TItem>
     {
         protected TQuery[] Queries;
         protected TQuery CurrentQuery;

@@ -52,16 +52,16 @@ namespace Nhonho
  
             var watch = new Stopwatch();
             watch.Start();
-            for (int i = 1; i < (int)(Math.Pow(33,2)); i++)
+            for (int i = 1; i < (int)(Math.Pow(33,5)); i++)
             {
                 list.Add(new Coordinates() { Index = i });
                 //Write(i, query);
             }
             watch.Stop();
-            watch.Reset();
-            watch.Start();
+            //watch.Reset();
+            //watch.Start();
             list.Add(new Coordinates() { Index = 0 });
-            list.Add(new Coordinates() { Index = (int)(Math.Pow(33, 2)) });
+            //list.Add(new Coordinates() { Index = (int)(Math.Pow(33, 2)) });
             watch.Stop();
             watch.Reset();
             watch.Start();
@@ -115,6 +115,8 @@ namespace Nhonho
                     _rightIndex.CompareTo(val.Value.Index);
                 
                 Console.Write("key: {0} ", val.Value.Index);
+
+                if (comp != 0) { throw new Exception(); }
 
                 Console.Write(comp == 0 ? "is right" : string.Concat("is wrong, should be", _rightIndex));
                 

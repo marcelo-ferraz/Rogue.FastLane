@@ -5,7 +5,7 @@ using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane.Queries
 {
-    public abstract class SimpleQuery<TItem, TKey> : IQuery<TItem>
+    public abstract class SimpleQuery<TItem, TKey> : IQuery<TItem>, ICrudQuery<TItem>
     {
         /// <summary>
         /// Key for getting the result
