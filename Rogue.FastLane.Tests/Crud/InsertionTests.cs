@@ -9,7 +9,7 @@ using System;
 namespace Rogue.FastLane.Tests.Crud
 {
     [TestFixture]
-    public class InsertionTests : BaseNodeTest
+    public class InsertionTests : BaseTest
     {
         [SetUp]
         public void Setup()
@@ -23,7 +23,7 @@ namespace Rogue.FastLane.Tests.Crud
                 };
 
             Collection =
-                new OptmizedCollection<MockItem>(Query);
+                new OptimizedCollection<MockItem>(Query);
         }
 
         [Test]

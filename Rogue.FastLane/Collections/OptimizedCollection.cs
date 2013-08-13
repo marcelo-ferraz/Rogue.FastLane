@@ -5,16 +5,16 @@ using Rogue.FastLane.Queries;
 
 namespace Rogue.FastLane.Collections
 {
-    public class OptmizedCollection<TItem> : SimpleCollection<TItem>
+    public class OptimizedCollection<TItem> : SimpleCollection<TItem>
     {
-        public OptmizedCollection(params IQuery<TItem>[] queries)
+        public OptimizedCollection(params IQuery<TItem>[] queries)
             : base(queries) { }
 
         protected ValueNode<TItem> CurrentNode;
 
-        public int Count { get; set; }
+        public virtual int Count { get; set; }
 
-        public void Add(TItem item)
+        public virtual void Add(TItem item)
         {
             var node =
                 new ValueNode<TItem>
@@ -40,7 +40,7 @@ namespace Rogue.FastLane.Collections
         }
 
 
-        public void Remove<TKey>(IQuery<TItem> selector)
+        public virtual void Remove<TKey>(IQuery<TItem> selector)
         {
             var node =
                 selector.First();

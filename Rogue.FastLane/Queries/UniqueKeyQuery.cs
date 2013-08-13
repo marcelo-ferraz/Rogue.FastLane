@@ -96,6 +96,9 @@ namespace Rogue.FastLane.Queries
                 {
                     /*Minor fix, before evaluating the calculus precision.
                      * On tests, it fails after 5 million.
+                     * 
+                     * values failed:
+                     * - 5044805
                      */
                     if (@ref == null) { throw ex; }
                     @ref.Values =

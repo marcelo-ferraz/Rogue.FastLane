@@ -19,7 +19,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         
         public int MaxComparisons { get; set; }
 
-        protected override void DeriveNewState(OptmizedCollection<TItem> @struct)
+        protected override void DeriveNewState(OptimizedCollection<TItem> @struct)
         {
             NewState =
                 UniqueKeyQueryCalculus.Calculate4UniqueKey(@struct.Count, MaxComparisons);

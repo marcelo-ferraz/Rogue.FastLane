@@ -16,6 +16,8 @@ namespace Rogue.FastLane.Infrastructure.Mixins
         {
             var type = obj.GetType();
             
+            if (type == def) { return true; }
+
             Type genericDef = null;
             if (def.IsGenericType)
             {

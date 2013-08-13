@@ -11,14 +11,20 @@ using Rogue.FastLane.Collections;
 
 namespace Rogue.FastLane.Tests
 {
-    public class BaseNodeTest
+    public class BaseTest
     {
-        public class MockItem
+        public class MockItem : IComparable<MockItem>
         {
             public int Index { get; set; }
+            public byte[] IndexInBytes { get; set; }
+
+            public int CompareTo(MockItem other)
+            {
+                return this.Index.CompareTo(other.Index);
+            }
         }
 
-        public OptmizedCollection<MockItem> Collection { get; set; }
+        public OptimizedCollection<MockItem> Collection { get; set; }
         public UniqueKeyQuery<MockItem, int> Query { get; set; }
 
         protected int RightIndex = 0;

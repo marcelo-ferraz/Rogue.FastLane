@@ -9,7 +9,7 @@ using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Tests.Crud
 {
-    public class InsertNDeleteTests : BaseNodeTest
+    public class InsertNDeleteTests : BaseTest
     {
         [Test]
         public void GrandInsertionNDeleteTest()

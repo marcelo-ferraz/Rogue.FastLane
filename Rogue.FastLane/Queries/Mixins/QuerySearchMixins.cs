@@ -80,7 +80,15 @@ namespace Rogue.FastLane.Queries.Mixins
         internal static Coordinates[] Locate<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex = 1, int lastOverallIndex = 0)
         {
-            node = node ?? self.Root;
+            if (node == null)
+            {
+                node = self.Root;
+            }
+
+            if (object.Equals(node.Key, default(TKey)))
+            {
+                node.Key = self.Key;
+            }
 
             var keyComparison =
                 self.CompareKeys(node.Key, self.Key);

@@ -46,9 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseNodeTest.cs" />
+    <Compile Include="BaseTest.cs" />
+    <Compile Include="Perfomance\MassiveFastestSearchingPerformanceTests.cs" />
+    <Compile Include="Perfomance\MassiveSearchingPerformanceTests.cs" />
+    <Compile Include="Perfomance\SearchingPerformanceTests.cs" />
+    <Compile Include="Perfomance\PerformanceInsertionTests.cs" />
     <Compile Include="Crud\InsertionTests.cs" />
     <Compile Include="Crud\InsertNDeleteTests.cs" />
+    <Compile Include="Perfomance\PerformanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

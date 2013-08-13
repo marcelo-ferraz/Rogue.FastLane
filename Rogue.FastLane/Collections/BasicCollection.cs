@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Rogue.FastLane.Queries;
-using Rogue.FastLane.Queries.Dispatchers;
 using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Config;
 using Rogue.FastLane.Infrastructure.Mixins;
+using Rogue.FastLane.Queries;
+using Rogue.FastLane.Queries.Dispatchers;
 
 namespace Rogue.FastLane.Collections
 {
-    public abstract class SimpleCollection<TItem>
+    public abstract class SimpleCollection<TItem> //TODO: implements from ICollection<TItem>
     {
         public SimpleCollection(params IQuery<TItem>[] queries)
         {
@@ -25,8 +24,8 @@ namespace Rogue.FastLane.Collections
         protected IDispatcher<TItem>[] Dispatchers;
 
         protected internal IList<IQuery<TItem>> Queries { get; set; }
-        
-        private TQuery Where<TQuery>(Func<IQuery<TItem>, bool> predicate)
+
+        protected virtual TQuery Where<TQuery>(Func<IQuery<TItem>, bool> predicate)
             where TQuery: class, IQuery<TItem> 
         {
             for (int i = 0; i < Queries.Count; i++)
