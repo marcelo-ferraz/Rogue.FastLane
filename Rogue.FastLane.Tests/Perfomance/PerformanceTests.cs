@@ -28,7 +28,7 @@ namespace Rogue.FastLane.Tests.Performance
                 new OptimizedCollection<MockItem>(Query);
         }
 
-        protected void TestInsertionAgainst<T>(int qtd, T list = default(T), Action<T, int> add = null, Action<T> afterListInsertion = null)
+        protected void TestInsertionAgainst<T>(int qtd, T list = default(T), Action<T, int> add = null)
             where T : new()
         {
             if (list == null) { list = new T(); }
@@ -36,15 +36,10 @@ namespace Rogue.FastLane.Tests.Performance
             Watch.Reset();
             Watch.Start();
             for (int i = 1; i < qtd; i++)
-            { add(list, i); }
-            Watch.Stop();
-
-            if (afterListInsertion != null)
-            {
-                Watch.Start();
-                afterListInsertion(list);
-                Watch.Stop();
+            { 
+                add(list, i);
             }
+            Watch.Stop();
 
             var elapsed4List = Watch.Elapsed;
 
@@ -56,7 +51,7 @@ namespace Rogue.FastLane.Tests.Performance
 
             var elapsed4Collection = Watch.Elapsed;
 
-            Console.WriteLine("For the list of type {0} took {1} to insert {2} items, for FastLane took {3}.",
+            Console.WriteLine("For the list of type {0} took \n{1} to insert {2} items, for FastLane took {3}.",
                 typeof(T), elapsed4List, qtd, elapsed4Collection);
         }
 
@@ -64,10 +59,10 @@ namespace Rogue.FastLane.Tests.Performance
         {
             TestInsertionAgainst<List<MockItem>>((int)qtd,
             list: list,                
-            add: (l, i) =>
-                l.Add(new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) }),
-            afterListInsertion: l =>
-                l.Sort());
+            add: (l, i) => {
+                l.Add(new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) });
+                l.Sort();
+            });
         }
 
         protected void TestInsertionAgainstSortedList(double qtd, SortedList<int,MockItem> list = null)

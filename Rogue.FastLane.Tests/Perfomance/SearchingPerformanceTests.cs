@@ -31,7 +31,7 @@ namespace Rogue.FastLane.Tests.Performance
             var elapsed4List = Watch.Elapsed;
 
 
-            Console.WriteLine("For the list<T>, took {0} to get one item, for FastLane took {1}.",
+            Console.WriteLine("For the list<T>, took {0} to get one item, \n FastLane took {1}.",
                 elapsed4List, elapsed4Collection);
         }
 

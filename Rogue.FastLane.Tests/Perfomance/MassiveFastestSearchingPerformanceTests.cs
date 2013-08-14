@@ -27,7 +27,7 @@ namespace Rogue.FastLane.Tests.Performance
                 new _Query()
                 {
                     SelectKey = item => item.IndexInBytes,
-                    KeyComparer = (one, other) => one.CompareTo(other)
+                    KeyComparer = (one, other) => one.UnsafeCompareTo(other)
                 };
 
             Collection =
