@@ -107,7 +107,7 @@ namespace Rogue.FastLane.Tests.Performance
             Watch.Start();
             for (int i = 0; i < max; i++)
             {
-                var mockedInList = list.Where(item => item.Index == i);
+                var mockedInList = list.First(item => item.Index == i);
             }
             Watch.Stop();
 

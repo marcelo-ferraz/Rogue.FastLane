@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime;
 
 namespace Rogue.FastLane.Collections.Mixins
 {
     public unsafe static class ByteArrayMixins
     {
+        [TargetedPatchingOptOut("")]
         public static int CompareTo(this byte[] self, byte[] other)
         {
             //if (self.Length < other.Length) { return -1; }
@@ -24,6 +26,7 @@ namespace Rogue.FastLane.Collections.Mixins
             return comparison;
         }
 
+        [TargetedPatchingOptOut("")]
         public unsafe static int UnsafeCompareTo(this byte[] self, byte[] other)
         {
             //if (self.Length < other.Length) { return -1; }

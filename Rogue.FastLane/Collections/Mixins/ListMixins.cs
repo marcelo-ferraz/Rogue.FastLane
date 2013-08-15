@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime;
 
 namespace Rogue.FastLane.Collections.Mixins
 {
     public static class ListMixins
         {
+            [TargetedPatchingOptOut("")]
             private static Func<T, int> GetComparison<T>(T item, Func<T, int> comparison)
             {
                 if (comparison != null) { return comparison; }
@@ -28,6 +30,7 @@ namespace Rogue.FastLane.Collections.Mixins
                 return i => item.GetHashCode().CompareTo(i.GetHashCode());
             }
 
+            [TargetedPatchingOptOut("")]
             public static int BinarySearch<T>(this IList<T> self, Func<T, int> comparison)
             {
                 int low = 0;
@@ -63,12 +66,14 @@ namespace Rogue.FastLane.Collections.Mixins
                 return -(low + 1);
             }
 
+            [TargetedPatchingOptOut("")]
             public static int BinarySearch<T>(this IList<T> self, T item)
                 where T : IComparable
             {
                 return self.BinarySearch<T>(i => item.CompareTo(i));
             }
 
+            [TargetedPatchingOptOut("")]
             public static int BinarySearch<T>(this IList<T> self, Func<T, int> comparison = null, T item = default(T))
             {
                 return self.BinarySearch<T>(GetComparison<T>(item, comparison));
@@ -82,6 +87,7 @@ namespace Rogue.FastLane.Collections.Mixins
             /// <param name="comparison"></param>
             /// <param name="item"></param>
             /// <returns></returns>
+            [TargetedPatchingOptOut("")]
             public static T BinaryGet<T>(this IList<T> self, Func<T, int> comparison = null, T item = default(T))
             {
                 return self.BinaryGet(GetComparison(item, comparison));
@@ -94,12 +100,23 @@ namespace Rogue.FastLane.Collections.Mixins
             /// <param name="self"></param>
             /// <param name="comparison"></param>
             /// <returns></returns>
+            [TargetedPatchingOptOut("")]
             public static T BinaryGet<T>(this IList<T> self, Func<T, int> comparison)
             {
                 int index =
                     BinarySearch(self, comparison);
 
                 return index < 0 ? default(T) : self[index];
+            }
+
+
+            public static unsafe int UnsafeBinarySearch<T>(this T[] self)                
+            {
+                fixed (int* pValsStart = self)
+                {
+
+                }
+                return 1;
             }
         }
     }

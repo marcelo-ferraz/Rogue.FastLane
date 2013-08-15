@@ -60,7 +60,9 @@ namespace Rogue.FastLane.Tests.Performance
             TestInsertionAgainst<List<MockItem>>((int)qtd,
             list: list,                
             add: (l, i) => {
-                l.Add(new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) });
+                var item = new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) };
+                var index = l.BinarySearch(item);
+                l.Insert(~index, item);
                 l.Sort();
             });
         }
