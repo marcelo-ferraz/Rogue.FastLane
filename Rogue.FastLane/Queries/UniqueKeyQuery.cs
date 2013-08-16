@@ -9,6 +9,7 @@ using Rogue.FastLane.Items;
 
 using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Queries.States;
+using System.Runtime;
 
 namespace Rogue.FastLane.Queries
 {
@@ -25,6 +26,7 @@ namespace Rogue.FastLane.Queries
 
         public UniqueKeyQueryState State { get; set; }
 
+        [TargetedPatchingOptOut("")]
         public override ValueNode<TItem> First()
         {
             var found =
@@ -106,8 +108,6 @@ namespace Rogue.FastLane.Queries
                     ChangeKey2LastKey(@ref.Parent);
                 }
             }
-
-            //StraightUpKeys();
         }
 
         private void StraightUpKeys()

@@ -33,10 +33,10 @@ namespace Rogue.FastLane.Collections.Mixins
 
             //if (self.Length > other.Length) { return +1; }
 
-            int n = self.Length;
-
             fixed (byte* selfPtr = self, otherPtr = other)
             {
+                int n = self.Length;
+
                 byte* ptr1 = selfPtr;
                 byte* ptr2 = otherPtr;
 

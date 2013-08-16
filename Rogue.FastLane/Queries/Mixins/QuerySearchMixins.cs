@@ -2,6 +2,7 @@ using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Infrastructure.Positioning;
 using Rogue.FastLane.Queries.States.Mixins;
+using System.Runtime;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
@@ -20,6 +21,7 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="found"></param>
         /// <param name="rawIndex"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("")]
         internal static Coordinates[] GetCoordinates<TItem, TKey>(UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex, int lastOverallIndex, INode found, int rawIndex)
         {
             var index = rawIndex < 0 ? ~rawIndex : rawIndex;
@@ -53,16 +55,24 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="self"></param>
         /// <param name="node"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("")]
         internal static int BinarySearch<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node)
         {
-            if (node.Values != null)
-            {
-                return node.Values.BinarySearch(n =>
-                    n != null ?
-                        self.CompareKeys(self.Key, self.SelectKey(n.Value)) : 0);
-            }
-            return node.References.BinarySearch(
-                n =>
+            //if (node.Values != null)
+            //{
+            //    return node.Values.BinarySearch(n =>
+            //        n != null ?
+            //            self.CompareKeys(self.Key, self.SelectKey(n.Value)) : 0);
+            //}
+
+            //return node.References.BinarySearch(
+            //    n =>
+            //        n != null ? self.CompareKeys(self.Key, n.Key) : 0);
+
+            return (node.Values != null) ? 
+                node.Values.BinarySearch(n => 
+                    n != null ? self.CompareKeys(self.Key, self.SelectKey(n.Value)) : 0) :
+                node.References.BinarySearch(n => 
                     n != null ? self.CompareKeys(self.Key, n.Key) : 0);
         }
 
@@ -77,6 +87,7 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="lvlIndex"></param>
         /// <param name="lastOverallIndex"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("")]
         internal static Coordinates[] Locate<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, Coordinates[] coordinateSet, int lvlIndex = 1, int lastOverallIndex = 0)
         {
@@ -135,6 +146,7 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="node"></param>
         /// <param name="ephemeral"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("")]
         public static Coordinates[] Locate<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ref ReferenceNode<TItem, TKey> node, bool ephemeral = false)
         {
@@ -153,20 +165,39 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="node"></param>
         /// <param name="compareKeys"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("")]
         public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
         {
-            if ((node ?? (node = self.Root)).Values != null) { return node; }
+            //if ((node ?? (node = self.Root)).Values != null) { return node; }
 
-            int index = node
-                .References.BinarySearch(k => self.CompareKeys(self.Key, k.Key));
+            //int index = node
+            //    .References.BinarySearch(k => self.CompareKeys(self.Key, k.Key));
 
-            index = 
-                index < 0 ? ~index : index;
+            //index = 
+            //    index < 0 ? ~index : index;
 
-            return index < node.References.Length ? 
-                FirstRefByUniqueKey(self, node.References[index]) : 
-                null;
+            //return index < node.References.Length ? 
+            //    FirstRefByUniqueKey(self, node.References[index]) : 
+            //    null;
+
+            
+            if (node != null)
+            { node = self.Root; }
+            int index = 0;
+            while (index < node.References.Length)
+            {
+                index = node
+                    .References.BinarySearch(k => self.CompareKeys(self.Key, k.Key));
+
+                index =
+                    index < 0 ? ~index : index;
+              
+                if (node.Values != null) { return node; }
+
+                node = node.References[index];
+            }
+            return null;
         }
         
         /// <summary>
@@ -177,6 +208,7 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="self"></param>
         /// <param name="node"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("")]
         public static ReferenceNode<TItem, TKey> LastRefNode<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
         {
             if (node == null) { node = self.Root; }
