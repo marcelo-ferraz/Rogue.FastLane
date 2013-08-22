@@ -101,6 +101,7 @@ namespace Rogue.FastLane.Tests.Performance
         {
             var list = new List<MockItem>();
             base.TestInsertionAgainstList(Math.Pow(33, 2), list);
+            base.ValidateOrder(Query.Root);
             CompareSearch(list, Collection);
         }
 

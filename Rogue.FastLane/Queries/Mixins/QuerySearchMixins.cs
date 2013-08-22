@@ -3,6 +3,7 @@ using Rogue.FastLane.Collections.Mixins;
 using Rogue.FastLane.Infrastructure.Positioning;
 using Rogue.FastLane.Queries.States.Mixins;
 using System.Runtime;
+using System;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
@@ -58,22 +59,10 @@ namespace Rogue.FastLane.Queries.Mixins
         [TargetedPatchingOptOut("")]
         internal static int BinarySearch<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node)
         {
-            //if (node.Values != null)
-            //{
-            //    return node.Values.BinarySearch(n =>
-            //        n != null ?
-            //            self.CompareKeys(self.Key, self.SelectKey(n.Value)) : 0);
-            //}
-
-            //return node.References.BinarySearch(
-            //    n =>
-            //        n != null ? self.CompareKeys(self.Key, n.Key) : 0);
-
-            return (node.Values != null) ? 
+             return (node.Values != null) ? 
                 node.Values.BinarySearch(n => 
-                    n != null ? self.CompareKeys(self.Key, self.SelectKey(n.Value)) : 0) :
-                node.References.BinarySearch(n => 
-                    n != null ? self.CompareKeys(self.Key, n.Key) : 0);
+                    n != null ? self.KeyComparer(self.Key, self.SelectKey(n.Value)) : 0) :
+                Array.BinarySearch(node.References, self.Key);
         }
 
         /// <summary>
@@ -102,7 +91,7 @@ namespace Rogue.FastLane.Queries.Mixins
             }
 
             var keyComparison =
-                self.CompareKeys(node.Key, self.Key);
+                self.KeyComparer(node.Key, self.Key);
 
             //the key in the node is lower than the new key
             if (keyComparison < 0 && node.References != null)
@@ -169,32 +158,19 @@ namespace Rogue.FastLane.Queries.Mixins
         public static ReferenceNode<TItem, TKey> FirstRefByUniqueKey<TItem, TKey>(
             this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node = null)
         {
-            //if ((node ?? (node = self.Root)).Values != null) { return node; }
-
-            //int index = node
-            //    .References.BinarySearch(k => self.CompareKeys(self.Key, k.Key));
-
-            //index = 
-            //    index < 0 ? ~index : index;
-
-            //return index < node.References.Length ? 
-            //    FirstRefByUniqueKey(self, node.References[index]) : 
-            //    null;
-
-            
-            if (node != null)
+            if (node == null)
             { node = self.Root; }
+
             int index = 0;
-            while (index < node.References.Length)
-            {
-                index = node
-                    .References.BinarySearch(k => self.CompareKeys(self.Key, k.Key));
+            while (index < node.Length)
+            {              
+                if (node.Values != null) { return node; }
+
+                index = Array.BinarySearch(node.References, self.Key);
 
                 index =
                     index < 0 ? ~index : index;
-              
-                if (node.Values != null) { return node; }
-
+                
                 node = node.References[index];
             }
             return null;

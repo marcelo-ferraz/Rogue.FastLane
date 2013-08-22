@@ -2,6 +2,7 @@
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Items;
+using System.Collections.Generic;
 
 namespace Rogue.FastLane.Queries
 {
@@ -17,7 +18,9 @@ namespace Rogue.FastLane.Queries
         /// <summary>
         /// Numero maximo de comparacoes para encontrar um valor
         /// </summary>
-        protected int MaxComparisons;        
+        protected int MaxComparisons;
+
+        protected Func<TKey, TKey, int> _keyComparer;
 
         protected OptimizedCollection<TItem> Structure;
 
@@ -26,7 +29,10 @@ namespace Rogue.FastLane.Queries
         /// Used for caching, and therefore enhancing the performance, and keeping the inteligence 
         /// for typing variaty by keeping the type choosen comparison
         /// </summary>
-        public virtual Func<TKey, TKey, int> KeyComparer { get; set; }
+        public virtual Func<TKey, TKey, int> KeyComparer {
+            get { return GetKeyComparer; }
+            set { _keyComparer = value; }
+        }
 
         /// <summary>
         /// Seletor de chaves, usado para obter a chave desse registro
@@ -45,9 +51,9 @@ namespace Rogue.FastLane.Queries
         /// <param name="key1"></param>
         /// <param name="key2"></param>
         /// <returns></returns>
-        protected internal virtual int CompareKeys(TKey key1, TKey key2)
+        protected internal virtual int GetKeyComparer(TKey key1, TKey key2)
         {
-            return (KeyComparer ?? (KeyComparer =
+            return (_keyComparer ?? (_keyComparer =
                 !typeof(IComparable).IsAssignableFrom(typeof(TKey)) ?
                 (Func<TKey, TKey, int>)((k1, k2) => ((IComparable<TKey>)k1).CompareTo(k2)) :
                 (k1, k2) => ((IComparable)k1).CompareTo(k2))
@@ -55,6 +61,8 @@ namespace Rogue.FastLane.Queries
         }
 
         public abstract ValueNode<TItem> First();
+
+        public abstract IEnumerable<TItem> Enumerate();
 
         public abstract void AugmentQueryValueCount(int qtd);
 

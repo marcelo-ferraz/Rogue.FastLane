@@ -9,7 +9,7 @@ using Rogue.FastLane.Queries.Dispatchers;
 
 namespace Rogue.FastLane.Collections
 {
-    public abstract class SimpleCollection<TItem> //TODO: implements from ICollection<TItem>
+    public abstract class SimpleCollection<TItem> 
     {
         public SimpleCollection(params IQuery<TItem>[] queries)
         {

@@ -16,6 +16,13 @@ namespace Rogue.FastLane.Tests
         public class MockItem : IComparable<MockItem>
         {
             public int Index { get; set; }
+            public float Holder0 { get; set; }
+            public float Holder1 { get; set; }
+            public float Holder2 { get; set; }
+            public float Holder3 { get; set; }
+            public float Holder4 { get; set; }
+            public float Holder5 { get; set; }
+            public float Holder6 { get; set; }
             public byte[] IndexInBytes { get; set; }
 
             public int CompareTo(MockItem other)
@@ -44,7 +51,7 @@ namespace Rogue.FastLane.Tests
 
         protected void ValidateOrder(ValueNode<MockItem>[] values, Action<ValueNode<MockItem>, int> expectedException = null)
         {
-            Assert.Less(values.Length, 34);            
+            Assert.Less(values.Length, 130);            
 
             foreach (var val in values)
             {

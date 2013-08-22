@@ -1,4 +1,5 @@
 ﻿using Rogue.FastLane.Items;
+using System.Collections.Generic;
 
 namespace Rogue.FastLane.Queries
 {
@@ -7,6 +8,8 @@ namespace Rogue.FastLane.Queries
         string Name { get; set; }
 
         ValueNode<TItem> First();
+
+        IEnumerable<TItem> Enumerate();
 
         void AugmentQueryValueCount(int qtd);
         

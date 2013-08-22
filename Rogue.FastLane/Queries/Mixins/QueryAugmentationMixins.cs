@@ -30,7 +30,7 @@ namespace Rogue.FastLane.Queries.Mixins
                                 new ReferenceNode<TItem, TKey>[1];
 
                             node.References[node.Length - 1] =
-                                new ReferenceNode<TItem, TKey> { Parent = node };
+                                new ReferenceNode<TItem, TKey> { Parent = node, Comparer = self.KeyComparer };
 
                             node = node.References[node.Length - 1];
                         }
@@ -94,7 +94,8 @@ namespace Rogue.FastLane.Queries.Mixins
                     {
                         Values = root.Values,
                         Parent = root,
-                        Key = root.Key
+                        Key = root.Key, 
+                        Comparer = self.KeyComparer
                     } 
                 };
 
@@ -112,7 +113,8 @@ namespace Rogue.FastLane.Queries.Mixins
                     {
                         References = refs,
                         Key = root.Key,
-                        Parent = root,                        
+                        Parent = root, 
+                        Comparer = self.KeyComparer
                     } 
                 };
 

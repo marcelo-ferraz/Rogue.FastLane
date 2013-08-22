@@ -18,7 +18,11 @@ namespace Rogue.FastLane.Queries
         public UniqueKeyQuery()
         {
             Root =
-                new ReferenceNode<TItem, TKey>() { Values = new ValueNode<TItem>[0] };
+                new ReferenceNode<TItem, TKey>()
+                {
+                    Values = new ValueNode<TItem>[0],
+                    Comparer = this.KeyComparer
+                };
 
             State =
                 new UniqueKeyQueryState();
@@ -34,7 +38,7 @@ namespace Rogue.FastLane.Queries
 
             return found.Values.BinaryGet(
                     node =>
-                        CompareKeys(Key, SelectKey(node.Value)));
+                        KeyComparer(Key, SelectKey(node.Value)));
         }
 
         public ValueNode<TItem> Get(TKey key)
@@ -80,8 +84,7 @@ namespace Rogue.FastLane.Queries
 
             closestRef.
                 Values[valueCoordinates.Index] = node;
-
-
+            
             ReferenceNode<TItem, TKey> @ref = null;
 
             while (affected.Count > 0)
@@ -162,7 +165,5 @@ namespace Rogue.FastLane.Queries
         {
             Remove(this.SelectKey(item.Value));
         }
-
-
     }
 }

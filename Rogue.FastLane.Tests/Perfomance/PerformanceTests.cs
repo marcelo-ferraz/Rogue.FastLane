@@ -45,7 +45,7 @@ namespace Rogue.FastLane.Tests.Performance
 
             Watch.Reset();
             Watch.Start();
-            for (int i = 1; i < qtd; i++)
+            for (int i = 0; i < qtd; i++)
             { Collection.Add(new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) }); }
             Watch.Stop();
 

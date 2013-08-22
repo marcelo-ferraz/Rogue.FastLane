@@ -33,27 +33,37 @@ namespace Rogue.FastLane.Collections.Mixins
             [TargetedPatchingOptOut("")]
             public static int BinarySearch<T>(this IList<T> self, Func<T, int> compare)
             {
-                int i = 0;
-                int num = i + self.Count - 1;
+                int low = 0;
+                int high = self.Count - 1;
+                int midpoint = 0;
 
-                while (i <= num)
+                if (self.Count == 1) { return compare(self[0]) == 0 ? 0 : -1; }
+
+                while (low <= high)
                 {
-                    int num2 = i + (num - i >> 1);
-                    int num3 = compare(self[num2]);
-                    if (num3 == 0)
+                    midpoint = low + (high - low) / 2;
+
+                    //var item = 
+                    //    self[midpoint];
+
+                    //if (object.Equals(item, default(T))) { continue; }
+
+                    int comparisonResult =
+                        compare(self[midpoint]);
+
+                    // check to see if value is equal to item in array
+                    if (comparisonResult == 0)
                     {
-                        return num2;
+                        return midpoint;
                     }
-                    if (num3 < 0)
-                    {
-                        i = num2 + 1;
-                    }
+
+                    if (comparisonResult < 0)
+                    { high = midpoint - 1; }
                     else
-                    {
-                        num = num2 - 1;
-                    }
+                    { low = midpoint + 1; }
                 }
-                return ~i;
+
+                return -(low + 1);
             }
 
             [TargetedPatchingOptOut("")]

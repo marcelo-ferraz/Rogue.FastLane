@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\BasicCollection.cs" />
+    <Compile Include="Collections\SimpleCollection.cs" />
     <Compile Include="Collections\Items\Mixins\NodeMixins.cs" />
     <Compile Include="Collections\LowRefsEnumerable.cs" />
     <Compile Include="Collections\Mixins\ArrayMixins.cs" />

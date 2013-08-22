@@ -39,7 +39,7 @@ namespace Rogue.FastLane.Tests.Crud
         [Test]
         public void GrandInsertionTest()
         {
-            for (int i = 1; i < (int)(Math.Pow(33, 2)); i++)
+            for (int i = 1; i < (int)(Math.Pow(1089, 2)); i++)
             { Collection.Add(new MockItem() { Index = i }); }
 
             Collection.Add(new MockItem() { Index = 0 });
