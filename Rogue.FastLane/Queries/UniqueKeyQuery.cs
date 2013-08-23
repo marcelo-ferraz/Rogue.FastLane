@@ -10,6 +10,7 @@ using Rogue.FastLane.Items;
 using Rogue.FastLane.Queries.Mixins;
 using Rogue.FastLane.Queries.States;
 using System.Runtime;
+using System.Collections.Generic;
 
 namespace Rogue.FastLane.Queries
 {
@@ -164,6 +165,21 @@ namespace Rogue.FastLane.Queries
         public override void Remove(ValueNode<TItem> item)
         {
             Remove(this.SelectKey(item.Value));
+        }
+
+        public override IEnumerable<TItem> Enumerate()
+        {
+            var iterator = 
+                new LowRefsEnumerable<TItem, TKey>();
+
+            foreach (var item in iterator.AllFrom(Root))
+            { 
+                var len = item.Values.Length;
+                for (var i = 0; i < len; i++)
+                {
+                    yield return item.Values[i].Value;
+                }
+            }
         }
     }
 }

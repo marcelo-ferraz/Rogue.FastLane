@@ -7,7 +7,9 @@ namespace Rogue.FastLane.Items
     {
         public ValueNode<TItem> Prior { get; set; }
         public ValueNode<TItem> Next { get; set; }
-        
+
+        public Func<TItem, TItem, int> Compare { get; set; }
+
         public TItem Value { get; set; }
     }
 }
