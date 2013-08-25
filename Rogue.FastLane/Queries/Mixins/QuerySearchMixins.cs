@@ -4,6 +4,7 @@ using Rogue.FastLane.Infrastructure.Positioning;
 using Rogue.FastLane.Queries.States.Mixins;
 using System.Runtime;
 using System;
+using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
@@ -56,14 +57,32 @@ namespace Rogue.FastLane.Queries.Mixins
         /// <param name="self"></param>
         /// <param name="node"></param>
         /// <returns></returns>
+        //[TargetedPatchingOptOut("")]
+        //internal static int BinarySearch<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node)
+        //{
+        //    return (node.Values != null) ?
+        //       node.Values.BinarySearch(n =>
+        //           n != null ? 
+        //           self.KeyComparer(self.Key, self.SelectKey(n.Value)) : 0
+        //           ) 
+        //           :
+        //       node.References.BinarySearch(n =>
+        //           //n != null ? 
+        //           self.KeyComparer(self.Key, n.Key) 
+        //           //: 0
+        //           );
+        //            //Array.BinarySearch(node.References, self.Key);
+        //}
+
         [TargetedPatchingOptOut("")]
-        internal static int BinarySearch<TItem, TKey>(this UniqueKeyQuery<TItem, TKey> self, ReferenceNode<TItem, TKey> node)
+        internal static int BinarySearch<TItem, TKey>(this ReferenceNode<TItem, TKey>[] self, TKey key)
         {
-             return (node.Values != null) ? 
-                node.Values.BinarySearch(n => 
-                    n != null ? self.KeyComparer(self.Key, self.SelectKey(n.Value)) : 0) :
-                Array.BinarySearch(node.References, self.Key);
+            return ListMixins.BinarySearch(self,
+                n =>
+                   n != null ? n.CompareTo(key): 0);
+            //Array.BinarySearch(node.References, self.Key);
         }
+
 
         /// <summary>
         /// Locates and maps the node by its unique key
@@ -102,12 +121,8 @@ namespace Rogue.FastLane.Queries.Mixins
                  * return coordinates set
                  */
 
-                var found = node[node.Length - 1];
-
-                var index = node.Length - 1;
-
                 return GetCoordinates<TItem, TKey>(
-                    self, ref node, coordinateSet, lvlIndex, lastOverallIndex, found, index);
+                    self, ref node, coordinateSet, lvlIndex, lastOverallIndex, node[node.Length - 1], node.Length - 1);
             }
             //the key in the node is higher than the new key
             else //if (rootComparison > 0) 
@@ -116,9 +131,17 @@ namespace Rogue.FastLane.Queries.Mixins
                  * if it is a reference one, search inside the child node, 
                  * else search inside the values and return the coordinates set
                  */
-                var rawIndex =
-                    self.BinarySearch(node);
 
+                var selectKey = 
+                    self.SelectKey;
+
+                var comparer =  
+                    self.KeyComparer;
+
+                int rawIndex =
+                    ListMixins.BinarySearch(node.Values,
+                    v => v != null ? comparer(self.Key, selectKey(v.Value)):0);
+                
                 var found = node[rawIndex < 0 ? ~rawIndex : rawIndex];
 
                 return GetCoordinates<TItem, TKey>(
@@ -166,7 +189,7 @@ namespace Rogue.FastLane.Queries.Mixins
             {              
                 if (node.Values != null) { return node; }
 
-                index = Array.BinarySearch(node.References, self.Key);
+                index = BinarySearch(self.Root.References, self.Key); 
 
                 index =
                     index < 0 ? ~index : index;

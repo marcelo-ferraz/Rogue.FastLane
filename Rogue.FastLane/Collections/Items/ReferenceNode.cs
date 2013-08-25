@@ -30,7 +30,7 @@ namespace Rogue.FastLane.Collections.Items
 
         public int CompareTo(object obj)
         {
-            return Comparer(this.Key, (TKey) obj);
+            return Comparer((TKey)obj, this.Key);
         }
     }
 }

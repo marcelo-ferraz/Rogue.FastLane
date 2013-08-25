@@ -28,25 +28,35 @@ namespace Rogue.FastLane.Tests.Performance
                 new OptimizedCollection<MockItem>(Query);
         }
 
-        protected void TestInsertionAgainst<T>(int qtd, T list = default(T), Action<T, int> add = null)
+        protected void TestInsertionAgainst<T>(int qtd, T list = default(T), Action<T, MockItem> add = null)
             where T : new()
         {
             if (list == null) { list = new T(); }
 
             Watch.Reset();
-            Watch.Start();
             for (int i = 1; i < qtd; i++)
-            { 
-                add(list, i);
+            {
+                Watch.Stop();
+                var item = 
+                    new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) };
+                Watch.Start();
+                add(list, item);
             }
             Watch.Stop();
 
             var elapsed4List = Watch.Elapsed;
 
             Watch.Reset();
-            Watch.Start();
+            
             for (int i = 0; i < qtd; i++)
-            { Collection.Add(new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) }); }
+            {
+                var mock = new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) };
+                Watch.Stop();
+
+                Collection.Add(mock);
+
+                Watch.Start();
+            }
             Watch.Stop();
 
             var elapsed4Collection = Watch.Elapsed;
@@ -59,20 +69,19 @@ namespace Rogue.FastLane.Tests.Performance
         {
             TestInsertionAgainst<List<MockItem>>((int)qtd,
             list: list,                
-            add: (l, i) => {
-                var item = new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) };
+            add: (l, item) => {
                 var index = l.BinarySearch(item);
                 l.Insert(~index, item);
-                l.Sort();
+                //l.Sort();
             });
         }
 
         protected void TestInsertionAgainstSortedList(double qtd, SortedList<int,MockItem> list = null)
         {
-            TestInsertionAgainst<SortedList<int, MockItem>>((int)qtd,
-            list: list,
-            add: (l, i) =>
-                l.Add(i, new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) }));
+            //TestInsertionAgainst<SortedList<int, MockItem>>((int)qtd,
+            //list: list,
+            //add: (l, item) =>
+            //    l.Add(i, item));
         }
 
         public abstract void TestAgainstListFor1089Items();

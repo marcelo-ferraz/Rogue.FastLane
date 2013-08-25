@@ -13,12 +13,17 @@ namespace Rogue.FastLane.Tests
         {
             var test = new Performance.MassiveSearchingPerformanceTests();
             test.Setup();
+            //test.TestAgainstListFor1089Items();
             test.TestAgainstListFor35937Items();
 
             var w = new Stopwatch();
+
+            int rdn = new Random(new Random().Next(1089)).Next(1089);
+
             w.Start();
-            test.Query.Get(500);
+            test.Query.Get(rdn);
             w.Stop();
+            Console.WriteLine("Seaching for index {0} took {1}", rdn, w.Elapsed); 
         }
     }
 }
