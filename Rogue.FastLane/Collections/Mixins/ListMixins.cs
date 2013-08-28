@@ -63,7 +63,12 @@ namespace Rogue.FastLane.Collections.Mixins
                     { low = midpoint + 1; }
                 }
 
-                return -(low + 1);
+                midpoint = -(low + 1);
+
+                var r = self.Count - 1;
+                return r < ~midpoint ?
+                    r : midpoint;
+                //return low;
             }
 
             [TargetedPatchingOptOut("")]

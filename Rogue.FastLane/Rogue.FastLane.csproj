@@ -90,6 +90,8 @@
     <Compile Include="Queries\Mixins\QueryAugmentationMixins.cs" />
     <Compile Include="Queries\Mixins\QuerySearchMixins.cs" />
     <Compile Include="Queries\Dispatchers\UniqueKeyDispatcher.cs" />
+    <Compile Include="_Fastlane2\Collections\Mixins\SZMixins.cs" />
+    <Compile Include="_Fastlane2\Queries\SimpleKeyQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

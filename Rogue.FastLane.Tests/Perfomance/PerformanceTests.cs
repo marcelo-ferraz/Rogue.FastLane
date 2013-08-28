@@ -50,12 +50,13 @@ namespace Rogue.FastLane.Tests.Performance
             
             for (int i = 0; i < qtd; i++)
             {
+                //if (i == 526080) { System.Diagnostics.Debugger.Break(); }
                 var mock = new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) };
-                Watch.Stop();
 
-                Collection.Add(mock);
 
                 Watch.Start();
+                Collection.Add(mock);
+                Watch.Stop();
             }
             Watch.Stop();
 

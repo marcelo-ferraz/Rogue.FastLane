@@ -100,11 +100,13 @@ namespace Rogue.FastLane.Queries
                 }
                 catch (NullReferenceException ex)
                 {
+                    //Console.WriteLine("{1} null reference ex = {0}", Key.ToString(), ++__i);
                     /*Minor fix, before evaluating the calculus precision.
                      * On tests, it fails after 5 million.
                      * 
                      * values failed:
                      * - 5044805
+                     * - 526080
                      */
                     if (@ref == null) { throw ex; }
                     @ref.Values =
@@ -113,7 +115,7 @@ namespace Rogue.FastLane.Queries
                 }
             }
         }
-
+        int __i = 0;
         private void StraightUpKeys()
         {
             var @enum =

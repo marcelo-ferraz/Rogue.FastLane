@@ -5,6 +5,7 @@ using Rogue.FastLane.Queries.States.Mixins;
 using System.Runtime;
 using System;
 using Rogue.FastLane.Items;
+using System.Collections;
 
 namespace Rogue.FastLane.Queries.Mixins
 {
@@ -142,10 +143,26 @@ namespace Rogue.FastLane.Queries.Mixins
                     ListMixins.BinarySearch(node.Values,
                     v => v != null ? comparer(self.Key, selectKey(v.Value)):0);
                 
+
                 var found = node[rawIndex < 0 ? ~rawIndex : rawIndex];
 
                 return GetCoordinates<TItem, TKey>(
                     self, ref node, coordinateSet, lvlIndex, lastOverallIndex, found, rawIndex);
+            }
+        }
+
+        class Comp<TItem> : IComparer
+        {
+            Func<ValueNode<TItem>, ValueNode<TItem>, int> C;
+            public Comp(Func<ValueNode<TItem>, ValueNode<TItem>, int> compare)
+            {
+                C = compare;
+            }
+
+            public int Compare(object x, object y)
+            {
+                System.Diagnostics.Debugger.Break();
+                return C((ValueNode<TItem>)x, (ValueNode<TItem>)y);
             }
         }
 
