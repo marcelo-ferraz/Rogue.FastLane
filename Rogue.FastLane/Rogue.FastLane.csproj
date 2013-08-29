@@ -90,8 +90,13 @@
     <Compile Include="Queries\Mixins\QueryAugmentationMixins.cs" />
     <Compile Include="Queries\Mixins\QuerySearchMixins.cs" />
     <Compile Include="Queries\Dispatchers\UniqueKeyDispatcher.cs" />
-    <Compile Include="_Fastlane2\Collections\Mixins\SZMixins.cs" />
-    <Compile Include="_Fastlane2\Queries\SimpleKeyQuery.cs" />
+    <Compile Include="_Fastlane2\Collections\Mixins\ArrayMixins.cs" />
+    <Compile Include="_Fastlane2\Infrastructure\TrySZBinarySearchFunction.cs" />
+    <Compile Include="_Fastlane2\Infrastructure\TrySZIndexOfFunction.cs" />
+    <Compile Include="_Fastlane2\Infrastructure\TrySZLastIndexOfFunction.cs" />
+    <Compile Include="_Fastlane2\Infrastructure\TrySZReverseFunction.cs" />
+    <Compile Include="_Fastlane2\Infrastructure\TrySZSortFunction.cs" />
+    <Compile Include="_Fastlane2\Queries\FlatUniqueKeyKeyQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
