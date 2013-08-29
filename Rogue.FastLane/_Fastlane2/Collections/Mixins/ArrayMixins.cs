@@ -49,7 +49,7 @@ namespace Rogue.FastLane._Fastlane2.Collections.Mixins
 
 
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        internal static Array Resize<T>(this Array array, int newSize)
+        public static Array Resize<T>(this Array array, int newSize)
         {
             Type type = array.GetType();
             Array newArray =
@@ -80,9 +80,9 @@ namespace Rogue.FastLane._Fastlane2.Collections.Mixins
         }
 
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        public static T[] G<T>(this object self, int size = 0)
+        public static T[] CreateArray<T>(this object self, int size = 0)
         {
-            return (T[])Array.CreateInstance(typeof(T), 0);
+            return (T[])Array.CreateInstance(typeof(T), size);
         }
     }
 }

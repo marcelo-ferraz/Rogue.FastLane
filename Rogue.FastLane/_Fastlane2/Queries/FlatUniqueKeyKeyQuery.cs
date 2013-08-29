@@ -18,6 +18,12 @@ namespace Rogue.FastLane._Fastlane2.Queries
 {
     public class State<TItem, TKey>
     {
+        public State()
+        {
+            Keys = this.CreateArray<TKey>();
+            Items = this.CreateArray<ValueNode<TItem>>();
+        }
+
         public TKey[] Keys { get; set; }
 
         public ValueNode<TItem>[] Items { get; set; }
@@ -31,7 +37,7 @@ namespace Rogue.FastLane._Fastlane2.Queries
         public State<TItem, TKey> State { get; set; }
     }
 
-    public class FlatUniqueKeyKeyQuery<TItem, TKey> : IQuery<TItem>
+    public class FlatUniqueKeyKeyQuery<TItem, TKey> : ICrudQuery<TItem>
     {
         protected State<TItem, TKey> CurrentState;
 
@@ -43,13 +49,11 @@ namespace Rogue.FastLane._Fastlane2.Queries
                 new State<TItem, TKey>();
         }
 
-        protected IndexNState<TItem, TKey> GetByKey(ValueNode<TItem> item)
+        protected IndexNState<TItem, TKey> GetByKey(TKey key)
         {
             int index;
             int length;
             var state = CurrentState;
-            var key =
-                SelectKey(item.Value);
             do
             {
                 length = state.Keys.Length;
@@ -62,7 +66,6 @@ namespace Rogue.FastLane._Fastlane2.Queries
                             State = state,
                             Index = index
                         };
-
                 }
             }
             while ((state = state.Next) != null);
@@ -79,58 +82,59 @@ namespace Rogue.FastLane._Fastlane2.Queries
             return state;
         }
 
+        protected State<TItem, TKey> Go2Next(State<TItem, TKey> state)
+        {
+            if(state.Next != null)
+            { return state.Next; }
+
+            state.Next = 
+                new State<TItem, TKey>();
+
+            return state;
+        }
 
 
         public void Add(ValueNode<TItem> item)
         {
+            var key =
+                SelectKey(item.Value);
+            
             var result =
-                GetByKey(item);
+                GetByKey(key);
 
             if (result.Index < 0)
             {
                 var index = ~result.Index;
 
-                var state =
-                    GetLastState(this.CurrentState);
+                //TODO: calcular o valor maximo que a lista pode ter para ocupar menos de 85kb, em int eh algo perto de 21.242
+                //                   \/
+                var state = index >= 99 ?
+                    Go2Next(result.State) :
+                    result.State;
 
-                var length =
-                    state.Keys.Length;
-
-                state.Items.Resize(++length);
-                state.Keys.Resize(length);
-
-                for (int i = index; i < length; i++)
-                {
-                    CurrentState.Keys[i] = CurrentState.Keys[i - 1];
-                    CurrentState.Items[i] = CurrentState.Items[i - 1];
-                }
+                state.Keys.Insert(index, SelectKey(item.Value));
+                state.Items.Insert(index, item);
             }
-
-            CurrentState.Keys[index] = key;
-            CurrentState.Items[index] = item;
+            else
+            {
+                result.State.Keys[result.Index] = key;
+                result.State.Items[result.Index] = item;
+            }
         }
 
         public void Remove(ValueNode<TItem> item)
         {
-            int index;
-            int length =
-                this.CurrentState.Keys.Length;
-
             var key =
                 SelectKey(item.Value);
 
-            if (!SZFunctions.TrySZBinarySearch(this.CurrentState.Keys, 0, length, key, out index))
-            { return; }
+            var result =
+                GetByKey(key);
 
+            // not found
+            if (result.Index < 0) { return; }
 
-            for (int i = index; i < length; i++)
-            {
-                CurrentState.Keys[i - 1] = CurrentState.Keys[i];
-                CurrentState.Items[i - 1] = CurrentState.Items[i];
-            }
-
-            this.CurrentState.Items.Resize(--length);
-            this.CurrentState.Keys.Resize(length);
+            result.State.Keys.Remove(result.Index);
+            result.State.Items.Remove(result.Index);
         }
 
         public string Name { get; set; }
