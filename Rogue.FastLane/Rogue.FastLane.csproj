@@ -91,6 +91,7 @@
     <Compile Include="Queries\Mixins\QuerySearchMixins.cs" />
     <Compile Include="Queries\Dispatchers\UniqueKeyDispatcher.cs" />
     <Compile Include="_Fastlane2\Collections\Mixins\ArrayMixins.cs" />
+    <Compile Include="_Fastlane2\Infrastructure\Calculate.cs" />
     <Compile Include="_Fastlane2\Infrastructure\TrySZBinarySearchFunction.cs" />
     <Compile Include="_Fastlane2\Infrastructure\TrySZIndexOfFunction.cs" />
     <Compile Include="_Fastlane2\Infrastructure\TrySZLastIndexOfFunction.cs" />
