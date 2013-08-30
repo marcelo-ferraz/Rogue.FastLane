@@ -1,18 +1,9 @@
 ﻿using System;
-
-using Rogue.FastLane.Collections;
-using Rogue.FastLane.Collections.Items;
-using Rogue.FastLane.Collections.Items.Mixins;
-using Rogue.FastLane._Fastlane2.Collections.Mixins;
-
-using Rogue.FastLane.Items;
-
-using Rogue.FastLane.Queries.Mixins;
-using Rogue.FastLane.Queries.States;
-using System.Runtime;
 using System.Collections.Generic;
+using Rogue._fastlane2.FastLane.Queries;
+using Rogue.FastLane._Fastlane2.Collections.Mixins;
 using Rogue.FastLane._Fastlane2.Infrastructure;
-using Rogue.FastLane.Queries;
+using Rogue.FastLane.Items;
 
 namespace Rogue.FastLane._Fastlane2.Queries
 {
@@ -21,12 +12,12 @@ namespace Rogue.FastLane._Fastlane2.Queries
         public State()
         {
             Keys = this.CreateArray<TKey>();
-            Items = this.CreateArray<ValueNode<TItem>>();
+            Items = this.CreateArray<ValueHolder<TItem>>();
         }
 
         public TKey[] Keys { get; set; }
 
-        public ValueNode<TItem>[] Items { get; set; }
+        public ValueHolder<TItem>[] Items { get; set; }
 
         public State<TItem, TKey> Next { get; set; }
     }
@@ -37,8 +28,10 @@ namespace Rogue.FastLane._Fastlane2.Queries
         public State<TItem, TKey> State { get; set; }
     }
 
-    public class FlatUniqueKeyKeyQuery<TItem, TKey> : ICrudQuery<TItem>
-    {
+    public class FlatUniqueKeyKeyQuery<TItem, TKey> : IQuery<TItem>, IEnumerable<ValueHolder<TItem>>
+    {     
+        protected int Maxlength;
+
         protected State<TItem, TKey> CurrentState;
 
         public virtual Func<TItem, TKey> SelectKey { get; set; }
@@ -47,6 +40,13 @@ namespace Rogue.FastLane._Fastlane2.Queries
         {
             CurrentState =
                 new State<TItem, TKey>();
+            
+            var maxLengthSizeOfKeys = 
+                Calculate.MaxLengthOfArray<TKey>();
+            var maxLengthOfItems = 
+                Calculate.MaxLengthOfArray<TItem>();
+            
+            Maxlength = Math.Min(maxLengthOfItems, maxLengthSizeOfKeys);
         }
 
         protected IndexNState<TItem, TKey> GetByKey(TKey key)
@@ -84,21 +84,20 @@ namespace Rogue.FastLane._Fastlane2.Queries
 
         protected State<TItem, TKey> Go2Next(State<TItem, TKey> state)
         {
-            if(state.Next != null)
+            if (state.Next != null)
             { return state.Next; }
 
-            state.Next = 
+            state.Next =
                 new State<TItem, TKey>();
 
             return state;
         }
 
-
-        public void Add(ValueNode<TItem> item)
+        public void Add(ValueHolder<TItem> item)
         {
             var key =
                 SelectKey(item.Value);
-            
+
             var result =
                 GetByKey(key);
 
@@ -106,9 +105,7 @@ namespace Rogue.FastLane._Fastlane2.Queries
             {
                 var index = ~result.Index;
 
-                //TODO: calcular o valor maximo que a lista pode ter para ocupar menos de 85kb, em int eh algo perto de 21.242
-                //                   \/
-                var state = index >= 99 ?
+                var state = index >= Maxlength ?
                     Go2Next(result.State) :
                     result.State;
 
@@ -117,15 +114,15 @@ namespace Rogue.FastLane._Fastlane2.Queries
             }
             else
             {
-                result.State.Keys[result.Index] = key;
+                //result.State.Keys[result.Index] = key;
                 result.State.Items[result.Index] = item;
             }
         }
 
-        public void Remove(ValueNode<TItem> item)
+        public void Remove(TItem item)
         {
             var key =
-                SelectKey(item.Value);
+                SelectKey(item);
 
             var result =
                 GetByKey(key);
@@ -139,5 +136,23 @@ namespace Rogue.FastLane._Fastlane2.Queries
 
         public string Name { get; set; }
 
+
+        public IEnumerator<ValueHolder<TItem>> GetEnumerator()
+        {
+            var state = CurrentState;
+            do
+            {
+                for (int i = 0; i < state.Items.Length; i++)
+                { 
+                    yield return state.Items[i];
+                }                    
+            }
+            while ((state = state.Next) != null);
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
     }
 }

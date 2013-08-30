@@ -60,7 +60,7 @@ namespace Rogue.FastLane.Queries
                 )(key1, key2);
         }
 
-        public abstract ValueNode<TItem> First();
+        public abstract ValueHolder<TItem> First();
 
         public abstract IEnumerable<TItem> Enumerate();
 
@@ -72,8 +72,8 @@ namespace Rogue.FastLane.Queries
         
         public abstract void AbridgeQueryLevelCount(int qtd);
 
-        public abstract void Add(ValueNode<TItem> item);
+        public abstract void Add(ValueHolder<TItem> item);
         
-        public abstract void Remove(ValueNode<TItem> item);
+        public abstract void Remove(ValueHolder<TItem> item);
     }
 }

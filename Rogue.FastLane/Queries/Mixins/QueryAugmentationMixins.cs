@@ -38,7 +38,7 @@ namespace Rogue.FastLane.Queries.Mixins
                         {
                             node.Values = node.Values != null ?
                                 node.Values.Resize(node.Length + 1) :
-                                new ValueNode<TItem>[1];
+                                new ValueHolder<TItem>[1];
                             return;
                         }
                     }

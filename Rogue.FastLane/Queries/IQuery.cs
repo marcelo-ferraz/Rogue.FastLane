@@ -7,7 +7,7 @@ namespace Rogue.FastLane.Queries
     {
         string Name { get; set; }
 
-        ValueNode<TItem> First();
+        ValueHolder<TItem> First();
 
         IEnumerable<TItem> Enumerate();
 

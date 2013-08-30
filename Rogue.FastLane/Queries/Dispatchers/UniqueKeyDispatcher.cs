@@ -26,7 +26,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
                 UniqueKeyQueryCalculus.Calculate4UniqueKey(@struct.Count, MaxComparisons);
         }
 
-        protected override void RemoveInEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
+        protected override void RemoveInEach(IUniqueKeyQuery<TItem> query, ValueHolder<TItem> item)
         {
             CurrentQuery = query;
 
@@ -41,7 +41,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
             SaveState();
         }
 
-        protected override void AddInEach(IUniqueKeyQuery<TItem> query, ValueNode<TItem> item)
+        protected override void AddInEach(IUniqueKeyQuery<TItem> query, ValueHolder<TItem> item)
         {
             query.State = NewState;
             base.AddInEach(query, item);

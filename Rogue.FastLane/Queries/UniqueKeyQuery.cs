@@ -21,7 +21,7 @@ namespace Rogue.FastLane.Queries
             Root =
                 new ReferenceNode<TItem, TKey>()
                 {
-                    Values = new ValueNode<TItem>[0],
+                    Values = new ValueHolder<TItem>[0],
                     Comparer = this.KeyComparer
                 };
 
@@ -32,7 +32,7 @@ namespace Rogue.FastLane.Queries
         public UniqueKeyQueryState State { get; set; }
 
         [TargetedPatchingOptOut("")]
-        public override ValueNode<TItem> First()
+        public override ValueHolder<TItem> First()
         {
             var found =
                 this.FirstRefByUniqueKey();
@@ -42,7 +42,7 @@ namespace Rogue.FastLane.Queries
                         KeyComparer(Key, SelectKey(node.Value)));
         }
 
-        public ValueNode<TItem> Get(TKey key)
+        public ValueHolder<TItem> Get(TKey key)
         {
             this.Key = key;
             return First();
@@ -68,7 +68,7 @@ namespace Rogue.FastLane.Queries
             this.AugmentLevelCount(qtd);
         }
 
-        public override void Add(ValueNode<TItem> node)
+        public override void Add(ValueHolder<TItem> node)
         {
             Key = SelectKey(node.Value);
 
@@ -164,7 +164,7 @@ namespace Rogue.FastLane.Queries
             StraightUpKeys();
         }
 
-        public override void Remove(ValueNode<TItem> item)
+        public override void Remove(ValueHolder<TItem> item)
         {
             Remove(this.SelectKey(item.Value));
         }

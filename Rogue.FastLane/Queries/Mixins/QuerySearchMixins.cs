@@ -153,8 +153,8 @@ namespace Rogue.FastLane.Queries.Mixins
 
         class Comp<TItem> : IComparer
         {
-            Func<ValueNode<TItem>, ValueNode<TItem>, int> C;
-            public Comp(Func<ValueNode<TItem>, ValueNode<TItem>, int> compare)
+            Func<ValueHolder<TItem>, ValueHolder<TItem>, int> C;
+            public Comp(Func<ValueHolder<TItem>, ValueHolder<TItem>, int> compare)
             {
                 C = compare;
             }
@@ -162,7 +162,7 @@ namespace Rogue.FastLane.Queries.Mixins
             public int Compare(object x, object y)
             {
                 System.Diagnostics.Debugger.Break();
-                return C((ValueNode<TItem>)x, (ValueNode<TItem>)y);
+                return C((ValueHolder<TItem>)x, (ValueHolder<TItem>)y);
             }
         }
 

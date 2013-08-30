@@ -36,7 +36,7 @@ namespace Rogue.FastLane.Tests
 
         protected int RightIndex = 0;
 
-        protected void ValidateOrder(ReferenceNode<MockItem, int> node, Action<ValueNode<MockItem>, int> expectedException = null)
+        protected void ValidateOrder(ReferenceNode<MockItem, int> node, Action<ValueHolder<MockItem>, int> expectedException = null)
         {
             var root = node.Root();
             
@@ -49,7 +49,7 @@ namespace Rogue.FastLane.Tests
             }
         }
 
-        protected void ValidateOrder(ValueNode<MockItem>[] values, Action<ValueNode<MockItem>, int> expectedException = null)
+        protected void ValidateOrder(ValueHolder<MockItem>[] values, Action<ValueHolder<MockItem>, int> expectedException = null)
         {
             //Assert.Less(values.Length, 130);
             Assert.Less(values.Length, 1090);            

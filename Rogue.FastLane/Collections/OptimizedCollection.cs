@@ -10,14 +10,14 @@ namespace Rogue.FastLane.Collections
         public OptimizedCollection(params IQuery<TItem>[] queries)
             : base(queries) { }
 
-        protected ValueNode<TItem> CurrentNode;
+        protected ValueHolder<TItem> CurrentNode;
 
         public virtual int Count { get; set; }
 
         public virtual void Add(TItem item)
         {
             var node =
-                new ValueNode<TItem>
+                new ValueHolder<TItem>
                 {
                     Value = item,
                 };

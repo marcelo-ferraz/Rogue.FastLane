@@ -54,7 +54,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// </summary>
         /// <param name="struct"></param>
         /// <param name="item"></param>
-        public virtual void AddNode(OptimizedCollection<TItem> @struct, ValueNode<TItem> item)
+        public virtual void AddNode(OptimizedCollection<TItem> @struct, ValueHolder<TItem> item)
         {
             DeriveNewState(@struct);
 
@@ -67,7 +67,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// </summary>
         /// <param name="query"></param>
         /// <param name="item"></param>
-        protected virtual void AddInEach(TQuery query, ValueNode<TItem> item)
+        protected virtual void AddInEach(TQuery query, ValueHolder<TItem> item)
         {
             CurrentQuery = query;
 
@@ -85,7 +85,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// </summary>
         /// <param name="optmizedStructure"></param>
         /// <param name="node"></param>
-        public virtual void RemoveNode(OptimizedCollection<TItem> @struct, ValueNode<TItem> item)
+        public virtual void RemoveNode(OptimizedCollection<TItem> @struct, ValueHolder<TItem> item)
         {
             DeriveNewState(@struct);
 
@@ -98,7 +98,7 @@ namespace Rogue.FastLane.Queries.Dispatchers
         /// </summary>
         /// <param name="query"></param>
         /// <param name="item"></param>
-        protected virtual void RemoveInEach(TQuery query, ValueNode<TItem> item)
+        protected virtual void RemoveInEach(TQuery query, ValueHolder<TItem> item)
         {
             CurrentQuery = query;
 

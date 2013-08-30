@@ -8,7 +8,7 @@ namespace Rogue.FastLane.Collections.Items
         public ReferenceNode<TItem, TKey> Parent { get; set; }
         public TKey Key { get; set; }
         public ReferenceNode<TItem, TKey>[] References { get; set; }
-        public ValueNode<TItem>[] Values { get; set; }
+        public ValueHolder<TItem>[] Values { get; set; }
         public Func<TKey, TKey, int> Comparer { get; set; }
 
         public INode this[int index]

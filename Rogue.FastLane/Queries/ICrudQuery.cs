@@ -4,8 +4,8 @@ namespace Rogue.FastLane.Queries
 {
     public interface ICrudQuery<TItem> 
     {
-        void Add(ValueNode<TItem> item);
+        void Add(ValueHolder<TItem> item);
         
-        void Remove(ValueNode<TItem> item);
+        void Remove(ValueHolder<TItem> item);
     }
 }

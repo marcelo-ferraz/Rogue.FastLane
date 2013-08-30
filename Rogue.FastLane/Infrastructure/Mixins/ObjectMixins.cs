@@ -2,11 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace Rogue.FastLane.Infrastructure.Mixins
 {
-    public static class InheritanceMixins
+    public static class ObjectMixins
     {
+        public static int SizeOf<T>()
+        {
+            return Marshal.SizeOf(typeof(T));
+        }
+
+        public static int Size(this Type type)
+        {
+            return Marshal.SizeOf(type);
+        }
+
+        public static int GetSize(this object obj)
+        {
+            return Marshal.SizeOf(obj);
+        }
+
         public static bool IsOrInherits<T>(this object obj)
         {
             return obj.IsOrInherits(typeof(T));
