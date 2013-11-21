@@ -14,7 +14,8 @@ namespace Rogue.FastLane.Tests
             var test = new Performance.MassiveSearchingPerformanceTests();
             test.Setup();
             //test.TestAgainstListFor1089Items();
-            test.TestAgainstListFor35937Items();
+            //test.TestAgainstListFor35937Items();
+            test.TestAgainstListFor1185921Items();
 
             var w = new Stopwatch();
 

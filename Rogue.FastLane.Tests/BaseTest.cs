@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Infrastructure.Positioning;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Queries;
 using NUnit.Framework;
 using Rogue.FastLane.Collections.Items.Mixins;

@@ -35,14 +35,13 @@ namespace Rogue.FastLane.Tests.Performance
 
             Watch.Reset();
             for (int i = 1; i < qtd; i++)
-            {
-                Watch.Stop();
+            {;
                 var item = 
                     new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) };
                 Watch.Start();
                 add(list, item);
+                Watch.Stop();
             }
-            Watch.Stop();
 
             var elapsed4List = Watch.Elapsed;
 
@@ -51,13 +50,11 @@ namespace Rogue.FastLane.Tests.Performance
             for (int i = 0; i < qtd; i++)
             {
                 var mock = new MockItem() { Index = i, IndexInBytes = BitConverter.GetBytes(i) };
-                Watch.Stop();
-
-                Collection.Add(mock);
 
                 Watch.Start();
+                Collection.Add(mock);
+                Watch.Stop();
             }
-            Watch.Stop();
 
             var elapsed4Collection = Watch.Elapsed;
 

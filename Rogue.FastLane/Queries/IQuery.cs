@@ -1,4 +1,4 @@
-﻿using Rogue.FastLane.Items;
+﻿using Rogue.FastLane.Collections.Items;
 using System.Collections.Generic;
 
 namespace Rogue.FastLane.Queries

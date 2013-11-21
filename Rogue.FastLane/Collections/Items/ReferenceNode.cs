@@ -1,4 +1,4 @@
-﻿using Rogue.FastLane.Items;
+﻿using Rogue.FastLane.Collections.Items;
 using System;
 
 namespace Rogue.FastLane.Collections.Items
@@ -13,7 +13,8 @@ namespace Rogue.FastLane.Collections.Items
 
         public INode this[int index]
         {
-            get {
+            get 
+            {
                 return ((INode[])this.Values ?? this.References)[index];
             }
         }

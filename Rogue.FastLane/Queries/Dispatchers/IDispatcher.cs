@@ -1,5 +1,5 @@
 ﻿using Rogue.FastLane.Collections;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 
 namespace Rogue.FastLane.Queries.Dispatchers
 {

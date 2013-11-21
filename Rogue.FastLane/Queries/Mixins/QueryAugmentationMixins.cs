@@ -1,6 +1,6 @@
 using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.Mixins;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 
 namespace Rogue.FastLane.Queries.Mixins
 {

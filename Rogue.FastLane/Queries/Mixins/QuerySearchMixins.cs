@@ -4,7 +4,7 @@ using Rogue.FastLane.Infrastructure.Positioning;
 using Rogue.FastLane.Queries.States.Mixins;
 using System.Runtime;
 using System;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 
 namespace Rogue.FastLane.Queries.Mixins
 {

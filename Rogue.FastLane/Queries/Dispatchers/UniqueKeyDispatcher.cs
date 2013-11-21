@@ -1,6 +1,6 @@
 ﻿using Rogue.FastLane.Collections;
 using Rogue.FastLane.Infrastructure;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Queries.States;
 
 namespace Rogue.FastLane.Queries.Dispatchers

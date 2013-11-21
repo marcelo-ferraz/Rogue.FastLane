@@ -3,7 +3,7 @@ using Rogue.FastLane.Collections.Items;
 using System.Collections.Generic;
 using Rogue.FastLane.Collections;
 using Rogue.FastLane.Collections.Mixins;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Queries.Mixins

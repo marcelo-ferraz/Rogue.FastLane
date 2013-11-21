@@ -45,10 +45,8 @@ namespace Rogue.FastLane.Infrastructure
             
             double percentageUsed =
                 totalLength / Math.Pow(state.MaxLengthPerNode, state.LevelCount);
-
-            int j = state
-                .LevelCount;
-            for (int i = 0; i < state.LevelCount; i++)
+            int i = 0;
+            for (; i < state.LevelCount; i++)
             {
                 state.Levels[i] =
                     new UniqueKeyQueryState.Level
@@ -57,8 +55,15 @@ namespace Rogue.FastLane.Infrastructure
                         TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
                         TotalUsed = GetTotalUsed(state, percentageUsed, i)
                     };
-                j--;
             }
+
+            state.Levels[--i] =
+                new UniqueKeyQueryState.Level
+                {
+                    Index = i,
+                    TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
+                    TotalUsed = totalLength
+                };
 
             return state;
         }

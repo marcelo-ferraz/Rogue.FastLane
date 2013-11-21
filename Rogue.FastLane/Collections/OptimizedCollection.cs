@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Queries;
 
 namespace Rogue.FastLane.Collections

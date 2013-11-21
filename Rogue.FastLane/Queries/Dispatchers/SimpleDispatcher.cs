@@ -1,5 +1,5 @@
 ﻿using Rogue.FastLane.Collections;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Collections.Mixins;
 using System;
 

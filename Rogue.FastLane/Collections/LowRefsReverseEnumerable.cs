@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rogue.FastLane.Collections.Items;
 using System;
-using Rogue.FastLane.Items;
+using Rogue.FastLane.Collections.Items;
 using Rogue.FastLane.Infrastructure.Positioning;
 
 namespace Rogue.FastLane.Collections

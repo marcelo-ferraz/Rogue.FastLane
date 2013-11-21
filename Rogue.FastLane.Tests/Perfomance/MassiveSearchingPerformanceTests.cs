@@ -79,21 +79,21 @@ namespace Rogue.FastLane.Tests.Performance
 
             var elapsed4List = Watch.Elapsed;
 
-            Watch.Reset();
-            Watch.Start();
-            for (int i = 0; i < max; i++)
-            {
-                var mockedInList = list.FirstOrDefault(item => item.Index == i);
-            }
-            Watch.Stop();
+            //Watch.Reset();
+            //Watch.Start();
+            //for (int i = 0; i < max; i++)
+            //{
+            //    var mockedInList = list.FirstOrDefault(item => item.Index == i);
+            //}
+            //Watch.Stop();
 
             var elapsed4ListLinq = Watch.Elapsed;
             
             Console.WriteLine("For the list<T>, took {0} to get all items, for FastLane took {1}.",
                 elapsed4List, elapsed4Collection);
 
-            Console.WriteLine("For the list<T> with linq, took {0} to get all items, for FastLane took {1}.",
-                elapsed4ListLinq, elapsed4Collection);
+            //Console.WriteLine("For the list<T> with linq, took {0} to get all items, for FastLane took {1}.",
+            //    elapsed4ListLinq, elapsed4Collection);
         }
 
         [Test]

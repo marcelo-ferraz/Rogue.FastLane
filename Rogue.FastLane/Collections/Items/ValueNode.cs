@@ -1,7 +1,7 @@
 ﻿using Rogue.FastLane.Collections.Items;
 using System;
 
-namespace Rogue.FastLane.Items
+namespace Rogue.FastLane.Collections.Items
 {
     public class ValueNode<TItem> : INode
     {
