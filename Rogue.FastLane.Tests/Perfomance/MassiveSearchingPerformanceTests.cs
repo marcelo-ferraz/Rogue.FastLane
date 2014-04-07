@@ -113,6 +113,13 @@ namespace Rogue.FastLane.Tests.Performance
             CompareSearch(list, Collection);
         }
 
+        public void TestAgainstListForNItems(int qtd)
+        {
+            var list = new List<MockItem>();
+            base.TestInsertionAgainstList(qtd, list);
+            CompareSearch(list, Collection);
+        }
+
         [Test]
         public override void TestAgainstListFor1185921Items()
         {

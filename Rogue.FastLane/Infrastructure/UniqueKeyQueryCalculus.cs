@@ -31,6 +31,8 @@ namespace Rogue.FastLane.Infrastructure
         
         public static UniqueKeyQueryState Calculate4UniqueKey(int totalLength, int maxComparisons)
         {
+            if (totalLength == 4196352) { System.Diagnostics.Debugger.Break(); }
+
             var state =
                 new UniqueKeyQueryState();
 
@@ -43,8 +45,8 @@ namespace Rogue.FastLane.Infrastructure
             state.LevelCount = CountLevels(
                 totalLength, state.MaxLengthPerNode);
             
-            double percentageUsed =
-                totalLength / Math.Pow(state.MaxLengthPerNode, state.LevelCount);
+            Decimal percentageUsed = 
+                totalLength / (decimal) Math.Pow(state.MaxLengthPerNode, state.LevelCount);
             int i = 0;
             for (; i < state.LevelCount; i++)
             {
@@ -53,7 +55,7 @@ namespace Rogue.FastLane.Infrastructure
                     {
                         Index = i,
                         TotalOfSpaces = (int)Math.Ceiling(Math.Pow(state.MaxLengthPerNode, i)),
-                        TotalUsed = GetTotalUsed(state, percentageUsed, i)
+                        TotalUsed = WorkAroundCSharpLimitations(state, percentageUsed, i)
                     };
             }
 
@@ -68,20 +70,21 @@ namespace Rogue.FastLane.Infrastructure
             return state;
         }
 
-        private static int GetTotalUsed(UniqueKeyQueryState state, double percentageUsed, int i)
+        private static int WorkAroundCSharpLimitations(UniqueKeyQueryState state, decimal percentageUsed, int i)
         {
-            var value = Math.Pow(state.MaxLengthPerNode, i + 1) * percentageUsed;
+            var value = decimal.Multiply(
+                (decimal) Math.Pow(state.MaxLengthPerNode, i + 1), percentageUsed);
 
             var integerVal = 
-                (int)Math.Round(value);
+                (int) Math.Round(value);
 
             var lessThanZeroValue = 
-                value - integerVal;
+                Decimal.Subtract(value, integerVal);
 
-            var factorOfValueCorrection =
-                1 / Math.Pow(state.MaxLengthPerNode, i + 1);
+            var factorOfCorrection =
+                (decimal) (1 / Math.Pow(state.MaxLengthPerNode, i + 1));
 
-            return (int)(lessThanZeroValue >= factorOfValueCorrection ?
+            return (int)(lessThanZeroValue >= factorOfCorrection ?
                 Math.Ceiling(value) :
                 integerVal);
         }
